@@ -32,8 +32,8 @@ module.exports.colors1 = [
     },
     {
         id: 2,
-        colour: ['red'],
-        code: ['#fb4e4e'],
+        colour: 'red',
+        code: '#fb4e4e',
         text: 'Join RED'
     }
 ]

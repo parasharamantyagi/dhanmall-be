@@ -1,4 +1,5 @@
 module.exports = {
+  MONGO_DB: process.env.MONGO_DB,// db cloud info
   MONGO_USERNAME: process.env.MONGO_USERNAME,// db cloud info
   MONGO_PASSWORD: process.env.MONGO_PASSWORD,
 
