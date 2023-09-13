@@ -25,13 +25,13 @@ const my_childrens = new mongoose.Schema({
   },
 });
 
-const myChildrens = (module.exports = mongoose.model(
+const MyChildrens = (module.exports = mongoose.model(
   "my_childrens",
   my_childrens
 ));
 
 module.exports.saveMyChildren = async function (input) {
-  const res = new myChildrens(input);
+  const res = new MyChildrens(input);
   let result = await res.save();
   return result;
 };
