@@ -1,3 +1,4 @@
+const { MESSAGE } = require("../config");
 const { currentDate } = require("../helpers");
 const { objectFormat } = require("../helpers");
 const { savePayment } = require("../models/payments");
@@ -17,7 +18,7 @@ exports.addPayment = async (req, res, next) => {
     savePayment(inputData);
     return res.status(200).json({
       status: 1,
-      message: "Payment created successfully",
+      message: MESSAGE.PAYMENT_SUCCESS,
       data: inputData,
     });
   } catch (e) {
