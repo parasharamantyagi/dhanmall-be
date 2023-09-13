@@ -13,7 +13,7 @@ exports.indexWelcome = async (req, res, next) => {
     // let response = { message: 'Welcome this is first app' };
     // const users = await userModel.find({});
 
-    // return res.status(200).json(users);
+    return res.status(200).json("Welcome");
   } catch (e) {
     return res.json();
   }
