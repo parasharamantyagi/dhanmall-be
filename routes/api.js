@@ -3,7 +3,7 @@ const { indexWelcome, registerReq, loginReq } = require('../controllers/index.co
 const { registerValidator, loginValidator, verifyNumberValidator } = require('../validators/velidate.req');
 const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
-const { myProfile, dashboardScreen, getOrders, saveOrders, gameNow } = require('../controllers/product.controller');
+const { myProfile, dashboardScreen, getOrders, saveOrders, gameNow, myChildren } = require('../controllers/product.controller');
 const { gameInterval } = require('../controllers/cron.job.controller');
 
 
@@ -17,10 +17,11 @@ router.post('/login', [loginValidator, isValid], loginReq);
 
 
 router.get('/profile', isUserValid, myProfile);
+router.get('/children', isUserValid, myChildren);
+
+
 router.post('/dashboard', isUserValid, dashboardScreen);
 router.get('/game-now', isUserValid, gameNow);
-
-
 router.route('/order').get(isUserValid, getOrders).post(isUserValid, saveOrders);
 
 

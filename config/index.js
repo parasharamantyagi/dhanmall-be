@@ -1,6 +1,8 @@
 module.exports = {
-  MONGO_DB: process.env.MONGO_DB,// db cloud info
-  MONGO_USERNAME: process.env.MONGO_USERNAME,// db cloud info
+  PORT: process.env.PORT || 7000, // db cloud info
+  APP_URL: process.env.APP_URL || "http://be.luckydhanmall.com", // db cloud info
+  MONGO_DB: process.env.MONGO_DB, // db cloud info
+  MONGO_USERNAME: process.env.MONGO_USERNAME, // db cloud info
   MONGO_PASSWORD: process.env.MONGO_PASSWORD,
 
   CRYPTOJS_SECRET: process.env.CRYPTOJS_SECRET, // use for user password incrypt
@@ -12,7 +14,7 @@ module.exports = {
 
   GDM_MODULE: {
     jwt: require("jsonwebtoken"),
-    CryptoJS: require('crypto-js')
+    CryptoJS: require("crypto-js"),
   },
-  GDM_CHARGES_FEE: 0.05
-}
+  GDM_CHARGES_FEE: 0.05,
+};

@@ -1,4 +1,4 @@
-const { GDM_CHARGES_FEE } = require("../config");
+const { GDM_CHARGES_FEE, APP_URL } = require("../config");
 const {
   objectFormat,
   arrayOfObject,
@@ -10,12 +10,24 @@ const {
 const { gameOfDashboard, countOfGame, gameById } = require("../models/games");
 const { saveOrderCalculation } = require("../models/orderCalculation");
 const { saveOrder, orderOfUser } = require("../models/orders");
-const { userById } = require("../models/users");
+const { userById, getChildren } = require("../models/users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
 
 exports.myProfile = async (req, res, next) => {
   try {
     let result = await userById(req.user.user_id);
+    result = merge_object(result, {
+      promotion_url: `${APP_URL}/register?r_code=${result.promotion_code}`,
+    });
+    return res.status(200).json({ status: 1, data: result });
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.myChildren = async (req, res, next) => {
+  try {
+    let result = await getChildren(req.user.user_id);
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
