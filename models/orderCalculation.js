@@ -1,5 +1,7 @@
-const mongoose = require("mongoose");
-const { currentDate, check } = require("../helpers");
+const { GDM_MODULE } = require("./../config");
+const mongoose = GDM_MODULE.mongoose;
+var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
+const { currentDate } = require("../helpers");
 
 const orderCalculationSchema = new mongoose.Schema({
   order_id: {
@@ -35,7 +37,7 @@ const orderCalculationSchema = new mongoose.Schema({
     required: true,
   },
   delivery: {
-    type: String,
+    type: Float,
     required: true,
   },
   fee: {

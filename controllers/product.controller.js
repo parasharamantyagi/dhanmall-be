@@ -89,10 +89,6 @@ exports.saveOrders = async (req, res, next) => {
       "ammount"
     );
     let invest_money = inputData.contract_money * inputData.contract_number;
-    invest_money =
-      checkObj(inputData, "type") && inputData.type === "2"
-        ? invest_money * 9
-        : invest_money;
     if (invest_money > user.money) {
       return res.status(200).json({
         status: 0,
@@ -100,6 +96,11 @@ exports.saveOrders = async (req, res, next) => {
         data: {},
       });
     } else {
+      minusUserMoney(inputData.user_id, { money: invest_money });
+      invest_money =
+        checkObj(inputData, "type") && inputData.type === "2"
+          ? invest_money * 9
+          : invest_money;
       // inputData.invest_money = invest_money;
       inputData.fee = invest_money * GDM_CHARGES_FEE;
       inputData.delivery = invest_money - inputData.fee;
@@ -111,7 +112,6 @@ exports.saveOrders = async (req, res, next) => {
       saveOrderCalculation(
         merge_object({ order_id: array_to_str(order._id) }, inputData)
       );
-      minusUserMoney(inputData.user_id, { money: 10.12 });
       return res
         .status(200)
         .json({ status: 1, message: MESSAGE.SAVE_ORDER, data: inputData });
