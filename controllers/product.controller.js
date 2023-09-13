@@ -16,7 +16,7 @@ const { colors1, colors2, contract_type } = require("../providers/colors");
 exports.myProfile = async (req, res, next) => {
   try {
     let result = await userById(req.user.user_id);
-    return res.status(200).json(result);
+    return res.status(200).json({ status: 1, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
@@ -88,7 +88,7 @@ exports.saveOrders = async (req, res, next) => {
     saveOrderCalculation(
       merge_object({ order_id: array_to_str(order._id) }, inputData)
     );
-    return res.status(200).json(order);
+    return res.status(200).json({ status: 1, data: order });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
