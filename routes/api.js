@@ -5,6 +5,7 @@ const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
 const { myProfile, dashboardScreen, getOrders, saveOrders, gameNow, myChildren } = require('../controllers/product.controller');
 const { gameInterval } = require('../controllers/cron.job.controller');
+const { addPayment } = require('../controllers/payment.controller'); // // all for payment related
 
 
 const router = express.Router();
@@ -23,6 +24,8 @@ router.get('/children', isUserValid, myChildren);
 router.post('/dashboard', isUserValid, dashboardScreen);
 router.get('/game-now', isUserValid, gameNow);
 router.route('/order').get(isUserValid, getOrders).post(isUserValid, saveOrders);
+
+router.post('/payment', isUserValid, addPayment);
 
 
 
