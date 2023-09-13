@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const { GDM_MODULE } = require("./../config");
+const mongoose = GDM_MODULE.mongoose;
 const { currentDate } = require("../helpers");
 
 const paymentSchema = new mongoose.Schema({
