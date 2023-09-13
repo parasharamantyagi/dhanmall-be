@@ -1,4 +1,4 @@
-const { GDM_CHARGES_FEE, APP_URL } = require("../config");
+const { GDM_CHARGES_FEE, APP_URL, MESSAGE } = require("../config");
 const {
   objectFormat,
   arrayOfObject,
@@ -10,7 +10,7 @@ const {
 const { gameOfDashboard, countOfGame, gameById } = require("../models/games");
 const { saveOrderCalculation } = require("../models/orderCalculation");
 const { saveOrder, orderOfUser } = require("../models/orders");
-const { userById, getChildren } = require("../models/users");
+const { userById, getChildren, minusUserMoney } = require("../models/users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
 
 exports.myProfile = async (req, res, next) => {
@@ -19,7 +19,9 @@ exports.myProfile = async (req, res, next) => {
     result = merge_object(result, {
       promotion_url: `${APP_URL}/register?r_code=${result.promotion_code}`,
     });
-    return res.status(200).json({ status: 1, data: result });
+    return res
+      .status(200)
+      .json({ status: 1, message: MESSAGE.my_profile, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
@@ -80,6 +82,7 @@ exports.saveOrders = async (req, res, next) => {
     ]);
     let gameDetail = await gameById(inputData.game_id);
     inputData.user_id = req.user.user_id;
+    let user = await userById(inputData.user_id, "money");
     inputData.contract_money = arrayOfObject(
       contract_type,
       { id: inputData.contract_type },
@@ -90,17 +93,29 @@ exports.saveOrders = async (req, res, next) => {
       checkObj(inputData, "type") && inputData.type === "2"
         ? invest_money * 9
         : invest_money;
-    inputData.fee = invest_money * GDM_CHARGES_FEE;
-    inputData.delivery = invest_money - inputData.fee;
-    inputData.project_id = 1;
-    inputData.goods_id = 11;
-    inputData.price = gameDetail.price;
-    inputData.fee = int_toFixed(inputData.fee);
-    let order = await saveOrder(inputData);
-    saveOrderCalculation(
-      merge_object({ order_id: array_to_str(order._id) }, inputData)
-    );
-    return res.status(200).json({ status: 1, data: order });
+    if (invest_money > user.money) {
+      return res.status(200).json({
+        status: 0,
+        message: MESSAGE.insufficient_balance,
+        data: {},
+      });
+    } else {
+      // inputData.invest_money = invest_money;
+      inputData.fee = invest_money * GDM_CHARGES_FEE;
+      inputData.delivery = invest_money - inputData.fee;
+      inputData.project_id = 1;
+      inputData.goods_id = 11;
+      inputData.price = gameDetail.price;
+      inputData.fee = int_toFixed(inputData.fee);
+      let order = await saveOrder(inputData);
+      saveOrderCalculation(
+        merge_object({ order_id: array_to_str(order._id) }, inputData)
+      );
+      minusUserMoney(inputData.user_id, { money: 10.12 });
+      return res
+        .status(200)
+        .json({ status: 1, message: MESSAGE.SAVE_ORDER, data: inputData });
+    }
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

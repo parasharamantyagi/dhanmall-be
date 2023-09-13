@@ -1,3 +1,5 @@
+const ALL_MESSAGE = require("./message");
+
 module.exports = {
   PORT: process.env.PORT || 7000, // db cloud info
   APP_URL: process.env.APP_URL || "http://be.luckydhanmall.com", // db cloud info
@@ -11,6 +13,8 @@ module.exports = {
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
 
   JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN, // verify user authantication
+
+  MESSAGE: ALL_MESSAGE,
 
   GDM_MODULE: {
     jwt: require("jsonwebtoken"),

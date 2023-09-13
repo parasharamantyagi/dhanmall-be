@@ -1,7 +1,7 @@
 const { currentDate } = require("../helpers");
 const { objectFormat } = require("../helpers");
 const { savePayment } = require("../models/payments");
-const { setUserMoney } = require("../models/users");
+const { plusUserMoney } = require("../models/users");
 
 exports.addPayment = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ exports.addPayment = async (req, res, next) => {
         date: currentDate(),
       },
     ]);
-    setUserMoney(req.user.user_id, { money: inputData.ammount });
+    plusUserMoney(req.user.user_id, { money: inputData.ammount });
     savePayment(inputData);
     return res.status(200).json({
       status: 1,

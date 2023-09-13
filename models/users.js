@@ -1,4 +1,4 @@
-const { setDataType } = require("../helpers");
+const { setDataType, check } = require("../helpers");
 const { GDM_MODULE } = require("./../config");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
@@ -54,13 +54,16 @@ const UserSchema = new mongoose.Schema({
 
 const User = (module.exports = mongoose.model("users", UserSchema));
 
-module.exports.userById = async function (_id) {
+module.exports.userById = async function (_id, field = "") {
+  let select = check(field) ? field : "user_id email money commission interest";
   return await User.findOne(
-    { _id: _id },
-    { password: 0, verification_code: 0 }
-  ).then((result) => {
-    return JSON.parse(JSON.stringify(result));
-  });
+    { _id: _id }
+    // { password: 0, verification_code: 0 }
+  )
+    .select(select)
+    .then((result) => {
+      return JSON.parse(JSON.stringify(result));
+    });
 };
 
 module.exports.getChildren = async function (_id) {
@@ -86,11 +89,23 @@ module.exports.getChildren = async function (_id) {
   });
 };
 
-module.exports.setUserMoney = async function (id, { money }) {
+module.exports.plusUserMoney = async function (id, { money }) {
   let user = await User.findOne({ _id: id }).select("money");
   await User.findOneAndUpdate(
     { _id: id },
     { money: setDataType(user.money, "f") + setDataType(money, "f") },
+    {
+      new: true,
+    }
+  );
+  return true;
+};
+
+module.exports.minusUserMoney = async function (id, { money }) {
+  let user = await User.findOne({ _id: id }).select("money");
+  await User.findOneAndUpdate(
+    { _id: id },
+    { money: setDataType(user.money, "f") - setDataType(money, "f") },
     {
       new: true,
     }
