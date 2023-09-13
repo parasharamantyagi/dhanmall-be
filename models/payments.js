@@ -24,6 +24,10 @@ const paymentSchema = new mongoose.Schema({
 const Payment = (module.exports = mongoose.model("payments", paymentSchema));
 module.exports = mongoose.model("payments", paymentSchema);
 
+module.exports.getPayment = async function (user_id) {
+  return await Payment.findOne({ user_id: user_id }, {}, { sort: { _id: -1 } });
+};
+
 module.exports.savePayment = async function (input) {
   const res = new Payment(input);
   let result = await res.save();

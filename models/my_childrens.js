@@ -22,4 +22,4 @@ const my_childrens = new mongoose.Schema({
     required: true,
   },
 });
-module.exports = mongoose.model("my_childrens", my_childrens);;
+module.exports = mongoose.model("my_childrens", my_childrens);
