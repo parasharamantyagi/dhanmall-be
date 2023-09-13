@@ -1,5 +1,7 @@
-const mongoose = require("mongoose");
-const { promotionCode } = require("../helpers/crypto");
+const { setDataType } = require("../helpers");
+const { GDM_MODULE } = require("./../config");
+const mongoose = GDM_MODULE.mongoose;
+var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const UserSchema = new mongoose.Schema({
   user_id: {
@@ -28,7 +30,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   money: {
-    type: String,
+    type: Float,
     default: 0,
   },
   commission: {
@@ -47,7 +49,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    // default: promotionCode(),
   },
 });
 
@@ -83,6 +84,18 @@ module.exports.getChildren = async function (_id) {
     );
     return result;
   });
+};
+
+module.exports.setUserMoney = async function (id, { money }) {
+  let user = await User.findOne({ _id: id }).select("money");
+  await User.findOneAndUpdate(
+    { _id: id },
+    { money: setDataType(user.money, "f") + setDataType(money, "f") },
+    {
+      new: true,
+    }
+  );
+  return true;
 };
 
 module.exports = mongoose.model("users", UserSchema);

@@ -1,31 +1,33 @@
 // import { FinishedTransportStatus } from '@tevvo/billing-api';
 // import moment from 'moment-timezone';
-var moment = require('moment-timezone');
-const my_date_format = 'YYYY-MM-DD HH:mm:00';
-
-
+var moment = require("moment-timezone");
+const my_date_format = "YYYY-MM-DD HH:mm:00";
 
 exports.currentDate = () => {
   // 👈 return only current date and time
   // 'YYYY-MM-DD - HH:mm:00'
-  return moment().tz('Asia/Kolkata').format('YYYYMMDDHHmm00');
-}
-
-
+  return moment().tz("Asia/Kolkata").format("YYYYMMDDHHmm00");
+};
 
 exports.cronjobTZ = (date) => {
-  return moment(date).tz('America/Phoenix').format(my_date_format);
-}
+  return moment(date).tz("America/Phoenix").format(my_date_format);
+};
 
 exports.check = (value) => {
   // 👈 check string is valid or not
-  return value && value !== 'NaN' && value !== 'false' && value !== 'undefined' && value !== 'null';
-}
+  return (
+    value &&
+    value !== "NaN" &&
+    value !== "false" &&
+    value !== "undefined" &&
+    value !== "null"
+  );
+};
 
 exports.checkIsString = (value) => {
   // 👈 check value type is string
-  return this.check(value) && typeof value === 'string' ? true : false;
-}
+  return this.check(value) && typeof value === "string" ? true : false;
+};
 
 exports.checkObj = (myObj, key = null) => {
   // 👈 check object is valid and check key is exit in object
@@ -38,12 +40,15 @@ exports.checkObj = (myObj, key = null) => {
     return false;
   } else {
     if (key) {
-      return Object.hasOwnProperty.bind(myObj)(key) && (this.check(myObj[key]) || myObj[key] === 0);
+      return (
+        Object.hasOwnProperty.bind(myObj)(key) &&
+        (this.check(myObj[key]) || myObj[key] === 0)
+      );
     } else {
-      return this.check(myObj) && typeof myObj === 'object' ? true : false;
+      return this.check(myObj) && typeof myObj === "object" ? true : false;
     }
   }
-}
+};
 
 exports.checkArray = (arr, num = 0) => {
   // 👈 check array lenth and min length of array
@@ -56,7 +61,7 @@ exports.checkArray = (arr, num = 0) => {
   } else {
     return false;
   }
-}
+};
 
 exports.objectFormat = (obj = {}, keys = []) => {
   let return_obj = {};
@@ -80,8 +85,6 @@ exports.objectFormat = (obj = {}, keys = []) => {
   return return_obj;
 };
 
-
-
 exports.arrayOfObject = (array, Obj, getVal) => {
   if (this.checkArray(array) && this.checkObj(Obj)) {
     let res = array.filter(function (item) {
@@ -100,17 +103,21 @@ exports.arrayOfObject = (array, Obj, getVal) => {
       if (this.check(getVal) && getVal === true) {
         return this.checkArray(res);
       } else {
-        if (this.checkArray(res) && this.checkObj(res[0]) && this.check(getVal)) {
+        if (
+          this.checkArray(res) &&
+          this.checkObj(res[0]) &&
+          this.check(getVal)
+        ) {
           return res[0][getVal];
         } else {
-          return this.checkObj(res[0]) ? res[0] : {}
+          return this.checkObj(res[0]) ? res[0] : {};
         }
       }
     }
   } else {
     return array;
-  };
-}
+  }
+};
 
 exports.merge_object = (...args) => {
   return args.reduce(function (result, current) {
@@ -141,4 +148,25 @@ exports.sum_of_array = (arr) => {
   return arr.reduce(function (a, b) {
     return a + b;
   }, 0);
+};
+
+exports.setDataType = (value, type) => {
+  switch (type) {
+    case "number":
+      return parseInt(value);
+    case "int":
+      return parseInt(value);
+    case "string":
+      return value.toString();
+    case "float":
+      return parseFloat(value);
+    case "f":
+      return parseFloat(value);
+    case "u":
+      return value.toUpperCase();
+    case "l":
+      return value.toLowerCase();
+    default:
+      return value;
+  }
 };

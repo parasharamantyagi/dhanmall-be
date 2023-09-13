@@ -15,6 +15,8 @@ module.exports = {
   GDM_MODULE: {
     jwt: require("jsonwebtoken"),
     CryptoJS: require("crypto-js"),
+    mongoose: require("mongoose"),
+    mongooseFloat: require("mongoose-float"),
   },
   GDM_CHARGES_FEE: 0.05,
 };
