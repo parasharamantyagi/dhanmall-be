@@ -23,4 +23,9 @@ module.exports = {
     mongooseFloat: require("mongoose-float"),
   },
   GDM_CHARGES_FEE: 0.05,
+  USER_COMMISION: {
+    LAVEL_1: 20,
+    LAVEL_2: 5,
+    LAVEL_3: 2,
+  },
 };

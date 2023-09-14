@@ -13,7 +13,7 @@ const paymentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["created"],
+    enum: ["created", "reward_1", "reward_2", "reward_3"],
     default: "created",
   },
   date: {

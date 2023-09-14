@@ -3,11 +3,11 @@ const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const my_childrens = new mongoose.Schema({
-  pid: {
+  user_id: {
     type: String,
     required: true,
   },
-  my_promotion_code: {
+  childrens_id: {
     type: String,
     required: true,
   },
@@ -22,6 +22,11 @@ const my_childrens = new mongoose.Schema({
   first_reward: {
     type: Float,
     default: 0,
+  },
+  type: {
+    type: String,
+    enum: ["lavel_1", "lavel_2", "lavel_3"],
+    default: "lavel_1",
   },
 });
 
