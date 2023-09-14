@@ -40,3 +40,8 @@ module.exports.saveMyChildren = async function (input) {
   let result = await res.save();
   return result;
 };
+
+module.exports.getMyChildren = async function (user_id) {
+  return await MyChildrens.find({ user_id: user_id }).exec();
+};
+

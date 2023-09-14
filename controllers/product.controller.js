@@ -8,6 +8,7 @@ const {
   array_to_str,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/games");
+const { getMyChildren } = require("../models/my_childrens");
 const { saveOrderCalculation } = require("../models/orderCalculation");
 const { saveOrder, orderOfUser } = require("../models/orders");
 const { userById, getChildren, minusUserMoney } = require("../models/users");
@@ -29,7 +30,8 @@ exports.myProfile = async (req, res, next) => {
 
 exports.myChildren = async (req, res, next) => {
   try {
-    let result = await getChildren(req.user.user_id);
+    let result = await userById(req.user.user_id);
+    result.children = await getMyChildren(req.user.user_id);
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
