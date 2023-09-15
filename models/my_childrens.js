@@ -41,7 +41,6 @@ module.exports.saveMyChildren = async function (input) {
   return result;
 };
 
-module.exports.getMyChildren = async function (user_id) {
-  return await MyChildrens.find({ user_id: user_id }).exec();
+module.exports.getMyChildren = async function (user_id, input) {
+  return await MyChildrens.find({ user_id: user_id, type: input.type }).exec();
 };
-

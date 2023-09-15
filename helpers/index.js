@@ -6,7 +6,13 @@ const my_date_format = "YYYY-MM-DD HH:mm:00";
 exports.currentDate = () => {
   // 👈 return only current date and time
   // 'YYYY-MM-DD - HH:mm:00'
-  return moment().tz("Asia/Kolkata").format("YYYYMMDDHHmm00");
+  return moment().tz("Asia/Kolkata").unix();
+};
+
+exports.currentDate2 = () => {
+  // 👈 return only current date and time
+  // 'YYYY-MM-DD - HH:mm:00'
+  return moment().tz("Europe/London").unix();
 };
 
 exports.cronjobTZ = (date) => {
@@ -173,8 +179,10 @@ exports.setDataType = (value, type) => {
 
 exports.gameNowTime = () => {
   const currentTimestamp = Date.now();
-  // Convert it to seconds
+  console.log(currentTimestamp);
+  // Convert it to seconds 
   const currentSeconds = Math.floor(currentTimestamp / 1000);
+  console.log(currentSeconds);
   // Calculate the current second within the 180-second cycle
   const secondInCycle = currentSeconds % 180;
   return 180 - secondInCycle;
