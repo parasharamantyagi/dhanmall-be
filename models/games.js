@@ -41,9 +41,13 @@ module.exports = mongoose.model("games", gameSchema);
 
 module.exports.gameById = async function (id = '') {
   if (check(id)) {
-    return await Game.findOne({ _id: id });
+    return await Game.findOne({ _id: id }).exec().then((result) => {
+      return JSON.parse(JSON.stringify(result));
+    });
   } else {
-    return await Game.findOne({}, {}, { sort: { _id: -1 } });
+    return await Game.findOne({}, {}, { sort: { _id: -1 } }).exec().then((result) => {
+      return JSON.parse(JSON.stringify(result));
+    });
   }
 }
 

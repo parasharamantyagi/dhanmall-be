@@ -6,6 +6,7 @@ const {
   checkObj,
   merge_object,
   array_to_str,
+  gameNowTime,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/games");
 const { getMyChildren } = require("../models/my_childrens");
@@ -58,6 +59,7 @@ exports.dashboardScreen = async (req, res, next) => {
 exports.gameNow = async (req, res, next) => {
   try {
     let result = await gameById();
+    result.time = gameNowTime();
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });

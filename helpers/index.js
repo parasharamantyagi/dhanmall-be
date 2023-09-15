@@ -170,3 +170,42 @@ exports.setDataType = (value, type) => {
       return value;
   }
 };
+
+exports.gameNowTime = () => {
+  const currentTimestamp = Date.now();
+  // Convert it to seconds
+  const currentSeconds = Math.floor(currentTimestamp / 1000);
+  // Calculate the current second within the 180-second cycle
+  const secondInCycle = currentSeconds % 180;
+  return 180 - secondInCycle;
+};
+
+function getSecondsDifference(startTime) {
+  // Create a new Date object for the current time
+  const currentTime = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = currentTime - startTime;
+
+  // Convert the time difference from milliseconds to seconds
+  const secondsDifference = timeDifference / 1000;
+
+  // Check if the time difference is a multiple of 3 minutes (180 seconds)
+  if (secondsDifference % 180 === 0) {
+    return secondsDifference;
+  } else {
+    return false;
+  }
+}
+
+// Example: Get the seconds difference from a starting time
+const startTime = new Date(); // Replace this with your actual start time
+const result = getSecondsDifference(startTime);
+
+if (result !== false) {
+  console.log(
+    `The time difference is ${result} seconds, which is a multiple of 3 minutes.`
+  );
+} else {
+  console.log(`The time difference is not a multiple of 3 minutes.`);
+}
