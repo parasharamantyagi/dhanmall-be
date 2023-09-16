@@ -21,14 +21,14 @@ exports.verifyNumber = async (req, res, next) => {
   try {
     const inputData = req.body;
 
-    // client.messages
-    //   .create({
-    //     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-    //     from: '+12566701744',
-    //     to: `+917347332511`
-    //   })
-    //   .then(message => console.log(message.sid))
-    //   .done();
+    client.messages
+      .create({
+        body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+        from: '+12566701744',
+        to: `+917347332511`
+      })
+      .then(message => console.log(message.sid))
+      .done();
 
     // const user = new userModel({ name: 'aman tyagi', age: 30 });
     // await user.save();

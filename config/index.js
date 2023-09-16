@@ -21,6 +21,7 @@ module.exports = {
     CryptoJS: require("crypto-js"),
     mongoose: require("mongoose"),
     mongooseFloat: require("mongoose-float"),
+    rn: require("random-number"),
   },
   GDM_CHARGES_FEE: 0.05,
   USER_COMMISION: {
