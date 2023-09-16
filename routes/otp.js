@@ -22,26 +22,23 @@ router.post("/", async (req, res, next) => {
         to: `+917347332511`,
       })
       .then((message) => {
-        console.log("success");
-        console.log(message);
+        return true;
       })
       .catch((err) => {
-        console.log("eerrr", err);
+        return false;
       });
     saveOtpVerification({
       mobile: inputData.mobile,
       verification_code: otp,
       date: currentDate(),
     });
-    return res.status(200).json(inputData);
-
-    // {
-    //   status: 1,
-    //   message: "User register successfully",
-    //   token: setJWT({
-    //     user_id: user_result._id,
-    //   }),
-    // }
+    return res.status(200).json({
+      status: 1,
+      message: "Otp send successfully",
+      data: {
+        date: currentDate(),
+      }
+    });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

@@ -1,3 +1,4 @@
+const { checkObj, check, setDataType } = require("../helpers");
 const { GDM_MODULE } = require("./../config");
 const mongoose = GDM_MODULE.mongoose;
 
@@ -18,15 +19,23 @@ const OtpVerificationSchema = new mongoose.Schema({
   status: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
-const OtpVerification = (module.exports = mongoose.model('otp_verifications', OtpVerificationSchema));
+const OtpVerification = (module.exports = mongoose.model(
+  "otp_verifications",
+  OtpVerificationSchema
+));
 module.exports = mongoose.model("otp_verifications", OtpVerificationSchema);
 
-
 module.exports.saveOtpVerification = async function (input) {
-  const res = new OtpVerification(input);
-  let result = await res.save();
-  return result;
-}
+  let findAndCheck = await OtpVerification.findOne({ mobile: input.mobile });
+  if (check(findAndCheck)) {
+    OtpVerification.findOneAndUpdate(
+      { _id: setDataType(findAndCheck._id, "string") },
+      { verification_code: input.verification_code, date: input.date }
+    );
+  } else {
+    OtpVerification.create(input);
+  }
+};
