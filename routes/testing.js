@@ -1,14 +1,22 @@
-var express = require('express');
-// const sdk = require('api')('@msg91api/v5.0#6n91xmlhu4pcnz');
-
-
+var express = require("express");
+const { Book } = require("../models/module.Book");
 
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-
-    return res.json('respond with a resource');
+router.get("/", async function (req, res, next) {
+  try {
+    // let data = await PostTest.findOne().populate('User').exec();
+    let check = await Book.findOne({ title: 'book1' }).populate('author').exec();
+    // Book.create({
+    //     title: "book1",
+    //     author: '6506f725106636f1b6b91a7c'
+    // });
+    res.status(200).json(check);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, msg: err.message });
+  }
 });
 
 module.exports = router;
