@@ -28,5 +28,6 @@ module.exports = {
     LAVEL_1: 20,
     LAVEL_2: 5,
     LAVEL_3: 2,
+    LAVEL_4: 1,
   },
 };

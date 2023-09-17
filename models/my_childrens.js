@@ -1,3 +1,4 @@
+const { setDataType } = require("../helpers");
 const { GDM_MODULE } = require("./../config");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
@@ -43,4 +44,17 @@ module.exports.saveMyChildren = async function (input) {
 
 module.exports.getMyChildren = async function (inputData) {
   return await MyChildrens.find(inputData).exec();
+};
+
+module.exports.updateMyChildren = async function (id, inputData) {
+  try {
+    let result = await MyChildrens.findOneAndUpdate({ _id: setDataType(id, "s") }, inputData, {
+      upsert: true, // Create the document if it doesn't exist
+      new: true, // Return the modified document as the result
+    });
+    // console.log(okkkk);
+    return result;
+  } catch (error) {
+    return error;
+  }
 };
