@@ -31,9 +31,9 @@ exports.myProfile = async (req, res, next) => {
 
 exports.myChildren = async (req, res, next) => {
   try {
-    let inputData = objectFormat(req.query, [{ type: "lavel_1" }]);
+    let inputData = objectFormat(req.query, [{user_id: req.user.user_id}, { type: "lavel_1" }]);
     let result = await userById(req.user.user_id);
-    result.children = await getMyChildren(req.user.user_id, inputData);
+    result.children = await getMyChildren(inputData);
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });

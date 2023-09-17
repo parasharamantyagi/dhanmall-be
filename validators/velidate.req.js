@@ -11,7 +11,7 @@ exports.registerValidator = [
 
 exports.loginValidator = [
   // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
-  body("email").exists().isEmail().withMessage("Provide valid email"),
+  body("mobile").exists().isLength({ min: 12 }).withMessage("Provide valid mobile"),
   body("password").exists().withMessage("Password is required").isString(),
 ];
 

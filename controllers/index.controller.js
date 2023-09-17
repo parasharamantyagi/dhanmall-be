@@ -18,7 +18,7 @@ exports.indexWelcome = async (req, res, next) => {
 
 exports.registerReq = async (req, res, next) => {
   try {
-    const inputData = objectFormat(req.body, ['mobile', 'password', 'verification_code', 'recommendation_code']);
+    const inputData = objectFormat(req.body, ['nickname', 'mobile', 'password', 'verification_code', 'recommendation_code']);
     let user = await userModel.findOne({ mobile: inputData.mobile }, ["mobile"]);
     if (checkObj(user))
       return res
@@ -34,6 +34,7 @@ exports.registerReq = async (req, res, next) => {
     inputData.promotion_code = promotionCode();
     const saveuser = new userModel(inputData);
     let user_result = await saveuser.save();
+    userModel.manageUserAllChildren(user_result);
     return res.status(200).json({
       status: 1,
       message: "User register successfully",
@@ -41,7 +42,6 @@ exports.registerReq = async (req, res, next) => {
         user_id: user_result._id,
       }),
     });
-  
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
@@ -49,15 +49,15 @@ exports.registerReq = async (req, res, next) => {
 
 exports.loginReq = async (req, res, next) => {
   try {
-    const inputData = objectFormat(req.body, ["email", "password"]);
-    let user = await userModel.findOne({ email: inputData.email }, [
-      "email",
+    const inputData = objectFormat(req.body, ["mobile", "password"]);
+    let user = await userModel.findOne({ mobile: inputData.mobile }, [
+      "mobile",
       "password",
     ]);
     if (!checkObj(user))
       return res
         .status(400)
-        .send({ status: 0, message: "This is invalid email" });
+        .send({ status: 0, message: "This is invalid mobile" });
     if (dencrypted(user.password) === inputData.password) {
       return res.status(200).json({
         status: 1,

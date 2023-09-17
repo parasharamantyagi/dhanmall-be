@@ -25,7 +25,7 @@ const my_childrens = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["lavel_1", "lavel_2", "lavel_3"],
+    enum: ["lavel_1", "lavel_2", "lavel_3", "lavel_4"],
     default: "lavel_1",
   },
 });
@@ -41,6 +41,6 @@ module.exports.saveMyChildren = async function (input) {
   return result;
 };
 
-module.exports.getMyChildren = async function (user_id, input) {
-  return await MyChildrens.find({ user_id: user_id, type: input.type }).exec();
+module.exports.getMyChildren = async function (inputData) {
+  return await MyChildrens.find(inputData).exec();
 };

@@ -164,6 +164,8 @@ exports.setDataType = (value, type) => {
       return parseInt(value);
     case "string":
       return value.toString();
+    case "s":
+      return value.toString();
     case "float":
       return parseFloat(value);
     case "f":
@@ -179,7 +181,7 @@ exports.setDataType = (value, type) => {
 
 exports.gameNowTime = () => {
   const currentTimestamp = Date.now();
-  // Convert it to seconds 
+  // Convert it to seconds
   const currentSeconds = Math.floor(currentTimestamp / 1000);
   // Calculate the current second within the 180-second cycle
   const secondInCycle = currentSeconds % 180;
