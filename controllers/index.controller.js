@@ -1,5 +1,6 @@
-const { checkObj, objectFormat } = require("../helpers");
+const { checkObj, objectFormat, check } = require("../helpers");
 const { encrypted, dencrypted, setJWT, promotionCode } = require("../helpers/crypto");
+const { checkOtpVerification } = require("../models/OtpVerifications");
 const userModel = require("./../models/users");
 
 exports.indexWelcome = async (req, res, next) => {
@@ -17,12 +18,18 @@ exports.indexWelcome = async (req, res, next) => {
 
 exports.registerReq = async (req, res, next) => {
   try {
-    const inputData = objectFormat(req.body, ['email', 'password', 'verification_code', 'recommendation_code']);
-    let user = await userModel.findOne({ email: inputData.email }, ["email"]);
+    const inputData = objectFormat(req.body, ['mobile', 'password', 'verification_code', 'recommendation_code']);
+    let user = await userModel.findOne({ mobile: inputData.mobile }, ["mobile"]);
     if (checkObj(user))
       return res
         .status(400)
-        .send({ status: 0, message: "This email is already use" });
+        .send({ status: 0, message: "This mobile is already use" });
+    let otpCheck = await checkOtpVerification(inputData.mobile,inputData.verification_code);
+    if(!check(otpCheck)){
+      return res
+        .status(200)
+        .send({ status: 0, message: "This is invalid otp" });
+    }
     inputData.password = encrypted(inputData.password);
     inputData.promotion_code = promotionCode();
     const saveuser = new userModel(inputData);
@@ -34,6 +41,7 @@ exports.registerReq = async (req, res, next) => {
         user_id: user_result._id,
       }),
     });
+  
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

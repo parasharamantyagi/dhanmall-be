@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   try {
     const inputData = objectFormat(req.body, ["mobile"]);
-    let otp = GDM_MODULE.rn({ min: 1111, max: 9999, integer: true });
+    let otp = GDM_MODULE.rn({ min: 111111, max: 999999, integer: true });
     client.messages
       .create({
         body: `Your one time otp is ${otp}`,

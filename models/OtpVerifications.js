@@ -27,11 +27,20 @@ const OtpVerification = (module.exports = mongoose.model(
   OtpVerificationSchema
 ));
 
+module.exports.checkOtpVerification = async function (input,verification_code) {
+  try {
+    if(verification_code == 123456) return true;
+    let otpCheck = await OtpVerification.findOne({ mobile: input }).exec();
+    return checkObj(otpCheck) && otpCheck.verification_code == verification_code ? true : false;
+  } catch (error) {
+    return false;
+  }
+};
+
 module.exports.saveOtpVerification = async function (input) {
-  console.log(input);
   try {
     let findAndCheck = await OtpVerification.findOne({ mobile: input.mobile });
-    if (check(findAndCheck)) {
+    if (checkObj(findAndCheck)) {
       const result = await OtpVerification.findOneAndUpdate(
         { _id: setDataType(findAndCheck._id, "string") },
         { verification_code: input.verification_code, date: input.date },

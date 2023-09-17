@@ -43,8 +43,7 @@ const UserSchema = new mongoose.Schema({
   },
   recommendation_code: {
     type: String,
-    required: true,
-    unique: true,
+    required: true
   },
   promotion_code: {
     type: String,

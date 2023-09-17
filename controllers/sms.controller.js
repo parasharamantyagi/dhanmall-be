@@ -1,21 +1,21 @@
-const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = require('../config');
-const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = require("../config");
+const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const { colors1, colors2, contract_type } = require("../providers/colors");
 
 exports.homeScreen = async (req, res, next) => {
   try {
     return res.status(200).json({
-      status: 1, data: {
+      status: 1,
+      data: {
         colors1: colors1,
         colors2: colors2,
         contract_type: contract_type,
-      }
+      },
     });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
-}
-
+};
 
 exports.verifyNumber = async (req, res, next) => {
   try {
@@ -23,11 +23,13 @@ exports.verifyNumber = async (req, res, next) => {
 
     client.messages
       .create({
-        body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-        from: '+12566701744',
-        to: `+917347332511`
+        body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+        from: "+12566701744",
+        to: `+917347332511`,
       })
-      .then(message => console.log(message.sid))
+      .then((message) => {
+        return message;
+      })
       .done();
 
     // const user = new userModel({ name: 'aman tyagi', age: 30 });
@@ -39,4 +41,4 @@ exports.verifyNumber = async (req, res, next) => {
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
-}
+};
