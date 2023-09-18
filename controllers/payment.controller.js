@@ -7,17 +7,9 @@ const {
 } = require("../helpers");
 const { setDataType } = require("../helpers");
 const { objectFormat } = require("../helpers");
-const {
-  saveMyChildren,
-  getMyChildren,
-  updateMyChildren,
-} = require("../models/my_childrens");
-const { savePayment } = require("../models/payments");
-const {
-  plusUserMoney,
-  getUserForCommision,
-  updateUserFromId,
-} = require("../models/users");
+const { getMyChildren, updateMyChildren } = require("../models/MyChildrens");
+const { savePayment } = require("../models/Payments");
+const { plusUserMoney, updateUserFromId } = require("../models/Users");
 
 exports.addPayment = async (req, res, next) => {
   try {

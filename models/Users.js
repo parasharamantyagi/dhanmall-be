@@ -1,6 +1,6 @@
 const { setDataType, check, checkObj, currentDate } = require("../helpers");
-const { GDM_MODULE } = require("./../config");
-const { saveMyChildren } = require("./my_childrens");
+const { GDM_MODULE } = require("../config");
+const { saveMyChildren } = require("./MyChildrens");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
@@ -58,7 +58,7 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-const User = (module.exports = mongoose.model("users", UserSchema));
+const User = (module.exports = mongoose.model("User", UserSchema));
 
 module.exports.userById = async function (_id, field = "") {
   let select = check(field)
@@ -170,14 +170,16 @@ module.exports.updateUserFromId = async function (id, object) {
 };
 
 module.exports.manageUserAllChildren = async function (object) {
-  let userForCommision = await this.getUserForCommision(setDataType(object._id));
+  let userForCommision = await this.getUserForCommision(
+    setDataType(object._id)
+  );
   if (
     checkObj(userForCommision, "user_1") &&
     checkObj(userForCommision.user_1)
   ) {
     saveMyChildren({
-      user_id: setDataType(userForCommision.user_1._id),
-      childrens_id: setDataType(userForCommision.my_profile._id),
+      user_id: userForCommision.user_1._id,
+      childrens_id: userForCommision.my_profile._id,
       date: currentDate(),
       water_reward: 0,
       first_reward: 0,
@@ -189,8 +191,8 @@ module.exports.manageUserAllChildren = async function (object) {
     checkObj(userForCommision.user_2)
   ) {
     saveMyChildren({
-      user_id: setDataType(userForCommision.user_2._id),
-      childrens_id: setDataType(userForCommision.my_profile._id),
+      user_id: userForCommision.user_2._id,
+      childrens_id: userForCommision.my_profile._id,
       date: currentDate(),
       water_reward: 0,
       first_reward: 0,
@@ -202,8 +204,8 @@ module.exports.manageUserAllChildren = async function (object) {
     checkObj(userForCommision.user_3)
   ) {
     saveMyChildren({
-      user_id: setDataType(userForCommision.user_3._id),
-      childrens_id: setDataType(userForCommision.my_profile._id),
+      user_id: userForCommision.user_3._id,
+      childrens_id: userForCommision.my_profile._id,
       date: currentDate(),
       water_reward: 0,
       first_reward: 0,
@@ -215,8 +217,8 @@ module.exports.manageUserAllChildren = async function (object) {
     checkObj(userForCommision.user_4)
   ) {
     saveMyChildren({
-      user_id: setDataType(userForCommision.user_4._id),
-      childrens_id: setDataType(userForCommision.my_profile._id),
+      user_id: userForCommision.user_4._id,
+      childrens_id: userForCommision.my_profile._id,
       date: currentDate(),
       water_reward: 0,
       first_reward: 0,
@@ -226,4 +228,4 @@ module.exports.manageUserAllChildren = async function (object) {
   return true;
 };
 
-module.exports = mongoose.model("users", UserSchema);
+module.exports.User = mongoose.model("User", UserSchema);

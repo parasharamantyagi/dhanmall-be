@@ -1,4 +1,4 @@
-const { GDM_MODULE } = require("./../config");
+const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 const { currentDate } = require("../helpers");
@@ -78,8 +78,8 @@ const orderCalculationSchema = new mongoose.Schema({
   },
 });
 
-const OrderCalculation = (module.exports = mongoose.model('orderCalculation', orderCalculationSchema));
-module.exports = mongoose.model("orderCalculation", orderCalculationSchema);
+const OrderCalculation = (module.exports = mongoose.model('OrderCalculation', orderCalculationSchema));
+module.exports = mongoose.model("OrderCalculation", orderCalculationSchema);
 
 
 module.exports.saveOrderCalculation = async function (input) {

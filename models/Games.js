@@ -36,8 +36,8 @@ const gameSchema = new mongoose.Schema({
   },
 });
 
-const Game = (module.exports = mongoose.model('games', gameSchema));
-module.exports = mongoose.model("games", gameSchema);
+const Game = (module.exports = mongoose.model('Game', gameSchema));
+module.exports = mongoose.model("Game", gameSchema);
 
 module.exports.gameById = async function (id = '') {
   if (check(id)) {

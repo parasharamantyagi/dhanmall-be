@@ -1,15 +1,15 @@
-const { GDM_MODULE } = require("./../config");
+const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 const { currentDate, check } = require("../helpers");
 
 const orderSchema = new mongoose.Schema({
   user_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   game_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Game',
   },
   contract_money: {
     type: Number,

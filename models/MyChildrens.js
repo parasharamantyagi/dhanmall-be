@@ -1,16 +1,16 @@
 const { setDataType } = require("../helpers");
-const { GDM_MODULE } = require("./../config");
+const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const my_childrens = new mongoose.Schema({
   user_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   childrens_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   date: {
     type: Number,
@@ -31,30 +31,33 @@ const my_childrens = new mongoose.Schema({
   },
 });
 
-const MyChildrens = (module.exports = mongoose.model(
-  "my_childrens",
-  my_childrens
-));
+const MyChildren = (module.exports = mongoose.model("MyChildren", my_childrens));
+
 
 module.exports.saveMyChildren = async function (input) {
-  const res = new MyChildrens(input);
+  const res = new MyChildren(input);
   let result = await res.save();
   return result;
 };
 
 module.exports.getMyChildren = async function (inputData) {
-  return await MyChildrens.find(inputData).exec();
+  return await MyChildren.find(inputData).exec();
 };
 
 module.exports.updateMyChildren = async function (id, inputData) {
   try {
-    let result = await MyChildrens.findOneAndUpdate({ _id: setDataType(id, "s") }, inputData, {
-      upsert: true, // Create the document if it doesn't exist
-      new: true, // Return the modified document as the result
-    });
+    let result = await MyChildren.findOneAndUpdate(
+      { _id: setDataType(id, "s") },
+      inputData,
+      {
+        upsert: true, // Create the document if it doesn't exist
+        new: true, // Return the modified document as the result
+      }
+    );
     // console.log(okkkk);
     return result;
   } catch (error) {
     return error;
   }
 };
+module.exports.MyChildren = mongoose.model("MyChildren", my_childrens);

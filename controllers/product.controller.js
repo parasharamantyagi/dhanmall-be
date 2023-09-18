@@ -8,11 +8,11 @@ const {
   array_to_str,
   gameNowTime,
 } = require("../helpers");
-const { gameOfDashboard, countOfGame, gameById } = require("../models/games");
-const { getMyChildren } = require("../models/my_childrens");
-const { saveOrderCalculation } = require("../models/orderCalculation");
-const { saveOrder, orderOfUser } = require("../models/orders");
-const { userById, getChildren, minusUserMoney } = require("../models/users");
+const { gameOfDashboard, countOfGame, gameById } = require("../models/Games");
+const { getMyChildren } = require("../models/MyChildrens");
+const { saveOrderCalculation } = require("../models/OrderCalculation");
+const { saveOrder, orderOfUser } = require("../models/Orders");
+const { userById, getChildren, minusUserMoney } = require("../models/Users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
 
 exports.myProfile = async (req, res, next) => {

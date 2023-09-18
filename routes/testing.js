@@ -1,5 +1,6 @@
 var express = require("express");
 const { Book } = require("../models/module.Book");
+const { MyChildren } = require("../models/MyChildrens");
 
 var router = express.Router();
 
@@ -7,7 +8,8 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     // let data = await PostTest.findOne().populate('User').exec();
-    let check = await Book.findOne({ title: 'book1' }).populate('author').exec();
+    let check = await MyChildren.findOne().exec();
+
     // Book.create({
     //     title: "book1",
     //     author: '6506f725106636f1b6b91a7c'

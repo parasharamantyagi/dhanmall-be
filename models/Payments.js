@@ -1,11 +1,11 @@
-const { GDM_MODULE } = require("./../config");
+const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 const { currentDate } = require("../helpers");
 
 const paymentSchema = new mongoose.Schema({
   user_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   ammount: {
     type: String,

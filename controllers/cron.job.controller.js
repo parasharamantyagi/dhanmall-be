@@ -1,7 +1,7 @@
 const { currentDate, checkObj, filterArrayKey, arrayOfObject, sum_of_array, checkArray } = require("../helpers");
-const { saveGame, gameById, updateGame } = require("../models/games");
-const { getOrderCalculation } = require("../models/orderCalculation");
-const { orderByGameId } = require("../models/orders");
+const { saveGame, gameById, updateGame } = require("../models/Games");
+const { getOrderCalculation } = require("../models/OrderCalculation");
+const { orderByGameId } = require("../models/Orders");
 
 exports.gameInterval = async (req, res, next) => {
   try {

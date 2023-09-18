@@ -1,7 +1,7 @@
 const { checkObj, objectFormat, check } = require("../helpers");
 const { encrypted, dencrypted, setJWT, promotionCode } = require("../helpers/crypto");
 const { checkOtpVerification } = require("../models/OtpVerifications");
-const userModel = require("./../models/users");
+const userModel = require("./../models/Users");
 
 exports.indexWelcome = async (req, res, next) => {
   try {
