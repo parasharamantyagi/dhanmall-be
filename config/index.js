@@ -3,6 +3,7 @@ const ALL_MESSAGE = require("./message");
 module.exports = {
   PORT: process.env.PORT || 7000, // db cloud info
   APP_URL: process.env.APP_URL || "http://be.luckydhanmall.com", // db cloud info
+  MY_NODE_ENV: process.env.NODE_ENV === "production" ? true : false,
   MONGO_DB: process.env.MONGO_DB, // db cloud info
   MONGO_USERNAME: process.env.MONGO_USERNAME, // db cloud info
   MONGO_PASSWORD: process.env.MONGO_PASSWORD,
