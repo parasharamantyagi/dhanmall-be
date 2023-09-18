@@ -56,6 +56,11 @@ const UserSchema = new mongoose.Schema({
     enum: [0, 1],
     default: 0,
   },
+  is_special: {
+    type: Number,
+    enum: [0, 1],
+    default: 0,
+  },
 });
 
 const User = (module.exports = mongoose.model("User", UserSchema));
