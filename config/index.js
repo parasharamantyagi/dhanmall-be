@@ -24,10 +24,16 @@ module.exports = {
     rn: require("random-number"),
   },
   GDM_CHARGES_FEE: 0.05,
-  USER_COMMISION: {
+  USER_FIRST_COMMISION: {
     LAVEL_1: 20,
     LAVEL_2: 5,
     LAVEL_3: 2,
     LAVEL_4: 1,
+  },
+  USER_NORMAL_COMMISION: {
+    LAVEL_1: 10,
+    LAVEL_2: 2.5,
+    LAVEL_3: 1,
+    LAVEL_4: 0.5,
   },
 };
