@@ -22,10 +22,7 @@ const OtpVerificationSchema = new mongoose.Schema({
   },
 });
 
-const OtpVerification = (module.exports = mongoose.model(
-  "otp_verifications",
-  OtpVerificationSchema
-));
+const OtpVerification = (module.exports = mongoose.model("OtpVerification", OtpVerificationSchema));
 
 module.exports.checkOtpVerification = async function (input,verification_code) {
   try {

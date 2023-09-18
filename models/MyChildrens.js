@@ -6,7 +6,7 @@ var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 const my_childrens = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
   childrens_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,8 +31,10 @@ const my_childrens = new mongoose.Schema({
   },
 });
 
-const MyChildren = (module.exports = mongoose.model("MyChildren", my_childrens));
-
+const MyChildren = (module.exports = mongoose.model(
+  "MyChildren",
+  my_childrens
+));
 
 module.exports.saveMyChildren = async function (input) {
   const res = new MyChildren(input);
@@ -41,7 +43,9 @@ module.exports.saveMyChildren = async function (input) {
 };
 
 module.exports.getMyChildren = async function (inputData) {
-  return await MyChildren.find(inputData).exec();
+  return await MyChildren.find(inputData)
+    .populate({ path: "childrens_id", select: "nickname mobile" })
+    .exec();
 };
 
 module.exports.updateMyChildren = async function (id, inputData) {
