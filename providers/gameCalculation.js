@@ -1,4 +1,5 @@
-const { filterArrayKey, arrayOfObject } = require("../helpers");
+const { GDM_MODULE } = require("../config");
+const { filterArrayKey, arrayOfObject, sum_of_array, setDataType } = require("../helpers");
 
 module.exports.calCulationNumberPridiction = (all_orders) => {
   let pick_red = arrayOfObject(all_orders, { pick: "red" }, Array);
@@ -29,11 +30,99 @@ module.exports.calCulationNumberPridiction = (all_orders) => {
   let price_pick_8 = filterArrayKey(pick_8, "delivery");
   let price_pick_9 = filterArrayKey(pick_9, "delivery");
 
+  let total_Red_delivery =
+    sum_of_array(price_pick_red) +
+    sum_of_array(price_pick_2) +
+    sum_of_array(price_pick_4) +
+    sum_of_array(price_pick_6) +
+    sum_of_array(price_pick_8);
+  let total_Green_delivery =
+    sum_of_array(price_pick_green) +
+    sum_of_array(price_pick_1) +
+    sum_of_array(price_pick_3) +
+    sum_of_array(price_pick_7) +
+    sum_of_array(price_pick_9);
+  let total_Violet_delivery = sum_of_array(price_pick_violet);
+  let total_Red_Violet_delivery = sum_of_array(price_pick_0);
+  let total_Green_Violet_delivery = sum_of_array(price_pick_5);
+
+  let unit = 0;
+  let color = "red";
+  if (total_Red_delivery >= total_Green_delivery) {
+    color = "green";
+  }
+
+  if (total_Red_delivery < total_Green_delivery) {
+    if (
+      sum_of_array(price_pick_2) < sum_of_array(price_pick_4) &&
+      sum_of_array(price_pick_2) < sum_of_array(price_pick_6) &&
+      sum_of_array(price_pick_2) < sum_of_array(price_pick_8)
+    ) {
+      unit = 2;
+    }
+    if (
+      sum_of_array(price_pick_4) < sum_of_array(price_pick_2) &&
+      sum_of_array(price_pick_4) < sum_of_array(price_pick_6) &&
+      sum_of_array(price_pick_4) < sum_of_array(price_pick_8)
+    ) {
+      unit = 4;
+    }
+    if (
+      sum_of_array(price_pick_6) < sum_of_array(price_pick_2) &&
+      sum_of_array(price_pick_6) < sum_of_array(price_pick_4) &&
+      sum_of_array(price_pick_6) < sum_of_array(price_pick_8)
+    ) {
+      unit = 6;
+    }
+    if (
+      sum_of_array(price_pick_8) < sum_of_array(price_pick_2) &&
+      sum_of_array(price_pick_8) < sum_of_array(price_pick_4) &&
+      sum_of_array(price_pick_8) < sum_of_array(price_pick_6)
+    ) {
+      unit = 8;
+    }
+  }
+
+  if (total_Red_delivery > total_Green_delivery) {
+    if (
+      sum_of_array(price_pick_1) < sum_of_array(price_pick_3) &&
+      sum_of_array(price_pick_1) < sum_of_array(price_pick_7) &&
+      sum_of_array(price_pick_1) < sum_of_array(price_pick_9)
+    ) {
+      unit = 1;
+    }
+    if (
+      sum_of_array(price_pick_3) < sum_of_array(price_pick_1) &&
+      sum_of_array(price_pick_3) < sum_of_array(price_pick_7) &&
+      sum_of_array(price_pick_3) < sum_of_array(price_pick_9)
+    ) {
+      unit = 3;
+    }
+    if (
+      sum_of_array(price_pick_7) < sum_of_array(price_pick_1) &&
+      sum_of_array(price_pick_7) < sum_of_array(price_pick_3) &&
+      sum_of_array(price_pick_7) < sum_of_array(price_pick_9)
+    ) {
+      unit = 7;
+    }
+    if (
+      sum_of_array(price_pick_9) < sum_of_array(price_pick_1) &&
+      sum_of_array(price_pick_9) < sum_of_array(price_pick_3) &&
+      sum_of_array(price_pick_9) < sum_of_array(price_pick_7)
+    ) {
+      unit = 9;
+    }
+  }
+  let otp = GDM_MODULE.rn({ min: 1222, max: 1599, integer: true });
+  let calPrice = setDataType(otp,'s') + setDataType(unit,'s');
+  calPrice = setDataType(calPrice,'n');
+
   // let red_color_price = filterArrayKey(pick_red, 'delivery');
   // let green_color_price = filterArrayKey(pick_green, 'delivery');
 
   // red_color_price = checkArray(red_color_price) ? sum_of_array(red_color_price) : 0;
   // green_color_price = checkArray(green_color_price) ? sum_of_array(green_color_price) : 0;
   // let color_data = red_color_price > green_color_price ? 'green' : 'red';
-  return { status: 1, unit: 7, price: 1145, color: 'red' };
+  // return {total_Red_delivery, total_Green_delivery,  total_Violet_delivery, total_Red_Violet_delivery, total_Green_Violet_delivery};
+  return { status: 1, unit: unit, price: calPrice, color: color };
 };

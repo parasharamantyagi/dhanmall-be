@@ -162,6 +162,8 @@ exports.setDataType = (value, type) => {
       return parseInt(value);
     case "int":
       return parseInt(value);
+    case "n":
+      return parseInt(value);
     case "string":
       return value.toString();
     case "s":
