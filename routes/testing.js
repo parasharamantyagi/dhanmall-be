@@ -1,5 +1,7 @@
 var express = require("express");
 const { MyChildren, updateMyChildren } = require("../models/MyChildrens");
+const { calCulationNumberPridiction } = require("../providers/gameCalculation");
+const { gameMockData } = require("../providers/mockData");
 
 var router = express.Router();
 
@@ -7,6 +9,7 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
+    check = calCulationNumberPridiction(gameMockData);
     // let check = await Author.updateOne({_id: '6509dcbd7742fed0a17dc783'}, { $inc: { money: 50 } });
     return res.status(200).json(check);
   } catch (err) {
