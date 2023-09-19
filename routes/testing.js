@@ -1,5 +1,4 @@
 var express = require("express");
-const { Book } = require("../models/module.Book");
 const { MyChildren, updateMyChildren } = require("../models/MyChildrens");
 
 var router = express.Router();
@@ -7,15 +6,9 @@ var router = express.Router();
 /* GET home page. */
 router.get("/", async function (req, res, next) {
   try {
-    // let data = await PostTest.findOne().populate('User').exec();
-    // let check = await MyChildren.findOne().exec();
-    updateMyChildren("6507ec7897a0dcd0f5038ccc", { first_reward: 0 });
-
-    // Book.create({
-    //     title: "book1",
-    //     author: '6506f725106636f1b6b91a7c'
-    // });
-    res.status(200).json('check');
+    let check = true;
+    // let check = await Author.updateOne({_id: '6509dcbd7742fed0a17dc783'}, { $inc: { money: 50 } });
+    return res.status(200).json(check);
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, msg: err.message });

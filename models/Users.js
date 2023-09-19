@@ -136,23 +136,19 @@ module.exports.getUserForCommision = async function (id) {
   return return_data;
 };
 
-module.exports.plusUserMoney = async function (
-  id,
-  { money },
-  type = "payment"
-) {
-  let user = await User.findOne({ _id: id }).select("money commission");
+module.exports.plusUserMoney = async function (id, { money }, type = "payment") {
+  // let user = await User.findOne({ _id: id }).select("money commission");
   let object = {
-    money: setDataType(user.money, "f") + setDataType(money, "f"),
+    money: setDataType(money, "f"),
   };
   if (type === "reward") {
-    object.commission =
-      setDataType(user.commission, "f") + setDataType(money, "f");
+    object.commission = setDataType(money, "f");
   }
-  await User.findOneAndUpdate({ _id: id }, object, {
-    new: true,
-  });
-  return true;
+  // await User.findOneAndUpdate({ _id: id }, object, {
+  //   new: true,
+  // });
+  result = await User.updateOne({ _id: id }, { $inc: object });
+  return result;
 };
 
 module.exports.minusUserMoney = async function (id, { money }) {
