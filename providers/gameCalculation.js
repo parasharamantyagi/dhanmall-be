@@ -4,6 +4,7 @@ const {
   arrayOfObject,
   sum_of_array,
   setDataType,
+  array_to_str,
 } = require("../helpers");
 const { colors2 } = require("./colors");
 
@@ -108,7 +109,11 @@ module.exports.calCulationNumberPridiction = (all_orders) => {
     ) {
       unit = 9;
     }
+  } else {
+
   }
+
+  
   let otp = GDM_MODULE.rn({ min: 1222, max: 1599, integer: true });
   let calPrice = setDataType(otp, "s") + setDataType(unit, "s");
   calPrice = setDataType(calPrice, "n");
@@ -127,7 +132,7 @@ module.exports.calCulationNumberPridiction = (all_orders) => {
     status: 1,
     unit: unit,
     price: calPrice,
-    color: color,
+    color: array_to_str(color),
     // data: {
     //   color: {
     //     total_Red_delivery,

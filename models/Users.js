@@ -42,6 +42,10 @@ const UserSchema = new mongoose.Schema({
     type: Float,
     default: 0,
   },
+  contribution: {
+    type: Float,
+    default: 0,
+  },
   recommendation_code: {
     type: String,
     required: true,
@@ -136,7 +140,11 @@ module.exports.getUserForCommision = async function (id) {
   return return_data;
 };
 
-module.exports.plusUserMoney = async function (id, { money }, type = "payment") {
+module.exports.plusUserMoney = async function (
+  id,
+  { money },
+  type = "payment"
+) {
   // let user = await User.findOne({ _id: id }).select("money commission");
   let object = {
     money: setDataType(money, "f"),
