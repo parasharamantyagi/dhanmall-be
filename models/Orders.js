@@ -75,6 +75,10 @@ const orderSchema = new mongoose.Schema({
     default: null,
     // required: true,
   },
+  details: {
+    type: Object,
+    default: {},
+  }
 });
 // module.exports = mongoose.model("orders", orderSchema);
 

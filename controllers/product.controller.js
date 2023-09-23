@@ -116,6 +116,10 @@ exports.saveOrders = async (req, res, next) => {
       inputData.project_id = 1;
       inputData.goods_id = 11;
       inputData.price = gameDetail.price;
+      inputData.details = {
+        game_period: gameDetail.period,
+        game_date: gameDetail.date,
+      };
       inputData.fee = int_toFixed(inputData.fee);
       let order = await saveOrder(inputData);
       saveOrderCalculation(
