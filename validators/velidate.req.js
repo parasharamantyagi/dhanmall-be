@@ -19,3 +19,15 @@ exports.verifyNumberValidator = [
   // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
   body("mobile").exists().withMessage("Mobile number is required").isLength({ min: 10 }).withMessage("Please provide a valid mobile number"),
 ];
+
+exports.saveBankCardValidator = [
+  // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
+  body("actual_name").exists().isLength({ min: 1 }).withMessage("Actual name is required"),
+  body("ifsc_code").exists().isLength({ min: 1 }).withMessage("Ifsc code is required"),
+  body("bank_name").exists().isLength({ min: 1 }).withMessage("Bank name is required"),
+  body("bank_account").exists().isLength({ min: 1 }).withMessage("Bank account number is required"),
+  body("state").exists().isLength({ min: 1 }).withMessage("State number is required"),
+  body("city").exists().isLength({ min: 1 }).withMessage("City number is required"),
+  body("address").exists().isLength({ min: 1 }).withMessage("Address number is required"),
+  body("email").exists().isLength({ min: 1 }).withMessage("Email number is required"),
+];
