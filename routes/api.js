@@ -12,6 +12,7 @@ const { getRecharge, addRecharge, getBankCard, addBankCard } = require('../contr
 const router = express.Router();
 
 /* GET home page. */
+
 router.get('/', indexWelcome);
 router.post('/register', [registerValidator, isValid], registerReq);
 router.post('/login', [loginValidator, isValid], loginReq);
