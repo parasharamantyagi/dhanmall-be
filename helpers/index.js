@@ -156,6 +156,7 @@ exports.sum_of_array = (arr) => {
   }, 0);
 };
 
+
 exports.setDataType = (value, type) => {
   switch (type) {
     case "number":
