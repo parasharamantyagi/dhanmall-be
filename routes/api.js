@@ -6,7 +6,7 @@ const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
 const { myProfile, dashboardScreen, getOrders, saveOrders, gameNow, myChildren, GameHistory } = require('../controllers/product.controller');
 const { gameInterval } = require('../controllers/cron.job.controller');
 const { addPayment } = require('../controllers/payment.controller'); // // all for payment related
-const { getRecharge, addRecharge } = require('../controllers/recharge.controller');
+const { getRecharge, addRecharge, getBankCard, addBankCard } = require('../controllers/recharge.controller');
 
 
 const router = express.Router();
@@ -30,6 +30,7 @@ router.get('/game-history', isUserValid, GameHistory);
 
 router.post('/payment', isUserValid, addPayment);
 router.route('/recharge').get(isUserValid, getRecharge).post(isUserValid, addRecharge);
+router.route('/bank-card').get(isUserValid, getBankCard).post(isUserValid, addBankCard);
 
 
 

@@ -13,7 +13,7 @@ const router = express.Router();
 /* GET home page. */
 router.post("/", async (req, res, next) => {
   try {
-    const inputData = objectFormat(req.body, ["mobile"]);
+    const inputData = objectFormat(req.body, ["mobile", {type: 'registration'}]);
     let otp = GDM_MODULE.rn({ min: 111111, max: 999999, integer: true });
     client.messages
       .create({
@@ -29,6 +29,7 @@ router.post("/", async (req, res, next) => {
       });
     saveOtpVerification({
       mobile: inputData.mobile,
+      type: inputData.type,
       verification_code: otp,
       date: currentDate(),
     });

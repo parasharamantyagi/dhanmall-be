@@ -24,7 +24,7 @@ exports.registerReq = async (req, res, next) => {
       return res
         .status(400)
         .send({ status: 0, message: "This mobile is already use" });
-    let otpCheck = await checkOtpVerification(inputData.mobile,inputData.verification_code);
+    let otpCheck = await checkOtpVerification({mobile: inputData.mobile, type: 'registration'}, inputData.verification_code);
     if(!check(otpCheck)){
       return res
         .status(200)
