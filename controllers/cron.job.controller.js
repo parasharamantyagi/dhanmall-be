@@ -27,7 +27,7 @@ exports.gameInterval = async (req, res, next) => {
     }
     let periodNu = checkObj(gameId) ? gameId.period + 1 : 100000001;
     saveGame({ period: periodNu, project_id: 1, price: 0 ,date: currentDate()});
-    return res.status(200).json(all_orders);
+    return res.status(200).json(true);
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

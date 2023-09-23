@@ -4,4 +4,6 @@ module.exports = {
   my_profile: "My profile",
   MY_ORDERS: "My orders",
   PAYMENT_SUCCESS: "Payment created successfully",
+  GET_RECHARGE: "Your recharge list",
+  ADD_RECHARGE: "Your recharge req submitted successfully",
 };
