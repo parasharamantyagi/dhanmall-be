@@ -3,6 +3,12 @@
 var moment = require("moment-timezone");
 const my_date_format = "YYYY-MM-DD HH:mm:00";
 
+exports.todayDate = () => {
+  // 👈 return only current date and time
+  // 'YYYY-MM-DD - HH:mm:00'
+  return moment().tz("Asia/Kolkata").format("YYYYMMDD");
+};
+
 exports.currentDate = () => {
   // 👈 return only current date and time
   // 'YYYY-MM-DD - HH:mm:00'
@@ -156,7 +162,6 @@ exports.sum_of_array = (arr) => {
   }, 0);
 };
 
-
 exports.setDataType = (value, type) => {
   switch (type) {
     case "number":
@@ -177,6 +182,8 @@ exports.setDataType = (value, type) => {
       return value.toUpperCase();
     case "l":
       return value.toLowerCase();
+    case "padStart":
+      return String(value).padStart(3, "0");
     default:
       return value;
   }
@@ -189,4 +196,10 @@ exports.gameNowTime = () => {
   // Calculate the current second within the 180-second cycle
   const secondInCycle = currentSeconds % 180;
   return 180 - secondInCycle;
+};
+
+exports.todayCurrentMinutes = () => {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  return this.setDataType(currentMinutes/3,'int');
 };

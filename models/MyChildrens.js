@@ -58,7 +58,6 @@ module.exports.updateMyChildren = async function (id, inputData) {
         new: true, // Return the modified document as the result
       }
     );
-    // console.log(okkkk);
     return result;
   } catch (error) {
     return error;

@@ -7,7 +7,7 @@ const gameSchema = new mongoose.Schema({
     default: 1,
   },
   period: {
-    type: Number,
+    type: String,
     required: true,
   },
   price: {
@@ -20,7 +20,11 @@ const gameSchema = new mongoose.Schema({
   },
   date: {
     type: Number,
-    default: currentDate(),
+    default: 0,
+  },
+  begintime: {
+    type: Number,
+    default: 0,
   },
   unit: {
     type: Number,
@@ -36,42 +40,48 @@ const gameSchema = new mongoose.Schema({
   },
 });
 
-const Game = (module.exports = mongoose.model('Game', gameSchema));
+const Game = (module.exports = mongoose.model("Game", gameSchema));
 module.exports = mongoose.model("Game", gameSchema);
 
-module.exports.gameById = async function (id = '') {
+module.exports.gameById = async function (id = "") {
   if (check(id)) {
-    return await Game.findOne({ _id: id }).exec().then((result) => {
-      return JSON.parse(JSON.stringify(result));
-    });
+    return await Game.findOne({ _id: id })
+      .exec()
+      .then((result) => {
+        return JSON.parse(JSON.stringify(result));
+      });
   } else {
-    return await Game.findOne({}, {}, { sort: { _id: -1 } }).exec().then((result) => {
-      return JSON.parse(JSON.stringify(result));
-    });
+    return await Game.findOne({}, {}, { sort: { _id: -1 } })
+      .exec()
+      .then((result) => {
+        return JSON.parse(JSON.stringify(result));
+      });
   }
-}
+};
 
 module.exports.gameOfDashboard = async function (input) {
-  let limit = checkObj(input, 'limit') ? input.limit : 10;
-  let skip = checkObj(input, 'page') ? (input.page - 1) * 10 : 0;
-  return await Game.find({ status: 1 }).skip(skip).limit(limit).sort({ _id: -1 });
-}
+  let limit = checkObj(input, "limit") ? input.limit : 10;
+  let skip = checkObj(input, "page") ? (input.page - 1) * 10 : 0;
+  return await Game.find({ status: 1 })
+    .skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 });
+};
 
 module.exports.countOfGame = async function () {
   return await Game.countDocuments();
-}
+};
 
 module.exports.updateGame = async function (input, update) {
   let data = await Game.findOneAndUpdate({ _id: input }, update, {
     new: true,
-    upsert: true
+    upsert: true,
   });
   return data;
-}
+};
 
 module.exports.saveGame = async function (input) {
   const res = new Game(input);
   await res.save();
   return true;
-}
-
+};

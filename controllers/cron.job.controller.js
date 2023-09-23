@@ -7,6 +7,7 @@ const {
   checkArray,
   merge_object,
   setDataType,
+  todayDate,
 } = require("../helpers");
 const { saveGame, gameById, updateGame } = require("../models/Games");
 const { getOrderCalculation } = require("../models/OrderCalculation");
@@ -25,8 +26,16 @@ exports.gameInterval = async (req, res, next) => {
         await updateOrder(setDataType(order._id,'s'),merge_object(calResult,{amount: 10}));
       }
     }
-    let periodNu = checkObj(gameId) ? gameId.period + 1 : 100000001;
-    saveGame({ period: periodNu, project_id: 1, price: 0 ,date: currentDate()});
+    let period = setDataType(1,'padStart');
+    if(checkObj(gameId)){
+      if(gameId.period && setDataType(gameId.period,'int') < 480){
+        period = setDataType(setDataType(gameId.period,'int') + 1,'padStart');
+      }else{
+        period = setDataType(1,'padStart');
+      }
+    }
+    saveGame({ period: period, project_id: 1, price: 0 , begintime: currentDate() , date: todayDate()});
+
     return res.status(200).json(true);
   } catch (e) {
     return res.json({ status: 0, message: e.message });

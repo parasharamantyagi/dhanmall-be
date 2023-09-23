@@ -55,6 +55,6 @@ module.exports.saveOtpVerification = async function (input) {
       OtpVerification.create(input);
     }
   } catch (error) {
-    console.error(error);
+    return false;
   }
 };
