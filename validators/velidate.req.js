@@ -9,6 +9,11 @@ exports.registerValidator = [
   body("recommendation_code").exists().withMessage("Recommendation code is required"),
 ];
 
+exports.otpVerifyValidator = [
+  // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
+  body("mobile").exists().isLength({ min: 12 }).withMessage("Provide valid mobile"),
+];
+
 exports.loginValidator = [
   // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
   body("mobile").exists().isLength({ min: 12 }).withMessage("Provide valid mobile"),

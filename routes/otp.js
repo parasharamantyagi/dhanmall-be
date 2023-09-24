@@ -1,19 +1,26 @@
 const express = require("express");
-const { objectFormat } = require("../helpers");
+const { objectFormat, checkObj, currentDate } = require("../helpers");
 const {
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   GDM_MODULE,
 } = require("../config");
 const { saveOtpVerification } = require("../models/OtpVerifications");
-const { currentDate } = require("../helpers");
+const { otpVerifyValidator } = require("../validators/velidate.req");
+const { isValid } = require("../validators");
 const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const router = express.Router();
+const userModel = require("./../models/Users");
 
 /* GET home page. */
-router.post("/", async (req, res, next) => {
+router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
   try {
     const inputData = objectFormat(req.body, ["mobile", {type: 'registration'}]);
+    let user = await userModel.findOne({ mobile: inputData.mobile }, ["mobile"]);
+    if (checkObj(user))
+      return res
+        .status(200)
+        .send({ status: 0, message: "This mobile is already use" });
     let otp = GDM_MODULE.rn({ min: 111111, max: 999999, integer: true });
     client.messages
       .create({

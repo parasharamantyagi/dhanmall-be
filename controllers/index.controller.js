@@ -22,7 +22,7 @@ exports.registerReq = async (req, res, next) => {
     let user = await userModel.findOne({ mobile: inputData.mobile }, ["mobile"]);
     if (checkObj(user))
       return res
-        .status(400)
+        .status(200)
         .send({ status: 0, message: "This mobile is already use" });
     let otpCheck = await checkOtpVerification({mobile: inputData.mobile, type: 'registration'}, inputData.verification_code);
     if(!check(otpCheck)){
@@ -56,7 +56,7 @@ exports.loginReq = async (req, res, next) => {
     ]);
     if (!checkObj(user))
       return res
-        .status(400)
+        .status(200)
         .send({ status: 0, message: "This is invalid mobile" });
     if (dencrypted(user.password) === inputData.password) {
       return res.status(200).json({
