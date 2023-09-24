@@ -72,7 +72,7 @@ const User = (module.exports = mongoose.model("User", UserSchema));
 module.exports.userById = async function (_id, field = "") {
   let select = check(field)
     ? field
-    : "user_id nickname email mobile money commission interest promotion_code first_payment";
+    : "user_id nickname email mobile money commission interest contribution promotion_code first_payment";
   return await User.findOne(
     { _id: _id }
     // { password: 0, verification_code: 0 }
@@ -140,14 +140,11 @@ module.exports.getUserForCommision = async function (id) {
   return return_data;
 };
 
-module.exports.plusUserMoney = async function (
-  id,
-  { money },
-  type = "payment"
-) {
+module.exports.plusUserMoney = async function (id, { money }, type = "payment") {
   // let user = await User.findOne({ _id: id }).select("money commission");
   let object = {
     money: setDataType(money, "f"),
+    contribution: setDataType(money, "f"),
   };
   if (type === "reward") {
     object.commission = setDataType(money, "f");
