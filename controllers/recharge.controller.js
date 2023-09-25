@@ -4,6 +4,7 @@ const {
   saveBankCardModule,
   getBankCardModule,
   getOneBankCardModule,
+  getBankCardDetailModule,
 } = require("../models/BankCards");
 const { checkOtpVerification } = require("../models/OtpVerifications");
 const { saveRecharge, getRecharge } = require("../models/Recharges");
@@ -97,6 +98,22 @@ exports.addBankCard = async (req, res, next) => {
       status: 1,
       message: MESSAGE.ADD_RECHARGE,
       data: {},
+    });
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.getBankCardById = async (req, res, next) => {
+  try {
+    let bankId = req.params._id;
+    let getBankDetail = await getBankCardDetailModule({
+      _id: bankId,
+    });
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.GET_BANK_CARD_ID,
+      data: getBankDetail,
     });
   } catch (e) {
     return res.json({ status: 0, message: e.message });

@@ -8,6 +8,7 @@ module.exports = {
   ADD_RECHARGE: "Your recharge req submitted successfully",
   ADD_BANK_CARD: "Your bank card save successfully",
   GET_BANK_CARD: "Your bank card list",
+  GET_BANK_CARD_ID: "Your bank card detail",
   BANK_CARD_EXIT: "This bank account are already linked to another account",
   INVALID_OTP: "This is invalid otp",
   MOBILE_IS_USE: "This mobile is already use",

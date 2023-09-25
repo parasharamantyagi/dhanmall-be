@@ -67,6 +67,12 @@ module.exports.getOneBankCardModule = async function (input) {
     .exec();
 };
 
+module.exports.getBankCardDetailModule = async function (input) {
+  return await BankCard.findOne(input, {}, { sort: { date: -1 } })
+    .populate({ path: "user_id", select: "nickname mobile" })
+    .exec();
+};
+
 module.exports.saveBankCardModule = async function (input) {
   const res = new BankCard(input);
   let result = await res.save();
