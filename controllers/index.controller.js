@@ -1,3 +1,4 @@
+const { MESSAGE } = require("../config");
 const { checkObj, objectFormat, check } = require("../helpers");
 const { encrypted, dencrypted, setJWT, promotionCode } = require("../helpers/crypto");
 const { checkOtpVerification } = require("../models/OtpVerifications");
@@ -23,12 +24,12 @@ exports.registerReq = async (req, res, next) => {
     if (checkObj(user))
       return res
         .status(200)
-        .send({ status: 0, message: "This mobile is already use" });
+        .send({ status: 0,type: 'mobile', message: MESSAGE.MOBILE_IS_USE });
     let otpCheck = await checkOtpVerification({mobile: inputData.mobile, type: 'registration'}, inputData.verification_code);
     if(!check(otpCheck)){
       return res
         .status(200)
-        .send({ status: 0, message: "This is invalid otp" });
+        .send({ status: 0,type: 'verification_code', message: MESSAGE.INVALID_OTP });
     }
     inputData.password = encrypted(inputData.password);
     inputData.promotion_code = promotionCode();

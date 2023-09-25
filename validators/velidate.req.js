@@ -6,7 +6,7 @@ exports.registerValidator = [
   body("password").exists().withMessage("Password is required").isString().withMessage("Password should be string")
     .isLength({ min: 5 }).withMessage("Password should be at least 5 characters"),
   body("verification_code").isLength({ min: 6 }).exists().withMessage("Verification code is required"),
-  body("recommendation_code").exists().withMessage("Recommendation code is required"),
+  // body("recommendation_code").exists().withMessage("Recommendation code is required"),
 ];
 
 exports.otpVerifyValidator = [
