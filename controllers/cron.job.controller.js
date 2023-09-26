@@ -11,7 +11,7 @@ const {
   check,
 } = require("../helpers");
 const { saveGame, gameById, updateGame } = require("../models/Games");
-const { getOrderCalculation } = require("../models/OrderCalculation");
+const { getOrderCalculation, deleteOrderCalculation } = require("../models/OrderCalculation");
 const { orderByGameId, updateOrder } = require("../models/Orders");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
@@ -54,6 +54,7 @@ exports.gameInterval = async (req, res, next) => {
           )
         );
       }
+      deleteOrderCalculation(setDataType(gameId._id, "s"));
     }
     let period = setDataType(1,'padStart');
     if(checkObj(gameId)){

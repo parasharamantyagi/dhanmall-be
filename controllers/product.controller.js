@@ -64,6 +64,9 @@ exports.dashboardScreen = async (req, res, next) => {
 exports.gameNow = async (req, res, next) => {
   try {
     let result = await gameById();
+    result.ammount = await userById(req.user.user_id,'money').then(res => {
+      return res.money;
+    });
     result.time = gameNowTime();
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
