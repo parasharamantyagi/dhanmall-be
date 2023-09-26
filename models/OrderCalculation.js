@@ -95,3 +95,16 @@ module.exports.getOrderCalculation = async function (game_id) {
 module.exports.deleteOrderCalculation = async function (game_id) {
   return await OrderCalculation.deleteMany({ game_id: game_id }).exec();
 }
+
+module.exports.updateOrderCalculation = async function (_id) {
+  // details: {
+  //   total_value: String,
+  //   total_count: Number,
+  // }
+  return await OrderCalculation.updateOne({ _id: _id }, { $inc: {'details.total_count': 10} });
+
+  // return await OrderCalculation.findOneAndUpdate(
+  //   { _id: _id },
+  //   { $set: { 'details.total_value': 'object value handle','details.total_count': 12 } },
+  //   { new: true,upsert: true});
+}

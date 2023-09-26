@@ -5,6 +5,7 @@ const {
   setDataType,
   todayDate,
 } = require("../helpers");
+const { saveGameOrderCalculation } = require("../models/GameOrderCalculation");
 const { saveGame, gameById, updateGame } = require("../models/Games");
 const { getOrderCalculation, deleteOrderCalculation } = require("../models/OrderCalculation");
 const { orderByGameId, updateOrder } = require("../models/Orders");
@@ -60,7 +61,8 @@ exports.gameInterval = async (req, res, next) => {
         period = setDataType(1,'padStart');
       }
     }
-    saveGame({ period: period, project_id: 1, price: 0 , begintime: currentDate() , date: todayDate()});
+    let newGame = await saveGame({ period: period, project_id: 1, price: 0 , begintime: currentDate() , date: todayDate()});
+    saveGameOrderCalculation({game_id: setDataType(newGame._id,"s"),date: currentDate()});
     return res.status(200).json(true);
   } catch (e) {
     return res.json({ status: 0, message: e.message });

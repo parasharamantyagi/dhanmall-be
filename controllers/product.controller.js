@@ -20,6 +20,7 @@ const { userById, getChildren, minusUserMoney } = require("../models/Users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
 const GetGame = require("../models/Games");
 const { gameHistoryTrend } = require("../providers/gameCalculation");
+const { updateGameOrderCalculation } = require("../models/GameOrderCalculation");
 
 exports.myProfile = async (req, res, next) => {
   try {
@@ -130,6 +131,7 @@ exports.saveOrders = async (req, res, next) => {
       };
       inputData.fee = int_toFixed(inputData.fee);
       let order = await saveOrder(inputData);
+      updateGameOrderCalculation(inputData.game_id, inputData);
       saveOrderCalculation(
         merge_object({ order_id: array_to_str(order._id) }, inputData)
       );

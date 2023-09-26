@@ -83,5 +83,5 @@ module.exports.updateGame = async function (input, update) {
 module.exports.saveGame = async function (input) {
   const res = new Game(input);
   await res.save();
-  return true;
+  return res;
 };

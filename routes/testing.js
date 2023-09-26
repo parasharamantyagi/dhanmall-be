@@ -3,6 +3,7 @@ const { MyChildren, updateMyChildren } = require("../models/MyChildrens");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 const { gameMockData, gameMockData2 } = require("../providers/mockData");
 const { gameById } = require("../models/Games");
+const { getOrderCalculation, updateOrderCalculation } = require("../models/OrderCalculation");
 
 var router = express.Router();
 
@@ -10,7 +11,8 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
-    // check = await gameById(0);
+    await updateOrderCalculation("6513123676b15059b25275c3");
+    // check = await getOrderCalculationById("6513123676b15059b25275c3");
     // let check = await Author.updateOne({_id: '6509dcbd7742fed0a17dc783'}, { $inc: { money: 50 } });
     return res.status(200).json(check);
   } catch (err) {
