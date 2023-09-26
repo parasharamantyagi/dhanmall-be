@@ -1,14 +1,9 @@
 const {
   currentDate,
   checkObj,
-  filterArrayKey,
-  arrayOfObject,
-  sum_of_array,
-  checkArray,
   merge_object,
   setDataType,
   todayDate,
-  check,
 } = require("../helpers");
 const { saveGame, gameById, updateGame } = require("../models/Games");
 const { getOrderCalculation, deleteOrderCalculation } = require("../models/OrderCalculation");
@@ -17,7 +12,8 @@ const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
 exports.gameInterval = async (req, res, next) => {
   try {
-    let gameId = await gameById();
+    let gameId = await gameById(0);
+    let lastGameId = await gameById(1);
     let all_orders = [];
     let order_cal = { amount: 0 };
     if (checkObj(gameId)) {
@@ -54,7 +50,7 @@ exports.gameInterval = async (req, res, next) => {
           )
         );
       }
-      deleteOrderCalculation(setDataType(gameId._id, "s"));
+      deleteOrderCalculation(setDataType(lastGameId._id, "s"));
     }
     let period = setDataType(1,'padStart');
     if(checkObj(gameId)){

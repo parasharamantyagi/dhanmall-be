@@ -7,14 +7,19 @@ const {
   merge_object,
   array_to_str,
   gameNowTime,
+  setDataType,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/Games");
 const { getMyChildren } = require("../models/MyChildrens");
-const { saveOrderCalculation } = require("../models/OrderCalculation");
+const {
+  saveOrderCalculation,
+  getOrderCalculation,
+} = require("../models/OrderCalculation");
 const { saveOrder, orderOfUser } = require("../models/Orders");
 const { userById, getChildren, minusUserMoney } = require("../models/Users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
 const GetGame = require("../models/Games");
+const { gameHistoryTrend } = require("../providers/gameCalculation");
 
 exports.myProfile = async (req, res, next) => {
   try {
@@ -63,8 +68,8 @@ exports.dashboardScreen = async (req, res, next) => {
 
 exports.gameNow = async (req, res, next) => {
   try {
-    let result = await gameById();
-    result.ammount = await userById(req.user.user_id,'money').then(res => {
+    let result = await gameById(0);
+    result.ammount = await userById(req.user.user_id, "money").then((res) => {
       return res.money;
     });
     result.time = gameNowTime();
@@ -139,13 +144,18 @@ exports.saveOrders = async (req, res, next) => {
 
 exports.GameHistory = async (req, res, next) => {
   try {
-    let result1 = await GetGame.findOne({}, {}, { sort: { _id: -1 } });
-    let result2 = await GetGame.findOne({}, {}, { sort: { _id: -1 }, skip: 1 });
-
-    // GetGame.findOne();
-    // let result2 = await gameById({sort: -2});
-    // result.time = gameNowTime();
-    return res.status(200).json({ result1: result1, result2: result2 });
+    let lastGameId = await gameById(1);
+    let all_orders = await getOrderCalculation(
+      setDataType(lastGameId._id, "s")
+    );
+    let resultResponse = merge_object(lastGameId, {
+      gameHistory: gameHistoryTrend(all_orders),
+    });
+    return res.status(200).json({
+      status: 1,
+      message: "Previews game history",
+      data: resultResponse,
+    });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

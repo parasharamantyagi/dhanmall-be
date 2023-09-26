@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { checkObj, currentDate, check } = require("../helpers");
+const { checkObj, currentDate, check, checkIsString } = require("../helpers");
 
 const gameSchema = new mongoose.Schema({
   project_id: {
@@ -44,14 +44,14 @@ const Game = (module.exports = mongoose.model("Game", gameSchema));
 module.exports = mongoose.model("Game", gameSchema);
 
 module.exports.gameById = async function (id = "") {
-  if (check(id)) {
+  if (check(id) && checkIsString(id)) {
     return await Game.findOne({ _id: id })
       .exec()
       .then((result) => {
         return JSON.parse(JSON.stringify(result));
       });
   } else {
-    return await Game.findOne({}, {}, { sort: { _id: -1 } })
+    return await Game.findOne().sort({ _id: -1 }).skip(id)
       .exec()
       .then((result) => {
         return JSON.parse(JSON.stringify(result));

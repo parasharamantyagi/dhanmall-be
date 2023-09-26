@@ -27,8 +27,6 @@ router.post('/dashboard', isUserValid, dashboardScreen);
 router.get('/game-now', isUserValid, gameNow);
 router.route('/order').get(isUserValid, getOrders).post(isUserValid, saveOrders);
 
-router.get('/game-history', isUserValid, GameHistory);
-
 router.post('/payment', isUserValid, addPayment);
 router.route('/recharge').get(isUserValid, getRecharge).post(isUserValid, addRecharge);
 router.route('/bank-card').get(isUserValid, getBankCard).post([isUserValid,saveBankCardValidator,isValid], addBankCard);
@@ -38,7 +36,7 @@ router.route('/bank-card/:_id').get(isUserValid, getBankCardById);
 router.post('/verify-number', [verifyNumberValidator, isValid], verifyNumber);
 router.get('/home-screen', isUserValid, homeScreen);
 
-
+router.get('/game-history', isUserValid, GameHistory);
 router.get('/game-interval', gameInterval);
 
 module.exports = router;
