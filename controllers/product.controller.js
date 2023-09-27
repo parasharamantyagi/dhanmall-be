@@ -116,7 +116,7 @@ exports.saveOrders = async (req, res, next) => {
     } else {
       minusUserMoney(inputData.user_id, { money: invest_money });
       invest_money =
-        checkObj(inputData, "type") && inputData.type === "2"
+        checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2
           ? invest_money * 9
           : invest_money;
       // inputData.invest_money = invest_money;

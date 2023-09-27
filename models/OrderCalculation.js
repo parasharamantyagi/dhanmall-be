@@ -92,9 +92,7 @@ module.exports.getOrderCalculation = async function (game_id) {
   return await OrderCalculation.find({ game_id: game_id }).exec();
 }
 
-module.exports.deleteOrderCalculation = async function (game_id) {
-  return await OrderCalculation.deleteMany({ game_id: game_id }).exec();
-}
+
 
 module.exports.updateOrderCalculation = async function (_id) {
   // details: {

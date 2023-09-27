@@ -141,6 +141,10 @@ exports.array_to_str = (obj) => {
   return obj.toString();
 };
 
+exports.str_to_array = (obj) => {
+  return obj.split(',');
+};
+
 exports.int_toFixed = (value) => {
   return parseFloat(value).toFixed(2);
 };
