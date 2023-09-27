@@ -1,11 +1,5 @@
 var express = require("express");
-const { MyChildren, updateMyChildren } = require("../models/MyChildrens");
-const { calCulationNumberPridiction } = require("../providers/gameCalculation");
-const { gameMockData, gameMockData2 } = require("../providers/mockData");
-const { gameById } = require("../models/Games");
-const { getGameOrderCalculation, getGameOrderCalculationByGameId } = require("../models/GameOrderCalculation");
-const { orderByGameId } = require("../models/Orders");
-const { setDataType } = require("../helpers");
+const AWS = require("aws-sdk");
 
 var router = express.Router();
 
@@ -13,12 +7,30 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
-    // check = await getGameOrderCalculation();
-    let order = await getGameOrderCalculationByGameId("6513e39676afdb3f5766f611");
-    // await updateOrderCalculation("6513123676b15059b25275c3");
-    // check = await getOrderCalculationById("6513123676b15059b25275c3");
-    // let check = await Author.updateOne({_id: '6509dcbd7742fed0a17dc783'}, { $inc: { money: 50 } });
-    return res.status(200).json(order);
+    // AWS.config.update({
+    //   accessKeyId: "AKIA4K7KVDPD255KUF6I",
+    //   secretAccessKey: "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",
+    //   region: "us-east-1",
+    // });
+    // let message = `Hello gmt check otp`;
+
+    // var publishTextPromise = new AWS.SNS()
+    //   .publish({
+    //     Message: message,
+    //     Subject: "Trip Status",
+    //     PhoneNumber: "+916239463839",
+    //   })
+    //   .promise();
+    // publishTextPromise
+    //   .then(function (data) {
+    //     console.log("data", data);
+    //     return true;
+    //   })
+    //   .catch(function (err) {
+    //     console.log("err", err);
+    //     return err;
+    //   });
+    return res.status(200).json(check);
   } catch (err) {
     res.status(500).json({ success: false, msg: err.message });
   }
