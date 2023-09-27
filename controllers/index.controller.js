@@ -95,7 +95,7 @@ exports.loginReq = async (req, res, next) => {
     } else {
       return res
         .status(200)
-        .json({ status: 1, message: "Password not matched!" });
+        .json({ status: 0, message: "Password not matched!" });
     }
   } catch (e) {
     return res.json({ status: 0, message: e.message });
