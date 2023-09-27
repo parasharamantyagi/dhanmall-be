@@ -51,7 +51,9 @@ exports.registerReq = async (req, res, next) => {
 exports.loginReq = async (req, res, next) => {
   try {
     const inputData = objectFormat(req.body, ["mobile", "password"]);
-    let user = await userModel.findOne({ mobile: inputData.mobile }, [
+    let user = {};
+    let roll = inputData.mobile === '+919191919191' ? 2 : 1;
+    user = await userModel.findOne({ mobile: inputData.mobile }, [
       "mobile",
       "password",
     ]);
@@ -63,6 +65,7 @@ exports.loginReq = async (req, res, next) => {
       return res.status(200).json({
         status: 1,
         message: "User login successfully",
+        role_id: roll,
         token: setJWT({
           user_id: user._id,
         }),
