@@ -11,6 +11,7 @@ const { isValid } = require("../validators");
 const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const router = express.Router();
 const userModel = require("./../models/Users");
+const { awsSendSms } = require("../providers/sendSms");
 
 /* GET home page. */
 router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
@@ -22,18 +23,19 @@ router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
         .status(200)
         .send({ status: 0, message: "This mobile is already use" });
     let otp = GDM_MODULE.rn({ min: 111111, max: 999999, integer: true });
-    client.messages
-      .create({
-        body: `Your one time otp is ${otp}`,
-        from: "+12566701744",
-        to: `+917347332511`,
-      })
-      .then((message) => {
-        return true;
-      })
-      .catch((err) => {
-        return false;
-      });
+    awsSendSms(inputData.mobile,`Your one time otp is ${otp}`);
+    // client.messages
+    //   .create({
+    //     body: `Your one time otp is ${otp}`,
+    //     from: "+12566701744",
+    //     to: `+917347332511`,
+    //   })
+    //   .then((message) => {
+    //     return true;
+    //   })
+    //   .catch((err) => {
+    //     return false;
+    //   });
     saveOtpVerification({
       mobile: inputData.mobile,
       type: inputData.type,

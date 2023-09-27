@@ -14,6 +14,9 @@ module.exports = {
   TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID, // use for send sms
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
 
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+
   JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN, // verify user authantication
 
   MESSAGE: ALL_MESSAGE,
