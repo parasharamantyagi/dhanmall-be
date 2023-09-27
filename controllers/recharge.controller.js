@@ -7,15 +7,20 @@ const {
   getBankCardDetailModule,
 } = require("../models/BankCards");
 const { checkOtpVerification } = require("../models/OtpVerifications");
-const { saveRecharge, getRecharge } = require("../models/Recharges");
+const { saveRecharge, getRecharge, countRecharge } = require("../models/Recharges");
 
 exports.getRecharge = async (req, res, next) => {
   try {
-    let result = await getRecharge(req.user.user_id);
+    let inputData = objectFormat(req.query, [{ limit: 10 }, { page: 0 }]);
+    let countResult = await countRecharge();
+    let result = await getRecharge(req.user.user_id,inputData);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.GET_RECHARGE,
-      data: result,
+      data: {
+        recharge_page: Math.ceil(countResult / 10),
+        recharge: result,
+      },
     });
   } catch (e) {
     return res.json({ status: 0, message: e.message });

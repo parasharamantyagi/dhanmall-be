@@ -1,7 +1,7 @@
 const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
-const { currentDate } = require("../helpers");
+const { currentDate, checkObj } = require("../helpers");
 
 const rechargeSchema = new mongoose.Schema({
   user_id: {
@@ -37,10 +37,18 @@ const rechargeSchema = new mongoose.Schema({
 
 const Recharge = (module.exports = mongoose.model("Recharge", rechargeSchema));
 
-module.exports.getRecharge = async function (user_id) {
-  return await Recharge.find({ user_id: user_id }, {}, { sort: { date: -1 } })
+module.exports.getRecharge = async function (user_id,input) {
+  let limit = checkObj(input, "limit") ? input.limit : 10;
+  let skip = checkObj(input, "page") ? (input.page - 1) * 10 : 0;
+  return await Recharge.find({ user_id: user_id })
     .populate({ path: "user_id", select: "nickname mobile" })
-    .exec();
+    .skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 }).exec();
+};
+
+module.exports.countRecharge = async function () {
+  return await Recharge.countDocuments();
 };
 
 module.exports.saveRecharge = async function (input) {

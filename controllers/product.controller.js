@@ -13,7 +13,10 @@ const { getMyChildren } = require("../models/MyChildrens");
 const { saveOrder, orderOfUser } = require("../models/Orders");
 const { userById, minusUserMoney } = require("../models/Users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
-const { updateGameOrderCalculation, getGameOrderCalculationByGameId } = require("../models/GameOrderCalculation");
+const {
+  updateGameOrderCalculation,
+  getGameOrderCalculationByGameId,
+} = require("../models/GameOrderCalculation");
 
 exports.myProfile = async (req, res, next) => {
   try {
@@ -45,7 +48,7 @@ exports.myChildren = async (req, res, next) => {
 
 exports.dashboardScreen = async (req, res, next) => {
   try {
-    let inputData = req.body;
+    let inputData = objectFormat(req.body, [{ limit: 10 }, { page: 0 }]);
     let countGame = await countOfGame();
     let resultGame = await gameOfDashboard(inputData);
     let result = {
