@@ -3,10 +3,6 @@ const { MyChildren, updateMyChildren } = require("../models/MyChildrens");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 const { gameMockData, gameMockData2 } = require("../providers/mockData");
 const { gameById } = require("../models/Games");
-const {
-  getOrderCalculation,
-  updateOrderCalculation,
-} = require("../models/OrderCalculation");
 const { getGameOrderCalculation, getGameOrderCalculationByGameId } = require("../models/GameOrderCalculation");
 const { orderByGameId } = require("../models/Orders");
 const { setDataType } = require("../helpers");

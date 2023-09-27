@@ -5,22 +5,15 @@ const {
   int_toFixed,
   checkObj,
   merge_object,
-  array_to_str,
   gameNowTime,
   setDataType,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/Games");
 const { getMyChildren } = require("../models/MyChildrens");
-const {
-  saveOrderCalculation,
-  getOrderCalculation,
-} = require("../models/OrderCalculation");
 const { saveOrder, orderOfUser } = require("../models/Orders");
-const { userById, getChildren, minusUserMoney } = require("../models/Users");
+const { userById, minusUserMoney } = require("../models/Users");
 const { colors1, colors2, contract_type } = require("../providers/colors");
-const GetGame = require("../models/Games");
-const { gameHistoryTrend } = require("../providers/gameCalculation");
-const { updateGameOrderCalculation } = require("../models/GameOrderCalculation");
+const { updateGameOrderCalculation, getGameOrderCalculationByGameId } = require("../models/GameOrderCalculation");
 
 exports.myProfile = async (req, res, next) => {
   try {
@@ -132,9 +125,6 @@ exports.saveOrders = async (req, res, next) => {
       inputData.fee = int_toFixed(inputData.fee);
       let order = await saveOrder(inputData);
       updateGameOrderCalculation(inputData.game_id, inputData);
-      saveOrderCalculation(
-        merge_object({ order_id: array_to_str(order._id) }, inputData)
-      );
       return res
         .status(200)
         .json({ status: 1, message: MESSAGE.SAVE_ORDER, data: inputData });
@@ -147,16 +137,13 @@ exports.saveOrders = async (req, res, next) => {
 exports.GameHistory = async (req, res, next) => {
   try {
     let lastGameId = await gameById(1);
-    let all_orders = await getOrderCalculation(
+    let all_orders = await getGameOrderCalculationByGameId(
       setDataType(lastGameId._id, "s")
     );
-    let resultResponse = merge_object(lastGameId, {
-      gameHistory: gameHistoryTrend(all_orders),
-    });
     return res.status(200).json({
       status: 1,
       message: "Previews game history",
-      data: resultResponse,
+      data: all_orders,
     });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
