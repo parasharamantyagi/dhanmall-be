@@ -47,6 +47,16 @@ module.exports.getRecharge = async function (user_id,input) {
     .sort({ _id: -1 }).exec();
 };
 
+module.exports.billingRecharge = async function (input) {
+  let limit = checkObj(input, "limit") ? input.limit : 10;
+  let skip = checkObj(input, "page") ? (input.page - 1) * 10 : 0;
+  return await Recharge.find()
+    .populate({ path: "user_id", select: "nickname mobile" })
+    .skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 }).exec();
+};
+
 module.exports.countRecharge = async function () {
   return await Recharge.countDocuments();
 };
