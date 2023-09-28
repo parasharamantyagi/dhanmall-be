@@ -1,4 +1,7 @@
 const { objectFormat } = require("../../helpers");
+const {
+  currentGameOrderCalculation,
+} = require("../../models/GameOrderCalculation");
 const { billingRecharge, countRecharge } = require("../../models/Recharges");
 
 exports.rechargeList = async (req, res, next) => {
@@ -13,6 +16,19 @@ exports.rechargeList = async (req, res, next) => {
         recharge_page: Math.ceil(countResult / 10),
         recharge: respone,
       },
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+exports.currentGame = async (req, res, next) => {
+  try {
+    let respone = await currentGameOrderCalculation();
+    return res.status(200).json({
+      status: 1,
+      message: "Current list",
+      data: respone,
     });
   } catch (e) {
     return res.json();
