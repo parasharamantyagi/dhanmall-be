@@ -38,6 +38,9 @@ const gameSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  detail: {
+    set_unit: { type: Number, default: 0 },
+  },
 });
 
 const Game = (module.exports = mongoose.model("Game", gameSchema));
@@ -51,7 +54,9 @@ module.exports.gameById = async function (id = "") {
         return JSON.parse(JSON.stringify(result));
       });
   } else {
-    return await Game.findOne().sort({ _id: -1 }).skip(id)
+    return await Game.findOne()
+      .sort({ _id: -1 })
+      .skip(id)
       .exec()
       .then((result) => {
         return JSON.parse(JSON.stringify(result));

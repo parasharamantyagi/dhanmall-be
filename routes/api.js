@@ -1,6 +1,6 @@
 const express = require('express');
-const { indexWelcome, registerReq, loginReq } = require('../controllers/index.controller');
-const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardValidator } = require('../validators/velidate.req');
+const { indexWelcome, registerReq, loginReq, resetPassword } = require('../controllers/index.controller');
+const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardValidator, resetPasswordValidator } = require('../validators/velidate.req');
 const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
 const { myProfile, dashboardScreen, getOrders, saveOrders, gameNow, myChildren, GameHistory } = require('../controllers/product.controller');
@@ -16,6 +16,7 @@ const router = express.Router();
 router.get('/', indexWelcome);
 router.post('/register', [registerValidator, isValid], registerReq);
 router.post('/login', [loginValidator, isValid], loginReq);
+router.post('/reset-password', [resetPasswordValidator, isValid], resetPassword);
 
 
 

@@ -1,5 +1,5 @@
 const { MESSAGE } = require("../config");
-const { checkObj, objectFormat, check } = require("../helpers");
+const { checkObj, objectFormat, check, setDataType } = require("../helpers");
 const {
   encrypted,
   dencrypted,
@@ -43,13 +43,11 @@ exports.registerReq = async (req, res, next) => {
       inputData.verification_code
     );
     if (!check(otpCheck)) {
-      return res
-        .status(200)
-        .send({
-          status: 0,
-          type: "verification_code",
-          message: MESSAGE.INVALID_OTP,
-        });
+      return res.status(200).send({
+        status: 0,
+        type: "verification_code",
+        message: MESSAGE.INVALID_OTP,
+      });
     }
     inputData.password = encrypted(inputData.password);
     inputData.promotion_code = promotionCode();
@@ -97,6 +95,43 @@ exports.loginReq = async (req, res, next) => {
         .status(200)
         .json({ status: 0, message: "Password not matched!" });
     }
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const inputData = objectFormat(req.body, [
+      "mobile",
+      "verification_code",
+      "password",
+    ]);
+    let user = await userModel.findOne({ mobile: inputData.mobile }, [
+      "mobile",
+    ]);
+    if (!checkObj(user)) {
+      return res
+        .status(200)
+        .send({ status: 0, type: "mobile", message: 'This mobile does not exit in our record' });
+    }
+    let otpCheck = await checkOtpVerification(
+      { mobile: inputData.mobile, type: "forgot_password" },
+      inputData.verification_code
+    );
+    if (!check(otpCheck)) {
+      return res.status(200).send({
+        status: 0,
+        type: "verification_code",
+        message: MESSAGE.INVALID_OTP,
+      });
+    }
+    userModel.updateUserFromId(setDataType(user._id,'s'),{password: encrypted(inputData.password)});
+    return res.status(200).json({
+      status: 1,
+      message: "User password has been updated successfully",
+      data: inputData,
+    });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

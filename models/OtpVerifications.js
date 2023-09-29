@@ -14,8 +14,8 @@ const OtpVerificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['registration', 'bankcard'],
-    default: 'registration',
+    enum: ["registration", "bankcard", "forgot_password"],
+    default: "registration",
   },
   date: {
     type: Number,
@@ -27,13 +27,21 @@ const OtpVerificationSchema = new mongoose.Schema({
   },
 });
 
-const OtpVerification = (module.exports = mongoose.model("OtpVerification", OtpVerificationSchema));
+const OtpVerification = (module.exports = mongoose.model(
+  "OtpVerification",
+  OtpVerificationSchema
+));
 
-module.exports.checkOtpVerification = async function (input,verification_code) {
+module.exports.checkOtpVerification = async function (
+  input,
+  verification_code
+) {
   try {
-    if(verification_code == 123456) return true;
+    if (verification_code == 123456) return true;
     let otpCheck = await OtpVerification.findOne(input).exec();
-    return checkObj(otpCheck) && otpCheck.verification_code == verification_code ? true : false;
+    return checkObj(otpCheck) && otpCheck.verification_code == verification_code
+      ? true
+      : false;
   } catch (error) {
     return false;
   }
@@ -45,7 +53,11 @@ module.exports.saveOtpVerification = async function (input) {
     if (checkObj(findAndCheck)) {
       const result = await OtpVerification.findOneAndUpdate(
         { _id: setDataType(findAndCheck._id, "string") },
-        { verification_code: input.verification_code, type: input.type, date: input.date },
+        {
+          verification_code: input.verification_code,
+          type: input.type,
+          date: input.date,
+        },
         {
           upsert: true, // Create the document if it doesn't exist
           new: true, // Return the modified document as the result

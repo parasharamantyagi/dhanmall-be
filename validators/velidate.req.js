@@ -17,7 +17,14 @@ exports.otpVerifyValidator = [
 exports.loginValidator = [
   // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
   body("mobile").exists().isLength({ min: 12 }).withMessage("Provide valid mobile"),
-  body("password").exists().withMessage("Password is required").isString(),
+  body("password").exists().isLength({ min: 6 }).withMessage("Password is required").isString(),
+];
+
+exports.resetPasswordValidator = [
+  // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
+  body("mobile").exists().isLength({ min: 12 }).withMessage("Provide valid mobile"),
+  body("verification_code").isLength({ min: 6 }).exists().withMessage("Verification code is required"),
+  body("password").exists().withMessage("Password is required").isLength({ min: 6 }).withMessage("Please provide a valid mobile number"),
 ];
 
 exports.verifyNumberValidator = [

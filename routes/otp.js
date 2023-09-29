@@ -17,7 +17,7 @@ router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
   try {
     const inputData = objectFormat(req.body, ["mobile", {type: 'registration'}]);
     let user = await userModel.findOne({ mobile: inputData.mobile }, ["mobile"]);
-    if (checkObj(user))
+    if (checkObj(user) && inputData.type === 'registration')
       return res
         .status(200)
         .send({ status: 0, message: "This mobile is already use" });
