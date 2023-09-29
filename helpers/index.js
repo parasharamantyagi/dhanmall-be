@@ -207,3 +207,7 @@ exports.todayCurrentMinutes = () => {
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   return this.setDataType(currentMinutes/3,'int');
 };
+
+exports.removeFirstThreeCharacters = (inputString) => {
+  return inputString.substring(3);
+};

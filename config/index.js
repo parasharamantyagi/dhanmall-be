@@ -17,6 +17,8 @@ module.exports = {
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 
+  FAST2SMS_KEY:process.env.FAST2SMS_KEY,
+
   JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN, // verify user authantication
 
   MESSAGE: ALL_MESSAGE,

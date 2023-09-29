@@ -1,17 +1,16 @@
 const express = require("express");
 const { objectFormat, checkObj, currentDate } = require("../helpers");
 const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
   GDM_MODULE,
+  // MESSAGE
 } = require("../config");
 const { saveOtpVerification } = require("../models/OtpVerifications");
 const { otpVerifyValidator } = require("../validators/velidate.req");
 const { isValid } = require("../validators");
-const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+
 const router = express.Router();
 const userModel = require("./../models/Users");
-const { awsSendSms } = require("../providers/sendSms");
+const { sendSmsToMobile } = require("../providers/sendSms");
 
 /* GET home page. */
 router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
@@ -23,19 +22,7 @@ router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
         .status(200)
         .send({ status: 0, message: "This mobile is already use" });
     let otp = GDM_MODULE.rn({ min: 111111, max: 999999, integer: true });
-    awsSendSms(inputData.mobile,`Your one time otp is ${otp}`);
-    // client.messages
-    //   .create({
-    //     body: `Your one time otp is ${otp}`,
-    //     from: "+12566701744",
-    //     to: `+917347332511`,
-    //   })
-    //   .then((message) => {
-    //     return true;
-    //   })
-    //   .catch((err) => {
-    //     return false;
-    //   });
+   let message = await sendSmsToMobile(inputData.mobile,otp);
     saveOtpVerification({
       mobile: inputData.mobile,
       type: inputData.type,
@@ -44,7 +31,7 @@ router.post("/", [otpVerifyValidator,isValid],async (req, res, next) => {
     });
     return res.status(200).json({
       status: 1,
-      message: "Otp send successfully",
+      message: message,
       data: {
         date: currentDate(),
       }
