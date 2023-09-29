@@ -1,6 +1,6 @@
-const { objectFormat } = require("../../helpers");
+const { objectFormat, checkObj, check } = require("../../helpers");
 const {
-  currentGameOrderCalculation,
+  currentGameOrderCalculation, getGameOrderCalculationByGameId,
 } = require("../../models/GameOrderCalculation");
 const { billingRecharge, countRecharge } = require("../../models/Recharges");
 
@@ -24,7 +24,13 @@ exports.rechargeList = async (req, res, next) => {
 
 exports.currentGame = async (req, res, next) => {
   try {
-    let respone = await currentGameOrderCalculation();
+    let inputData = objectFormat(req.query, [{game_id: ''}]);
+    let respone = '';
+    if(checkObj(inputData,'game_id') && check(inputData.game_id)){
+      respone = await getGameOrderCalculationByGameId(inputData.game_id);
+    }else{
+      respone = await currentGameOrderCalculation();
+    }
     return res.status(200).json({
       status: 1,
       message: "Current list",

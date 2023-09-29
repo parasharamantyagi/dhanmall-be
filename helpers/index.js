@@ -29,6 +29,7 @@ exports.check = (value) => {
   // 👈 check string is valid or not
   return (
     value &&
+    value !== '' &&
     value !== "NaN" &&
     value !== "false" &&
     value !== "undefined" &&
