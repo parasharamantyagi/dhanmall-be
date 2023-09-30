@@ -26,7 +26,7 @@ module.exports.sendSmsToMobile = async function (mobileNo, otpMessage) {
     req.end(function (res) {
       if (res.error) throw new Error(res.error);
     });
-    return "Please verify you Otp";
+    return "Please verify you correct Otp from FTZSMS";
   } else {
     AWS.config.update({
       accessKeyId: AWS_ACCESS_KEY_ID,
@@ -41,6 +41,6 @@ module.exports.sendSmsToMobile = async function (mobileNo, otpMessage) {
       })
       .promise();
     publishTextPromise.then(function (data) {}).catch(function (err) {});
-    return "Please verify you Otp";
+    return "Please verify you correct Otp";
   }
 };
