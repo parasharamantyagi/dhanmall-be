@@ -9,6 +9,12 @@ exports.registerValidator = [
   // body("recommendation_code").exists().withMessage("Recommendation code is required"),
 ];
 
+exports.changePasswordValidator = [
+  body("old_password").exists().withMessage("Old Password is required").isLength({ min: 6 }).withMessage("Old Password should be at least 6 characters"),
+  body("new_password").exists().withMessage("New Password is required").isLength({ min: 6 }).withMessage("New Password should be at least 6 characters"),
+  body("confirm_password").exists().withMessage("Confirm Password is required").isLength({ min: 6 }).withMessage("Confirm Password should be at least 6 characters"),
+];
+
 exports.otpVerifyValidator = [
   // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
   body("mobile").exists().isLength({ min: 12 }).withMessage("Provide valid mobile"),

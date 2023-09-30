@@ -1,12 +1,13 @@
 const express = require('express');
 const { indexWelcome, registerReq, loginReq, resetPassword } = require('../controllers/index.controller');
-const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardValidator, resetPasswordValidator } = require('../validators/velidate.req');
+const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardValidator, resetPasswordValidator, changePasswordValidator } = require('../validators/velidate.req');
 const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
-const { myProfile, dashboardScreen, getOrders, saveOrders, gameNow, myChildren, GameHistory } = require('../controllers/product.controller');
+const { dashboardScreen, getOrders, saveOrders, gameNow, GameHistory } = require('../controllers/product.controller');
 const { gameInterval } = require('../controllers/cron.job.controller');
 const { addPayment } = require('../controllers/payment.controller'); // // all for payment related
 const { getRecharge, addRecharge, getBankCard, addBankCard, getBankCardById } = require('../controllers/recharge.controller');
+const { myProfile, myChildren, updatePassword, updateProfile } = require('../controllers/profile.controller');
 
 
 const router = express.Router();
@@ -22,6 +23,8 @@ router.post('/reset-password', [resetPasswordValidator, isValid], resetPassword)
 
 router.get('/profile', isUserValid, myProfile);
 router.get('/children', isUserValid, myChildren);
+router.post('/change-password', [changePasswordValidator, isValid, isUserValid], updatePassword);
+router.post('/update-profile', isUserValid, updateProfile);
 
 
 router.post('/dashboard', isUserValid, dashboardScreen);

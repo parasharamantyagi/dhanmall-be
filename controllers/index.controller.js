@@ -78,7 +78,7 @@ exports.loginReq = async (req, res, next) => {
     if (!checkObj(user))
       return res
         .status(200)
-        .send({ status: 0, message: "This is invalid mobile" });
+        .json({ status: 0, message: "This is invalid mobile" });
     if (dencrypted(user.password) === inputData.password) {
       return res.status(200).json({
         status: 1,

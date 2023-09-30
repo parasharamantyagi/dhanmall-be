@@ -4,47 +4,17 @@ const {
   arrayOfObject,
   int_toFixed,
   checkObj,
-  merge_object,
   gameNowTime,
   setDataType,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/Games");
-const { getMyChildren } = require("../models/MyChildrens");
 const { saveOrder, orderOfUser } = require("../models/Orders");
 const { userById, minusUserMoney } = require("../models/Users");
-const { colors1, colors2, contract_type } = require("../providers/colors");
+const { contract_type } = require("../providers/colors");
 const {
   updateGameOrderCalculation,
   getGameOrderCalculationByGameId,
 } = require("../models/GameOrderCalculation");
-
-exports.myProfile = async (req, res, next) => {
-  try {
-    let result = await userById(req.user.user_id);
-    result = merge_object(result, {
-      promotion_url: `${APP_URL}/register?r_code=${result.promotion_code}`,
-    });
-    return res
-      .status(200)
-      .json({ status: 1, message: MESSAGE.my_profile, data: result });
-  } catch (e) {
-    return res.json({ status: 0, message: e.message });
-  }
-};
-
-exports.myChildren = async (req, res, next) => {
-  try {
-    let inputData = objectFormat(req.query, [
-      { user_id: req.user.user_id },
-      { type: "lavel_1" },
-    ]);
-    let result = await userById(req.user.user_id);
-    result.children = await getMyChildren(inputData);
-    return res.status(200).json({ status: 1, data: result });
-  } catch (e) {
-    return res.json({ status: 0, message: e.message });
-  }
-};
 
 exports.dashboardScreen = async (req, res, next) => {
   try {
