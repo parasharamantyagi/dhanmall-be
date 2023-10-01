@@ -39,7 +39,7 @@ exports.addRecharge = async (req, res, next) => {
       "transaction_id",
       "remarks",
       {
-        type: "type_1",
+        type: "upipay",
       },
       {
         status: "processing",

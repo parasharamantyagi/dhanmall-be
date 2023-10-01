@@ -21,8 +21,8 @@ const rechargeSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["type_1", "reward_2"],
-    default: "type_1",
+    enum: ["upipay", "qrcode"],
+    default: "upipay",
   },
   status: {
     type: String,
