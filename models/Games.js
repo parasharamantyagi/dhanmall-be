@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const { checkObj, currentDate, check, checkIsString } = require("../helpers");
+const { checkObj, currentDate, check, checkIsString, setDataType } = require("../helpers");
+const { PAGINATION_DEFAULT_LIMIT } = require("../config");
 
 const gameSchema = new mongoose.Schema({
   project_id: {
@@ -65,10 +66,9 @@ module.exports.gameById = async function (id = "") {
 };
 
 module.exports.gameOfDashboard = async function (input) {
-  let limit = checkObj(input, "limit") ? input.limit : 10;
-  let skip = checkObj(input, "page") ? (input.page - 1) * 10 : 0;
+  let limit = checkObj(input, "limit") ? input.limit : PAGINATION_DEFAULT_LIMIT;
   return await Game.find({ status: 1 })
-    .skip(skip)
+    .skip(setDataType(input.page, "n") * limit)
     .limit(limit)
     .sort({ _id: -1 });
 };

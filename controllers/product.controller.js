@@ -25,7 +25,7 @@ exports.dashboardScreen = async (req, res, next) => {
       // color_list: colors1,
       // number_list: colors2,
       game_history: resultGame,
-      game_page: Math.ceil(countGame / 10),
+      game_page: countGame,
     };
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
@@ -55,7 +55,7 @@ exports.getOrders = async (req, res, next) => {
       return res.status(200).json({
         status: 1,
         data: {
-          order_page: Math.floor(countOrders / 10),
+          order_page: countOrders,
           order_data: userOrder,
         },
       });
