@@ -17,7 +17,7 @@ module.exports = {
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 
-  FAST2SMS_KEY:process.env.FAST2SMS_KEY,
+  FAST2SMS_KEY: process.env.FAST2SMS_KEY,
 
   JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN, // verify user authantication
 
@@ -31,6 +31,7 @@ module.exports = {
     rn: require("random-number"),
   },
   GDM_CHARGES_FEE: 0.05,
+  PAGINATION_DEFAULT_LIMIT: 10,
   USER_FIRST_COMMISION: {
     LAVEL_1: 20,
     LAVEL_2: 5,

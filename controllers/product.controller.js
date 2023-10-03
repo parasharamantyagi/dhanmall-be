@@ -8,7 +8,7 @@ const {
   setDataType,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/Games");
-const { saveOrder, orderOfUser } = require("../models/Orders");
+const { saveOrder, orderOfUser, countUserOrders } = require("../models/Orders");
 const { userById, minusUserMoney } = require("../models/Users");
 const { contract_type } = require("../providers/colors");
 const {
@@ -48,8 +48,20 @@ exports.gameNow = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    let userOrder = await orderOfUser(req.user.user_id);
-    return res.status(200).json({ status: 1, data: userOrder });
+    let inputData = objectFormat(req.query);
+    let userOrder = await orderOfUser(req.user.user_id, inputData);
+    if (checkObj(inputData)) {
+      let countOrders = await countUserOrders(req.user.user_id);
+      return res.status(200).json({
+        status: 1,
+        data: {
+          order_page: Math.floor(countOrders / 10),
+          order_data: userOrder,
+        },
+      });
+    } else {
+      return res.status(200).json({ status: 1, data: userOrder });
+    }
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
