@@ -1,7 +1,7 @@
-const { GDM_MODULE } = require("../config");
+const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
-const { currentDate, checkObj } = require("../helpers");
+const { currentDate, checkObj, setDataType } = require("../helpers");
 
 const rechargeSchema = new mongoose.Schema({
   user_id: {
@@ -37,13 +37,11 @@ const rechargeSchema = new mongoose.Schema({
 
 const Recharge = (module.exports = mongoose.model("Recharge", rechargeSchema));
 
-module.exports.getRecharge = async function (user_id,input) {
-  let limit = checkObj(input, "limit") ? input.limit : 10;
-  let skip = checkObj(input, "page") ? (input.page - 1) * 10 : 0;
+module.exports.getRecharge = async function (user_id,object) {
   return await Recharge.find({ user_id: user_id })
     .populate({ path: "user_id", select: "nickname mobile" })
-    .skip(skip)
-    .limit(limit)
+    .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
+    .limit(PAGINATION_DEFAULT_LIMIT)
     .sort({ _id: -1 }).exec();
 };
 
@@ -57,8 +55,8 @@ module.exports.billingRecharge = async function (input) {
     .sort({ _id: -1 }).exec();
 };
 
-module.exports.countRecharge = async function () {
-  return await Recharge.countDocuments();
+module.exports.countRecharge = async function (obj = {}) {
+  return await Recharge.find(obj).countDocuments();
 };
 
 module.exports.saveRecharge = async function (input) {

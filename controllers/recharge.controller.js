@@ -15,14 +15,14 @@ const {
 
 exports.getRecharge = async (req, res, next) => {
   try {
-    let inputData = objectFormat(req.query, [{ limit: 10 }, { page: 0 }]);
-    let countResult = await countRecharge();
+    let inputData = objectFormat(req.query);
+    let countResult = await countRecharge({ user_id: req.user.user_id });
     let result = await getRecharge(req.user.user_id, inputData);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.GET_RECHARGE,
       data: {
-        recharge_page: Math.ceil(countResult / 10),
+        recharge_page: countResult,
         recharge: result,
       },
     });
