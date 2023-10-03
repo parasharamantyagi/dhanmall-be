@@ -6,9 +6,18 @@ const {
   todayDate,
   str_to_array,
 } = require("../helpers");
-const { saveGameOrderCalculation, getGameOrderCalculationByGameId } = require("../models/GameOrderCalculation");
-const { saveGame, gameById, updateGame } = require("../models/Games");
+const {
+  saveGameOrderCalculation,
+  getGameOrderCalculationByGameId,
+} = require("../models/GameOrderCalculation");
+const {
+  saveGame,
+  gameById,
+  updateGame,
+  removeGame,
+} = require("../models/Games");
 const { orderByGameId, updateOrder } = require("../models/Orders");
+const { plusUserMoney } = require("../models/Users");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
 exports.gameInterval = async (req, res, next) => {
@@ -18,13 +27,15 @@ exports.gameInterval = async (req, res, next) => {
     let order_cal = { amount: 0 };
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-      let gameOrders = await getGameOrderCalculationByGameId(setDataType(gameId._id, "s"));
+      let gameOrders = await getGameOrderCalculationByGameId(
+        setDataType(gameId._id, "s")
+      );
       let calResult = calCulationNumberPridiction(gameOrders);
       updateGame(setDataType(gameId._id, "s"), calResult);
       for (let order of all_orders) {
         if (order.type === 2) {
           if (order.pick === setDataType(calResult.unit, "s")) {
-            order_cal.amount = setDataType(order.delivery,"f");
+            order_cal.amount = setDataType(order.delivery, "f");
             order_cal.status = 1;
           } else {
             order_cal.amount = 0;
@@ -33,7 +44,7 @@ exports.gameInterval = async (req, res, next) => {
         } else {
           if (str_to_array(calResult.color).length === 1) {
             if (order.pick === calResult.color) {
-              order_cal.amount = setDataType(order.delivery,"f");
+              order_cal.amount = setDataType(order.delivery, "f");
               order_cal.status = 1;
             } else {
               order_cal.amount = 0;
@@ -41,7 +52,7 @@ exports.gameInterval = async (req, res, next) => {
             }
           } else {
             if (str_to_array(calResult.color).includes(order.pick)) {
-              order_cal.amount = setDataType(order.delivery,"f") / 2;
+              order_cal.amount = setDataType(order.delivery, "f") / 2;
               order_cal.status = 1;
             } else {
               order_cal.amount = 0;
@@ -49,7 +60,10 @@ exports.gameInterval = async (req, res, next) => {
             }
           }
         }
-        await updateOrder(
+        plusUserMoney(setDataType(order.user_id, "s"), {
+          money: order_cal.amount,
+        });
+        updateOrder(
           setDataType(order._id, "s"),
           merge_object(
             {
@@ -82,6 +96,15 @@ exports.gameInterval = async (req, res, next) => {
       date: currentDate(),
     });
     return res.status(200).json(true);
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.customSetting = async (req, res, next) => {
+  try {
+    let object = await removeGame({ date: { $lt: todayDate() } });
+    return res.status(200).json(object);
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

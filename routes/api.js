@@ -4,7 +4,6 @@ const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardVa
 const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
 const { dashboardScreen, getOrders, saveOrders, gameNow, GameHistory } = require('../controllers/product.controller');
-const { gameInterval } = require('../controllers/cron.job.controller');
 const { addPayment } = require('../controllers/payment.controller'); // // all for payment related
 const { getRecharge, addRecharge, getBankCard, addBankCard, getBankCardById } = require('../controllers/recharge.controller');
 const { myProfile, myChildren, updatePassword, updateProfile } = require('../controllers/profile.controller');
@@ -41,6 +40,5 @@ router.post('/verify-number', [verifyNumberValidator, isValid], verifyNumber);
 router.get('/home-screen', isUserValid, homeScreen);
 
 router.get('/game-history', isUserValid, GameHistory);
-router.get('/game-interval', gameInterval);
 
 module.exports = router;

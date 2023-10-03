@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
-const { checkObj, currentDate, check, checkIsString, setDataType } = require("../helpers");
+const {
+  checkObj,
+  currentDate,
+  check,
+  checkIsString,
+  setDataType,
+} = require("../helpers");
 const { PAGINATION_DEFAULT_LIMIT } = require("../config");
 
 const gameSchema = new mongoose.Schema({
@@ -89,4 +95,8 @@ module.exports.saveGame = async function (input) {
   const res = new Game(input);
   await res.save();
   return res;
+};
+
+module.exports.removeGame = async function (input) {
+  return await Game.deleteMany(input);
 };
