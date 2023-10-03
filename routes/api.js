@@ -1,6 +1,6 @@
 const express = require('express');
 const { indexWelcome, registerReq, loginReq, resetPassword } = require('../controllers/index.controller');
-const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardValidator, resetPasswordValidator, changePasswordValidator } = require('../validators/velidate.req');
+const { registerValidator, loginValidator, verifyNumberValidator, saveBankCardValidator, resetPasswordValidator, changePasswordValidator, addRechargeValidator } = require('../validators/velidate.req');
 const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
 const { dashboardScreen, getOrders, saveOrders, gameNow, GameHistory } = require('../controllers/product.controller');
@@ -31,7 +31,7 @@ router.get('/game-now', isUserValid, gameNow);
 router.route('/order').get(isUserValid, getOrders).post(isUserValid, saveOrders);
 
 router.post('/payment', isUserValid, addPayment);
-router.route('/recharge').get(isUserValid, getRecharge).post(isUserValid, addRecharge);
+router.route('/recharge').get(isUserValid, getRecharge).post(addRechargeValidator, isValid, isUserValid, addRecharge);
 router.route('/bank-card').get(isUserValid, getBankCard).post([isUserValid,saveBankCardValidator,isValid], addBankCard);
 router.route('/bank-card/:_id').get(isUserValid, getBankCardById);
 

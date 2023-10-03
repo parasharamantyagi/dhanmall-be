@@ -13,7 +13,7 @@ const rechargeSchema = new mongoose.Schema({
   },
   transaction_id: {
     type: Number,
-    required: true,
+    default: 0,
   },
   remarks: {
     type: String,

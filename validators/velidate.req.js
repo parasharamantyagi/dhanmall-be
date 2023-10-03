@@ -33,6 +33,11 @@ exports.resetPasswordValidator = [
   body("password").exists().withMessage("Password is required").isLength({ min: 6 }).withMessage("Please provide a valid mobile number"),
 ];
 
+exports.addRechargeValidator = [
+  body("ammount").exists().isLength({ min: 3 }).withMessage("Provide valid ammount"),
+  body("transaction_id").isLength({ min: 12 }).exists().withMessage("Transaction id is required"),
+];
+
 exports.verifyNumberValidator = [
   // body("nickname").exists({ checkFalsy: true }).withMessage("Nickname is required"),
   body("mobile").exists().withMessage("Mobile number is required").isLength({ min: 10 }).withMessage("Please provide a valid mobile number"),
