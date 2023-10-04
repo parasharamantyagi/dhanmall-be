@@ -5,6 +5,7 @@ const {
   check,
   merge_object,
 } = require("../../helpers");
+const { getOneBankCardModule } = require("../../models/BankCards");
 const {
   currentGameOrderCalculation,
   getGameOrderCalculationByGameId,
@@ -13,6 +14,7 @@ const {
   billingRecharge,
   countRecharge,
   updatedRechargeModule,
+  getRechargeDetail,
 } = require("../../models/Recharges");
 
 exports.rechargeReq = async (req, res, next) => {
@@ -59,11 +61,30 @@ exports.rechargeStatus = async (req, res, next) => {
   try {
     let rechargeId = req.params._id;
     let inputData = objectFormat(req.body, ["status"]);
-    updatedRechargeModule(rechargeId,inputData);
+    updatedRechargeModule(rechargeId, inputData);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.STATUS_UPDATE_SUCCESSFULLY,
       data: inputData,
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+exports.rechargeDetails = async (req, res, next) => {
+  try {
+    let rechargeId = req.params._id;
+    let result = await getRechargeDetail({ _id: rechargeId });
+    if (result.type === "withdraw" && checkObj(result.details, "bank_card")) {
+      result.bank_details = await getOneBankCardModule({
+        _id: result.details.bank_card,
+      });
+    }
+    return res.status(200).json({
+      status: 1,
+      message: "Details",
+      data: result,
     });
   } catch (e) {
     return res.json();

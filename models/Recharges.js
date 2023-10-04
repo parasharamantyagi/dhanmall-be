@@ -30,6 +30,14 @@ const rechargeSchema = new mongoose.Schema({
 
 const Recharge = (module.exports = mongoose.model("Recharge", rechargeSchema));
 
+module.exports.getRechargeDetail = async function (where) {
+  return await Recharge.findOne(where)
+    .populate({ path: "user_id", select: "nickname mobile" })
+    .then((result) => {
+      return JSON.parse(JSON.stringify(result));
+    });
+};
+
 module.exports.getRechargeModule = async function (where, object) {
   return await Recharge.find(where)
     .populate({ path: "user_id", select: "nickname mobile" })
