@@ -26,7 +26,7 @@ const my_childrens = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["lavel_1", "lavel_2", "lavel_3", "lavel_4"],
+    enum: ["lavel_1", "lavel_2", "lavel_3", "lavel_4", "lavel_5"],
     default: "lavel_1",
   },
 });
@@ -50,14 +50,7 @@ module.exports.getMyChildren = async function (inputData) {
 
 module.exports.updateMyChildren = async function (id, inputData) {
   try {
-    let result = await MyChildren.findOneAndUpdate(
-      { _id: setDataType(id, "s") },
-      inputData,
-      {
-        upsert: true, // Create the document if it doesn't exist
-        new: true, // Return the modified document as the result
-      }
-    );
+    let result = await MyChildren.updateOne({ _id: setDataType(id, "s") }, { $inc: inputData });
     return result;
   } catch (error) {
     return error;

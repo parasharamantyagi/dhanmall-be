@@ -113,6 +113,7 @@ module.exports.getUserForCommision = async function (id) {
     user_2: {},
     user_3: {},
     user_4: {},
+    user_5: {},
   };
   let selectField =
     "nickname email money commission recommendation_code first_payment";
@@ -135,6 +136,11 @@ module.exports.getUserForCommision = async function (id) {
   if (checkObj(return_data.user_3)) {
     return_data.user_4 = await User.findOne({
       promotion_code: return_data.user_3.recommendation_code,
+    }).select(selectField);
+  }
+  if (checkObj(return_data.user_4)) {
+    return_data.user_5 = await User.findOne({
+      promotion_code: return_data.user_4.recommendation_code,
     }).select(selectField);
   }
   return return_data;
@@ -233,6 +239,19 @@ module.exports.manageUserAllChildren = async function (object) {
       water_reward: 0,
       first_reward: 0,
       type: "lavel_4",
+    });
+  }
+  if (
+    checkObj(userForCommision, "user_5") &&
+    checkObj(userForCommision.user_5)
+  ) {
+    saveMyChildren({
+      user_id: userForCommision.user_5._id,
+      childrens_id: userForCommision.my_profile._id,
+      date: currentDate(),
+      water_reward: 0,
+      first_reward: 0,
+      type: "lavel_5",
     });
   }
   return true;

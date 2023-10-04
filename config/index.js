@@ -34,14 +34,16 @@ module.exports = {
   PAGINATION_DEFAULT_LIMIT: 10,
   USER_FIRST_COMMISION: {
     LAVEL_1: 20,
-    LAVEL_2: 5,
-    LAVEL_3: 2,
-    LAVEL_4: 1,
+    LAVEL_2: 10,
+    LAVEL_3: 5,
+    LAVEL_4: 2,
+    LAVEL_5: 1,
   },
   USER_NORMAL_COMMISION: {
     LAVEL_1: 10,
-    LAVEL_2: 2.5,
-    LAVEL_3: 1,
-    LAVEL_4: 0.5,
+    LAVEL_2: 5,
+    LAVEL_3: 2,
+    LAVEL_4: 1,
+    LAVEL_5: 0.5,
   },
 };

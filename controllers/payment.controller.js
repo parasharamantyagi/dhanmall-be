@@ -35,6 +35,7 @@ exports.addPayment = async (req, res, next) => {
     let resLavel2 = arrayOfObject(dicountAdmin, { type: "lavel_2" });
     let resLavel3 = arrayOfObject(dicountAdmin, { type: "lavel_3" });
     let resLavel4 = arrayOfObject(dicountAdmin, { type: "lavel_4" });
+    let resLavel5 = arrayOfObject(dicountAdmin, { type: "lavel_5" });
     if (checkObj(resLavel1)) {
       let ammount_commission = check(getUser.first_payment) ? USER_NORMAL_COMMISION.LAVEL_1 : USER_FIRST_COMMISION.LAVEL_1;
       let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
