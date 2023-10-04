@@ -26,7 +26,7 @@ exports.addPayment = async (req, res, next) => {
         date: currentDate(),
       },
     ]);
-    plusUserMoney(req.user.user_id, { money: inputData.ammount }, "payment");
+    plusUserMoney(req.user.user_id, { money: setDataType(inputData.ammount,'n') }, "payment");
     savePayment(inputData);
     updateUserFromId(req.user.user_id, { first_payment: 1 });
     let getUser = await userById(req.user.user_id, "first_payment");
@@ -38,7 +38,7 @@ exports.addPayment = async (req, res, next) => {
     let resLavel5 = arrayOfObject(dicountAdmin, { type: "lavel_5" });
     if (checkObj(resLavel1)) {
       let ammount_commission = check(getUser.first_payment) ? USER_NORMAL_COMMISION.LAVEL_1 : USER_FIRST_COMMISION.LAVEL_1;
-      let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
+      let ammount = (setDataType(inputData.ammount,'n') * ammount_commission) / 100;
       let myChildrenUpdated = check(getUser.first_payment) ? { water_reward: ammount } : { first_reward: ammount };
       updateMyChildren(resLavel1._id, myChildrenUpdated);
       plusUserMoney(resLavel1.user_id, { money: ammount }, "reward");
@@ -51,7 +51,7 @@ exports.addPayment = async (req, res, next) => {
     }
     if (checkObj(resLavel2)) {
       let ammount_commission = check(getUser.first_payment) ?  USER_NORMAL_COMMISION.LAVEL_2 : USER_FIRST_COMMISION.LAVEL_2;
-      let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
+      let ammount = (setDataType(inputData.ammount,'n') * ammount_commission) / 100;
       let myChildrenUpdated = check(getUser.first_payment) ? { water_reward: ammount } : { first_reward: ammount };
       updateMyChildren(resLavel2._id, myChildrenUpdated);
       plusUserMoney(resLavel2.user_id, { money: ammount }, "reward");
@@ -64,7 +64,7 @@ exports.addPayment = async (req, res, next) => {
     }
     if (checkObj(resLavel3)) {
       let ammount_commission = check(getUser.first_payment) ? USER_NORMAL_COMMISION.LAVEL_3 : USER_FIRST_COMMISION.LAVEL_3;
-      let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
+      let ammount = (setDataType(inputData.ammount,'n') * ammount_commission) / 100;
       let myChildrenUpdated = check(getUser.first_payment) ? { water_reward: ammount } : { first_reward: ammount };
       updateMyChildren(resLavel3._id, myChildrenUpdated);
       plusUserMoney(resLavel3.user_id, { money: ammount }, "reward");
@@ -77,7 +77,7 @@ exports.addPayment = async (req, res, next) => {
     }
     if (checkObj(resLavel4)) {
       let ammount_commission = check(getUser.first_payment) ? USER_NORMAL_COMMISION.LAVEL_4 : USER_FIRST_COMMISION.LAVEL_4;
-      let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
+      let ammount = (setDataType(inputData.ammount,'n') * ammount_commission) / 100;
       let myChildrenUpdated = check(getUser.first_payment) ? { water_reward: ammount } : { first_reward: ammount };
       updateMyChildren(resLavel4._id, myChildrenUpdated);
       plusUserMoney(resLavel4.user_id, { money: ammount }, "reward");
@@ -89,8 +89,8 @@ exports.addPayment = async (req, res, next) => {
       );
     }
     if (checkObj(resLavel5)) {
-      let ammount_commission = check(getUser.first_payment) ?  USER_NORMAL_COMMISION.LAVEL_2 : USER_FIRST_COMMISION.LAVEL_2;
-      let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
+      let ammount_commission = check(getUser.first_payment) ?  USER_NORMAL_COMMISION.LAVEL_5 : USER_FIRST_COMMISION.LAVEL_5;
+      let ammount = (setDataType(inputData.ammount,'n') * ammount_commission) / 100;
       let myChildrenUpdated = check(getUser.first_payment) ? { water_reward: ammount } : { first_reward: ammount };
       updateMyChildren(resLavel5._id, myChildrenUpdated);
       plusUserMoney(resLavel5.user_id, { money: ammount }, "reward");
