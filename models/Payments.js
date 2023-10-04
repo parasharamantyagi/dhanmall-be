@@ -1,6 +1,6 @@
 const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
-const { currentDate } = require("../helpers");
+const { currentDate, checkObj } = require("../helpers");
 
 const paymentSchema = new mongoose.Schema({
   user_id: {
@@ -30,6 +30,9 @@ module.exports.getPayment = async function (user_id) {
 };
 
 module.exports.savePayment = async function (input) {
+  if(!checkObj(input,'date')){
+    input.date = currentDate();
+  }
   const res = new Payment(input);
   let result = await res.save();
   return result;
