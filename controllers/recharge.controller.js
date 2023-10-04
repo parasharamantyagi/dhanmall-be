@@ -6,10 +6,9 @@ const {
   getOneBankCardModule,
   getBankCardDetailModule,
 } = require("../models/BankCards");
-const { checkOtpVerification } = require("../models/OtpVerifications");
 const {
   saveRecharge,
-  getRecharge,
+  getRechargeModule,
   countRecharge,
 } = require("../models/Recharges");
 
@@ -17,13 +16,16 @@ exports.getRecharge = async (req, res, next) => {
   try {
     let inputData = objectFormat(req.query);
     let countResult = await countRecharge({ user_id: req.user.user_id });
-    let result = await getRecharge(req.user.user_id, inputData);
+    let result = await getRechargeModule(
+      { user_id: req.user.user_id },
+      inputData
+    );
     return res.status(200).json({
       status: 1,
       message: MESSAGE.GET_RECHARGE,
       data: {
-        recharge_page: countResult,
-        recharge: result,
+        count: countResult,
+        result: result,
       },
     });
   } catch (e) {
@@ -41,17 +43,89 @@ exports.addRecharge = async (req, res, next) => {
       {
         type: "upipay",
       },
-      {
-        status: "processing",
-      },
-      {
-        date: currentDate(),
-      },
     ]);
-    saveRecharge(inputData);
+    saveRecharge({
+      user_id: inputData.user_id,
+      type: "recharge",
+      ammount: inputData.ammount,
+      status: "processing",
+      date: currentDate(),
+      details: {
+        type: inputData.type,
+        transaction_id: inputData.transaction_id,
+        remarks: inputData.remarks,
+      },
+    });
     return res.status(200).json({
       status: 1,
       message: MESSAGE.ADD_RECHARGE,
+      data: inputData,
+    });
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.getBankCardById = async (req, res, next) => {
+  try {
+    let bankId = req.params._id;
+    let getBankDetail = await getBankCardDetailModule({
+      _id: bankId,
+    });
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.GET_BANK_CARD_ID,
+      data: getBankDetail,
+    });
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.getWithdrawRequest = async (req, res, next) => {
+  try {
+    let inputData = objectFormat(req.query);
+    let countResult = await countRecharge({
+      user_id: req.user.user_id,
+      type: "withdraw",
+    });
+    let result = await getRechargeModule(
+      { user_id: req.user.user_id, type: "withdraw" },
+      inputData
+    );
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.GET_WITHDRAW_REQUEST,
+      data: {
+        count: countResult,
+        result: result,
+      },
+    });
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.addWithdrawRequest = async (req, res, next) => {
+  try {
+    let inputData = objectFormat(req.body, [
+      { user_id: req.user.user_id },
+      "ammount",
+      "bank_card",
+    ]);
+    saveRecharge({
+      user_id: inputData.user_id,
+      type: "withdraw",
+      ammount: inputData.ammount,
+      status: "processing",
+      date: currentDate(),
+      details: {
+        bank_card: inputData.bank_card,
+      },
+    });
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.ADD_WITHDRAW_REQUEST,
       data: inputData,
     });
   } catch (e) {
@@ -86,13 +160,6 @@ exports.addBankCard = async (req, res, next) => {
       "email",
       { date: currentDate() },
     ]);
-    let otpCheck = await checkOtpVerification(
-      { mobile: inputData.mobile_number, type: "bankcard" },
-      req.body.verification_code
-    );
-    if (!check(otpCheck)) {
-      return res.status(200).send({ status: 0, message: MESSAGE.INVALID_OTP });
-    }
     let checkBankDetail = await getOneBankCardModule({
       bank_account: inputData.bank_account,
     });
@@ -107,22 +174,6 @@ exports.addBankCard = async (req, res, next) => {
       status: 1,
       message: MESSAGE.ADD_RECHARGE,
       data: {},
-    });
-  } catch (e) {
-    return res.json({ status: 0, message: e.message });
-  }
-};
-
-exports.getBankCardById = async (req, res, next) => {
-  try {
-    let bankId = req.params._id;
-    let getBankDetail = await getBankCardDetailModule({
-      _id: bankId,
-    });
-    return res.status(200).json({
-      status: 1,
-      message: MESSAGE.GET_BANK_CARD_ID,
-      data: getBankDetail,
     });
   } catch (e) {
     return res.json({ status: 0, message: e.message });

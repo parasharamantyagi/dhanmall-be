@@ -12,5 +12,8 @@ module.exports = {
   BANK_CARD_EXIT: "This bank account are already linked to another account",
   INVALID_OTP: "This is invalid otp",
   MOBILE_IS_USE: "This mobile is already use",
-  SEND_OTP_MESSAGE: "Use 123456 now for verification code"
+  SEND_OTP_MESSAGE: "Use 123456 now for verification code",
+  ADD_WITHDRAW_REQUEST: "Your Withdraw req submitted successfully",
+  GET_WITHDRAW_REQUEST: "Your Withdraw req get successfully",
+  STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
 };

@@ -8,22 +8,15 @@ const rechargeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  type: {
+    type: String,
+    enum: ["recharge", "withdraw"],
+    default: "recharge",
+  },
   ammount: {
     type: Float,
   },
-  transaction_id: {
-    type: Number,
-    default: 0,
-  },
-  remarks: {
-    type: String,
-    default: "",
-  },
-  type: {
-    type: String,
-    enum: ["upipay", "qrcode"],
-    default: "upipay",
-  },
+  details: Object,
   status: {
     type: String,
     enum: ["processing", "success", "failure"],
@@ -37,22 +30,34 @@ const rechargeSchema = new mongoose.Schema({
 
 const Recharge = (module.exports = mongoose.model("Recharge", rechargeSchema));
 
-module.exports.getRecharge = async function (user_id,object) {
-  return await Recharge.find({ user_id: user_id })
+module.exports.getRechargeModule = async function (where, object) {
+  return await Recharge.find(where)
     .populate({ path: "user_id", select: "nickname mobile" })
     .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
     .limit(PAGINATION_DEFAULT_LIMIT)
-    .sort({ _id: -1 }).exec();
+    .sort({ _id: -1 })
+    .exec();
 };
 
-module.exports.billingRecharge = async function (input) {
-  let limit = checkObj(input, "limit") ? input.limit : 10;
-  let skip = checkObj(input, "page") ? (input.page - 1) * 10 : 0;
-  return await Recharge.find()
+module.exports.billingRecharge = async function (object) {
+  return await Recharge.find({ type: object.type })
     .populate({ path: "user_id", select: "nickname mobile" })
-    .skip(skip)
-    .limit(limit)
-    .sort({ _id: -1 }).exec();
+    .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
+    .limit(PAGINATION_DEFAULT_LIMIT)
+    .sort({ _id: -1 })
+    .exec();
+};
+
+module.exports.updatedRechargeModule = async function (id, obj = {}) {
+  let result = await Recharge.findOneAndUpdate(
+    { _id: setDataType(id, "string") },
+    obj,
+    {
+      upsert: true, // Create the document if it doesn't exist
+      new: true, // Return the modified document as the result
+    }
+  );
+  return result;
 };
 
 module.exports.countRecharge = async function (obj = {}) {

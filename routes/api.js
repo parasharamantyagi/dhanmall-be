@@ -5,7 +5,7 @@ const { isValid, isUserValid } = require('../validators');
 const { verifyNumber, homeScreen } = require('../controllers/sms.controller');
 const { dashboardScreen, getOrders, saveOrders, gameNow, GameHistory } = require('../controllers/product.controller');
 const { addPayment } = require('../controllers/payment.controller'); // // all for payment related
-const { getRecharge, addRecharge, getBankCard, addBankCard, getBankCardById } = require('../controllers/recharge.controller');
+const { getRecharge, addRecharge, getBankCard, addBankCard, getBankCardById, getWithdrawRequest, addWithdrawRequest } = require('../controllers/recharge.controller');
 const { myProfile, myChildren, updatePassword, updateProfile } = require('../controllers/profile.controller');
 
 
@@ -32,6 +32,7 @@ router.route('/order').get(isUserValid, getOrders).post(isUserValid, saveOrders)
 
 router.post('/payment', isUserValid, addPayment);
 router.route('/recharge').get(isUserValid, getRecharge).post(addRechargeValidator, isValid, isUserValid, addRecharge);
+router.route('/withdraw-request').get(isUserValid, getWithdrawRequest).post(isUserValid, addWithdrawRequest);
 router.route('/bank-card').get(isUserValid, getBankCard).post([isUserValid,saveBankCardValidator,isValid], addBankCard);
 router.route('/bank-card/:_id').get(isUserValid, getBankCardById);
 
