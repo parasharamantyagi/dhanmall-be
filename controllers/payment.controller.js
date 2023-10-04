@@ -88,6 +88,19 @@ exports.addPayment = async (req, res, next) => {
         })
       );
     }
+    if (checkObj(resLavel5)) {
+      let ammount_commission = check(getUser.first_payment) ?  USER_NORMAL_COMMISION.LAVEL_2 : USER_FIRST_COMMISION.LAVEL_2;
+      let ammount = (setDataType(inputData.ammount) * ammount_commission) / 100;
+      let myChildrenUpdated = check(getUser.first_payment) ? { water_reward: ammount } : { first_reward: ammount };
+      updateMyChildren(resLavel5._id, myChildrenUpdated);
+      plusUserMoney(resLavel5.user_id, { money: ammount }, "reward");
+      savePayment(
+        merge_object(inputData, {
+          user_id: resLavel5.user_id,
+          type: "reward_1",
+        })
+      );
+    }
     return res.status(200).json({
       status: 1,
       message: MESSAGE.PAYMENT_SUCCESS,
