@@ -158,12 +158,7 @@ module.exports.plusUserMoney = async function (
   if (type === "reward") {
     object.commission = setDataType(money, "f");
   }
-  try {
-    result = await User.updateOne({ _id: id }, { $inc: object });
-  } catch (e) {
-    result = await User.updateOne({ _id: id }, object);
-  }
-  return result;
+  return await User.updateOne({ _id: id }, { $inc: object },{ new: true, runValidators: true });
 };
 
 module.exports.minusUserMoney = async function (id, { money }) {
@@ -173,6 +168,7 @@ module.exports.minusUserMoney = async function (id, { money }) {
     { money: setDataType(user.money, "f") - setDataType(money, "f") },
     {
       new: true,
+      runValidators: true
     }
   );
   return true;
@@ -181,6 +177,7 @@ module.exports.minusUserMoney = async function (id, { money }) {
 module.exports.updateUserFromId = async function (id, object) {
   await User.findOneAndUpdate({ _id: id }, object, {
     new: true,
+    runValidators: true
   });
   return true;
 };

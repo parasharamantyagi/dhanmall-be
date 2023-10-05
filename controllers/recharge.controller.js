@@ -11,6 +11,7 @@ const {
   getBankCardModule,
   getOneBankCardModule,
   getBankCardDetailModule,
+  updateBankCardModule,
 } = require("../models/BankCards");
 const {
   saveRecharge,
@@ -125,7 +126,9 @@ exports.addWithdrawRequest = async (req, res, next) => {
       "nickname money first_payment"
     );
     if (checkObj(getUser) && check(getUser.first_payment)) {
-      if (setDataType(inputData.ammount, "f") <= setDataType(getUser.money, "f")) {
+      if (
+        setDataType(inputData.ammount, "f") <= setDataType(getUser.money, "f")
+      ) {
         minusUserMoney(inputData.user_id, { money: inputData.ammount });
         saveRecharge({
           user_id: inputData.user_id,
@@ -200,9 +203,45 @@ exports.addBankCard = async (req, res, next) => {
     saveBankCardModule(inputData);
     return res.status(200).json({
       status: 1,
-      message: MESSAGE.ADD_RECHARGE,
+      message: MESSAGE.ADD_BANK_CARD,
       data: {},
     });
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.updateBankCardById = async (req, res, next) => {
+  try {
+    let bankId = req.params._id;
+    let inputData = objectFormat(req.body, [
+      "actual_name",
+      "ifsc_code",
+      "bank_name",
+      "bank_account",
+      "state",
+      "city",
+      "address",
+      "email",
+      { date: currentDate() },
+    ]);
+    let checkBankDetail = await getOneBankCardModule({
+      bank_account: inputData.bank_account,
+    });
+    if (!check(checkBankDetail.is_valid)) {
+      updateBankCardModule(bankId, inputData);
+      return res.status(200).json({
+        status: 1,
+        message: MESSAGE.UPDATE_BANK_CARD,
+        data: {},
+      });
+    }else{
+      return res.status(200).json({
+        status: 0,
+        message: MESSAGE.UNABLE_BANK_CARD,
+        data: {},
+      });
+    }
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

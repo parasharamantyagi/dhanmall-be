@@ -36,10 +36,6 @@ const bankCardSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  mobile_number: {
-    type: String,
-    default: "",
-  },
   email: {
     type: String,
     default: "",
@@ -52,6 +48,10 @@ const bankCardSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  is_valid: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const BankCard = (module.exports = mongoose.model("BankCards", bankCardSchema));
@@ -63,8 +63,7 @@ module.exports.getBankCardModule = async function (user_id) {
 };
 
 module.exports.getOneBankCardModule = async function (input) {
-  return await BankCard.findOne(input, {}, { sort: { date: -1 } })
-    .exec();
+  return await BankCard.findOne(input, {}, { sort: { date: -1 } }).exec();
 };
 
 module.exports.getBankCardDetailModule = async function (input) {
@@ -77,4 +76,11 @@ module.exports.saveBankCardModule = async function (input) {
   const res = new BankCard(input);
   let result = await res.save();
   return result;
+};
+
+module.exports.updateBankCardModule = async function (id, updateObj) {
+  return await BankCard.findOneAndUpdate({ _id: id },updateObj,{
+    new: true,
+    upsert: true,
+  });
 };
