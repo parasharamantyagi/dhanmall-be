@@ -151,7 +151,6 @@ module.exports.plusUserMoney = async function (
   { money },
   type = "payment"
 ) {
-  // let user = await User.findOne({ _id: id }).select("money commission");
   let object = {
     money: setDataType(money, "f"),
     contribution: setDataType(money, "f"),
@@ -159,10 +158,11 @@ module.exports.plusUserMoney = async function (
   if (type === "reward") {
     object.commission = setDataType(money, "f");
   }
-  // await User.findOneAndUpdate({ _id: id }, object, {
-  //   new: true,
-  // });
-  result = await User.updateOne({ _id: id }, { $inc: object });
+  try {
+    result = await User.updateOne({ _id: id }, { $inc: object });
+  } catch (e) {
+    result = await User.updateOne({ _id: id }, object);
+  }
   return result;
 };
 

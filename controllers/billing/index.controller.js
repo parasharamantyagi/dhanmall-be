@@ -4,6 +4,7 @@ const {
   checkObj,
   check,
   merge_object,
+  setDataType,
 } = require("../../helpers");
 const { getOneBankCardModule } = require("../../models/BankCards");
 const {
@@ -66,8 +67,8 @@ exports.rechargeStatus = async (req, res, next) => {
       let rechargeDetail = await getRechargeDetail({ _id: rechargeId });
       updatedRechargeModule(rechargeId, inputData);
       handlePaymentRequest({
-        user_id: rechargeDetail.user_id._id,
-        ammount: rechargeDetail.ammount,
+        user_id: setDataType(rechargeDetail.user_id._id, "s"),
+        ammount: setDataType(rechargeDetail.ammount, "f"),
         type: "created",
         date: rechargeDetail.date,
       });

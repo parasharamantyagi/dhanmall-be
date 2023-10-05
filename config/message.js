@@ -14,6 +14,8 @@ module.exports = {
   MOBILE_IS_USE: "This mobile is already use",
   SEND_OTP_MESSAGE: "Use 123456 now for verification code",
   ADD_WITHDRAW_REQUEST: "Your Withdraw req submitted successfully",
+  WITHDRAW_REQUEST_FIRST: "Your Withdrawal request not submitted unless you do not make a recharge",
+  WITHDRAW_REQUEST_AMMOUNT: "You have insufficient balance in your wallet",
   GET_WITHDRAW_REQUEST: "Your Withdraw req get successfully",
   STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
 };

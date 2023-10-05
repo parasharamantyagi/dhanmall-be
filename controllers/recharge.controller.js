@@ -1,5 +1,11 @@
 const { MESSAGE } = require("../config");
-const { objectFormat, currentDate, check, checkObj } = require("../helpers");
+const {
+  objectFormat,
+  currentDate,
+  check,
+  checkObj,
+  setDataType,
+} = require("../helpers");
 const {
   saveBankCardModule,
   getBankCardModule,
@@ -11,6 +17,7 @@ const {
   getRechargeModule,
   countRecharge,
 } = require("../models/Recharges");
+const { userById, minusUserMoney } = require("../models/Users");
 
 exports.getRecharge = async (req, res, next) => {
   try {
@@ -113,21 +120,42 @@ exports.addWithdrawRequest = async (req, res, next) => {
       "ammount",
       "bank_card",
     ]);
-    saveRecharge({
-      user_id: inputData.user_id,
-      type: "withdraw",
-      ammount: inputData.ammount,
-      status: "processing",
-      date: currentDate(),
-      details: {
-        bank_card: inputData.bank_card,
-      },
-    });
-    return res.status(200).json({
-      status: 1,
-      message: MESSAGE.ADD_WITHDRAW_REQUEST,
-      data: inputData,
-    });
+    let getUser = await userById(
+      inputData.user_id,
+      "nickname money first_payment"
+    );
+    if (checkObj(getUser) && check(getUser.first_payment)) {
+      if (setDataType(inputData.ammount, "f") <= setDataType(getUser.money, "f")) {
+        minusUserMoney(inputData.user_id, { money: inputData.ammount });
+        saveRecharge({
+          user_id: inputData.user_id,
+          type: "withdraw",
+          ammount: inputData.ammount,
+          status: "processing",
+          date: currentDate(),
+          details: {
+            bank_card: inputData.bank_card,
+          },
+        });
+        return res.status(200).json({
+          status: 1,
+          message: MESSAGE.ADD_WITHDRAW_REQUEST,
+          data: inputData,
+        });
+      } else {
+        return res.status(200).json({
+          status: 0,
+          message: MESSAGE.WITHDRAW_REQUEST_AMMOUNT,
+          data: inputData,
+        });
+      }
+    } else {
+      return res.status(200).json({
+        status: 0,
+        message: MESSAGE.WITHDRAW_REQUEST_FIRST,
+        data: inputData,
+      });
+    }
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

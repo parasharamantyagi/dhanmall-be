@@ -17,7 +17,7 @@ const {
 } = require("../models/Users");
 
 exports.handlePaymentRequest = async (inputData) => {
-  plusUserMoney(inputData.user_id, { money: setDataType(inputData.ammount,'n') }, "payment");
+  plusUserMoney(inputData.user_id, { money: inputData.ammount }, "payment");
   savePayment(inputData);
   updateUserFromId(inputData.user_id, { first_payment: 1 });
   let getUser = await userById(inputData.user_id, "first_payment");
