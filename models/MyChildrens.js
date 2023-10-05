@@ -1,5 +1,5 @@
-const { setDataType } = require("../helpers");
-const { GDM_MODULE } = require("../config");
+const { setDataType, checkObj } = require("../helpers");
+const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
@@ -42,9 +42,18 @@ module.exports.saveMyChildren = async function (input) {
   return result;
 };
 
-module.exports.getMyChildren = async function (inputData) {
+module.exports.countMyChildren = async function (inputData) {
+  return await MyChildren.find(inputData).countDocuments();
+};
+
+module.exports.getMyChildren = async function (inputData, obj = {page: 0}) {
+
+  let limit = checkObj(inputData, "limit") ? inputData.limit : PAGINATION_DEFAULT_LIMIT;
   return await MyChildren.find(inputData)
     .populate({ path: "childrens_id", select: "nickname mobile" })
+    .skip(setDataType(obj.page, "n") * limit)
+    .limit(limit)
+    .sort({ _id: -1 })
     .exec();
 };
 

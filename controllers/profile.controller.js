@@ -1,6 +1,6 @@
 const { APP_URL, MESSAGE } = require("../config");
 const { objectFormat, merge_object, checkObj } = require("../helpers");
-const { getMyChildren } = require("../models/MyChildrens");
+const { getMyChildren, countMyChildren } = require("../models/MyChildrens");
 const userModel = require("./../models/Users");
 const { userById } = require("../models/Users");
 const { dencrypted } = require("../helpers/crypto");
@@ -25,9 +25,12 @@ exports.myChildren = async (req, res, next) => {
     let inputData = objectFormat(req.query, [
       { user_id: req.user.user_id },
       { type: "lavel_1" },
+      { page: 0 },
     ]);
     let result = await userById(req.user.user_id);
-    result.children = await getMyChildren(inputData);
+    result.total_people = await countMyChildren({ user_id: inputData.user_id });
+    result.totalPeopleWithType = await countMyChildren({user_id: inputData.user_id, type: inputData.type});
+    result.children = await getMyChildren({user_id: inputData.user_id, type: inputData.type},{ page: inputData.page });
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
