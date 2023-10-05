@@ -16,6 +16,7 @@ const {
   updatedRechargeModule,
   getRechargeDetail,
 } = require("../../models/Recharges");
+const { handlePaymentRequest } = require("../payment.controller");
 
 exports.rechargeReq = async (req, res, next) => {
   try {
@@ -61,11 +62,35 @@ exports.rechargeStatus = async (req, res, next) => {
   try {
     let rechargeId = req.params._id;
     let inputData = objectFormat(req.body, ["status"]);
+    if (inputData.status === "success") {
+      let rechargeDetail = await getRechargeDetail({ _id: rechargeId });
+      updatedRechargeModule(rechargeId, inputData);
+      handlePaymentRequest({
+        user_id: rechargeDetail.user_id._id,
+        ammount: rechargeDetail.ammount,
+        type: "created",
+        date: rechargeDetail.date,
+      });
+    }
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.STATUS_UPDATE_SUCCESSFULLY,
+      data: {},
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+exports.withdrawalStatus = async (req, res, next) => {
+  try {
+    let rechargeId = req.params._id;
+    let inputData = objectFormat(req.body, ["status"]);
     updatedRechargeModule(rechargeId, inputData);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.STATUS_UPDATE_SUCCESSFULLY,
-      data: inputData,
+      data: {},
     });
   } catch (e) {
     return res.json();
