@@ -96,7 +96,7 @@ module.exports.saveGameOrderCalculation = async function (input) {
 };
 
 module.exports.currentGameOrderCalculation = async function () {
-  return await GameOrderCalculation.findOne().sort({ date: -1 }).exec();
+  return await GameOrderCalculation.findOne().populate({ path: "game_id" }).sort({ date: -1 }).exec();
 };
 
 module.exports.getGameOrderCalculation = async function () {

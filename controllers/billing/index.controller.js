@@ -11,6 +11,7 @@ const {
   currentGameOrderCalculation,
   getGameOrderCalculationByGameId,
 } = require("../../models/GameOrderCalculation");
+const { updateGame } = require("../../models/Games");
 const {
   billingRecharge,
   countRecharge,
@@ -130,6 +131,33 @@ exports.currentGame = async (req, res, next) => {
       status: 1,
       message: "Current list",
       data: respone,
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+exports.setGameUnit = async (req, res, next) => {
+  try {
+    let inputData = objectFormat(req.body, [
+      "game_id",
+      "set_value",
+      "set_unit",
+    ]);
+    if (setDataType(inputData.set_unit, "n")) {
+      updateGame(inputData.game_id, {
+        detail: {
+          set_unit: setDataType(inputData.set_unit, "n"),
+          set_value: setDataType(inputData.set_value, "n"),
+        },
+      });
+    } else {
+      updateGame(inputData.game_id, { detail: { set_unit: 0, set_value: 0 } });
+    }
+    return res.status(200).json({
+      status: 1,
+      message: "Set game list",
+      data: inputData,
     });
   } catch (e) {
     return res.json();

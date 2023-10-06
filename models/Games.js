@@ -47,6 +47,7 @@ const gameSchema = new mongoose.Schema({
   },
   detail: {
     set_unit: { type: Number, default: 0 },
+    set_value: { type: Number, default: 0 },
   },
 });
 
