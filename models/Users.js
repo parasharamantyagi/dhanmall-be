@@ -162,20 +162,19 @@ module.exports.plusUserMoney = async function (
 };
 
 module.exports.minusUserMoney = async function (id, { money }) {
-  let user = await User.findOne({ _id: id }).select("money");
-  await User.findOneAndUpdate(
-    { _id: id },
-    { money: setDataType(user.money, "f") - setDataType(money, "f") },
-    {
-      new: true,
-      runValidators: true
-    }
-  );
-  return true;
+  return await User.updateOne({ _id: id }, { $inc: { money: -setDataType(money, "f")} },{ new: true, runValidators: true });
 };
 
 module.exports.updateUserFromId = async function (id, object) {
   await User.findOneAndUpdate({ _id: id }, object, {
+    new: true,
+    runValidators: true
+  });
+  return true;
+};
+
+module.exports.updateUserFromObject = async function (where, object) {
+  await User.findOneAndUpdate(where, object, {
     new: true,
     runValidators: true
   });
