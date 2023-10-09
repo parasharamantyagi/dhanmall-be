@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: Number,
-    enum: [0, 1, 2],
+    enum: [0, 1, 2], // 0 - waiting, 1 - win, 2 - fail
     default: 0,
   },
   goods_id: {

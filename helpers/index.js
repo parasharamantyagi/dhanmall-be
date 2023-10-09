@@ -25,11 +25,23 @@ exports.cronjobTZ = (date) => {
   return moment(date).tz("America/Phoenix").format(my_date_format);
 };
 
+exports.find_one = (inputArray, my_key = null) => {
+  // 👈 return single value from array default return first
+  let response = Object();
+  if (inputArray.length) {
+    response = inputArray.find(Boolean);
+    if (my_key) {
+      return inputArray[my_key];
+    }
+  }
+  return response;
+};
+
 exports.check = (value) => {
   // 👈 check string is valid or not
   return (
     value &&
-    value !== '' &&
+    value !== "" &&
     value !== "NaN" &&
     value !== "false" &&
     value !== "undefined" &&
@@ -143,7 +155,7 @@ exports.array_to_str = (obj) => {
 };
 
 exports.str_to_array = (obj) => {
-  return obj.split(',');
+  return obj.split(",");
 };
 
 exports.int_toFixed = (value) => {
@@ -155,7 +167,7 @@ exports.filterArrayKey = (target, input) => {
   let return_object = [];
   if (target.length > 0) {
     return_object = target.map(function (key) {
-      return parseFloat(key[input]);
+      return key[input];
     });
   }
   return return_object;
@@ -206,9 +218,31 @@ exports.gameNowTime = () => {
 exports.todayCurrentMinutes = () => {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  return this.setDataType(currentMinutes/3,'int');
+  return this.setDataType(currentMinutes / 3, "int");
 };
 
 exports.removeFirstThreeCharacters = (inputString) => {
   return inputString.substring(3);
 };
+
+exports.getSmallerAmount = (arrayOfObjects) => {
+  let smallestValue = Infinity; // Initialize with a large value
+  let smallestObjects = [];
+  for (const obj of arrayOfObjects) {
+    if (
+      typeof obj.value === 'number' &&
+      !isNaN(obj.value) &&
+      obj.value === smallestValue
+    ) {
+      smallestObjects.push(obj);
+    } else if (typeof obj.value === 'number' && !isNaN(obj.value) && obj.value < smallestValue) {
+      smallestValue = obj.value;
+      smallestObjects = [obj];
+    }
+  }
+  return this.filterArrayKey(smallestObjects,'no');
+};
+
+exports.isPositiveNumber = (number) => number > 0 ? true : number < 0 ? false : false;
+exports.changePositiveNumber = (number) => Math.abs(number);
+

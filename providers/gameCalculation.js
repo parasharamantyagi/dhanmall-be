@@ -4,84 +4,110 @@ const {
   setDataType,
   array_to_str,
   checkObj,
+  filterArrayKey,
+  sum_of_array,
+  isPositiveNumber,
+  changePositiveNumber,
+  checkArray,
+  getSmallerAmount,
 } = require("../helpers");
 const { colors2 } = require("./colors");
 
-module.exports.calCulationNumberPridiction = (gameOrders) => {
+
+module.exports.calCulationNumberPridiction = (gameOrders, current_game) => {
   let unit = GDM_MODULE.rn({ min: 0, max: 9, integer: true });
-  if (checkObj(gameOrders)) {
-    const {
-      pick_red,
-      pick_green,
-      pick_violet,
-      pick_0,
-      pick_1,
-      pick_2,
-      pick_3,
-      pick_4,
-      pick_5,
-      pick_6,
-      pick_7,
-      pick_8,
-      pick_9,
-      total_price,
-    } = gameOrders;
-    if (total_price.total_delivery) {
-      if (pick_red.total_delivery < pick_green.total_delivery) {
-        if (
-          pick_2.total_delivery <= pick_4.total_delivery &&
-          pick_2.total_delivery <= pick_6.total_delivery &&
-          pick_2.total_delivery <= pick_8.total_delivery
-        ) {
-          unit = 2;
-        } else if (
-          pick_4.total_delivery <= pick_2.total_delivery &&
-          pick_4.total_delivery <= pick_6.total_delivery &&
-          pick_4.total_delivery <= pick_8.total_delivery
-        ) {
-          unit = 4;
-        } else if (
-          pick_6.total_delivery <= pick_2.total_delivery &&
-          pick_6.total_delivery <= pick_4.total_delivery &&
-          pick_6.total_delivery <= pick_8.total_delivery
-        ) {
-          unit = 6;
-        } else if (
-          pick_8.total_delivery <= pick_2.total_delivery &&
-          pick_8.total_delivery <= pick_4.total_delivery &&
-          pick_8.total_delivery <= pick_6.total_delivery
-        ) {
-          unit = 8;
-        }
-      } else if (pick_red.total_delivery > pick_green.total_delivery) {
-        if (
-          pick_1.total_delivery <= pick_3.total_delivery &&
-          pick_1.total_delivery <= pick_7.total_delivery &&
-          pick_1.total_delivery <= pick_9.total_delivery
-        ) {
-          unit = 1;
-        } else if (
-          pick_3.total_delivery <= pick_1.total_delivery &&
-          pick_3.total_delivery <= pick_7.total_delivery &&
-          pick_3.total_delivery <= pick_9.total_delivery
-        ) {
-          unit = 3;
-        } else if (
-          pick_7.total_delivery <= pick_1.total_delivery &&
-          pick_7.total_delivery <= pick_3.total_delivery &&
-          pick_7.total_delivery <= pick_9.total_delivery
-        ) {
-          unit = 7;
-        } else if (
-          pick_9.total_delivery <= pick_1.total_delivery &&
-          pick_9.total_delivery <= pick_3.total_delivery &&
-          pick_9.total_delivery <= pick_7.total_delivery
-        ) {
-          unit = 9;
+  let unitArray = [];
+  let currentGame = gameOrders[0];
+  if (
+    setDataType(currentGame.game_id, "s") === setDataType(current_game, "s")
+  ) {
+    gameOrders = gameOrders.slice(1);
+    let last_five_transaction =
+      sum_of_array(filterArrayKey(filterArrayKey(gameOrders, "game_budget"),"total_amount")) -
+      sum_of_array(filterArrayKey(filterArrayKey(gameOrders, "game_budget"),"total_delivery"));
+      if (currentGame.total_price.total_amount * 2 > currentGame.total_price.total_delivery) {
+      if (currentGame.total_price.total_delivery > changePositiveNumber(last_five_transaction)) {
+        if (currentGame.pick_red.total_delivery < currentGame.pick_green.total_delivery) {
+          unitArray.push(1); // green pick
+          unitArray.push(3);
+          unitArray.push(7);
+          unitArray.push(9);
+        }else{
+          unitArray.push(2); // red pick
+          unitArray.push(4);
+          unitArray.push(6);
+          unitArray.push(8);
         }
       } else {
+        if (currentGame.pick_red.total_delivery < currentGame.pick_green.total_delivery) {
+          if(currentGame.pick_red.total_delivery < currentGame.pick_green.total_delivery / 2){
+            unitArray.push(2); // red pick
+            unitArray.push(4);
+            unitArray.push(6);
+            unitArray.push(8);
+          }else{
+            unitArray.push(0);
+          }          
+        }else{
+          if((currentGame.pick_red.total_delivery / 2) > currentGame.pick_green.total_delivery){
+            unitArray.push(1); // green pick
+            unitArray.push(3);
+            unitArray.push(7);
+            unitArray.push(9);
+          }else{
+            unitArray.push(5);
+          }
+        }
       }
+    }else{
+        const getVal = [
+          {
+            no: 0,
+            value: currentGame.pick_0.total_delivery
+          },
+          {
+            no: 1,
+            value: currentGame.pick_1.total_delivery
+          },
+          {
+            no: 2,
+            value: currentGame.pick_2.total_delivery
+          },
+          {
+            no: 3,
+            value: currentGame.pick_3.total_delivery
+          },
+          {
+            no: 4,
+            value: currentGame.pick_4.total_delivery
+          },
+          {
+            no: 5,
+            value: currentGame.pick_5.total_delivery
+          },
+          {
+            no: 6,
+            value: currentGame.pick_6.total_delivery
+          },
+          {
+            no: 7,
+            value: currentGame.pick_7.total_delivery
+          },
+          {
+            no: 8,
+            value: currentGame.pick_8.total_delivery
+          },
+          {
+            no: 9,
+            value: currentGame.pick_9.total_delivery
+          }
+        ]
+        unitArray = getSmallerAmount(getVal);
     }
+  }
+  if (checkArray(unitArray)) {
+    const randomIndex = Math.floor(Math.random() * unitArray.length);
+    unit = unitArray[randomIndex];
   }
   let otp = GDM_MODULE.rn({ min: 1222, max: 1599, integer: true });
   let calPrice = setDataType(otp, "s") + setDataType(unit, "s");

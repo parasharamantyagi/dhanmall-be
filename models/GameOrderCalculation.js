@@ -78,6 +78,12 @@ const gameOrderCalculationSchema = new mongoose.Schema({
     total_delivery: { type: Float, default: 0 },
     pick_count: { type: Number, default: 0 },
   },
+  game_budget: {
+    total_amount: { type: Float, default: 0 },
+    total_delivery: { type: Float, default: 0 },
+    winner_pick_count: { type: Number, default: 0 },
+    loser_pick_count: { type: Number, default: 0 },
+  },
   date: {
     type: Number,
     default: currentDate(),
@@ -99,12 +105,15 @@ module.exports.currentGameOrderCalculation = async function () {
   return await GameOrderCalculation.findOne().populate({ path: "game_id" }).sort({ date: -1 }).exec();
 };
 
+
 module.exports.getGameOrderCalculation = async function () {
   return await GameOrderCalculation.find().exec();
 };
 
-module.exports.getGameOrderCalculationByGameId = async function (game_id) {
-  return await GameOrderCalculation.findOne({ game_id: game_id }).exec();
+module.exports.getGameOrderCalculationByGameId = async function () {
+  // .limit(limit)
+  // return await GameOrderCalculation.findOne({ game_id: game_id }).exec();
+  return await GameOrderCalculation.find({ "total_price.total_amount": { $ne: 0 } }).limit(5).sort({ date: -1 }).exec();
 };
 
 module.exports.updateGameOrderCalculation = async function (game_id,object) {
@@ -141,3 +150,10 @@ module.exports.updateGameOrderCalculation = async function (game_id,object) {
     { $inc:  updateObj}
   );
 };
+
+module.exports.manageGameBudget = async function (game_id,object) {
+  return await GameOrderCalculation.updateOne(
+    { game_id: game_id },
+    {game_budget: object}
+  );
+}

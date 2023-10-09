@@ -5,10 +5,14 @@ const {
   setDataType,
   todayDate,
   str_to_array,
+  sum_of_array,
+  checkArray,
+  find_one,
 } = require("../helpers");
 const {
   saveGameOrderCalculation,
   getGameOrderCalculationByGameId,
+  manageGameBudget,
 } = require("../models/GameOrderCalculation");
 const {
   saveGame,
@@ -25,12 +29,13 @@ exports.gameInterval = async (req, res, next) => {
     let gameId = await gameById(0);
     let all_orders = [];
     let order_cal = { amount: 0 };
+    let gameBudgetAmmount = [0];
+    let total_winner_pick_count = 0;
+    let total_loser_pick_count = 0;
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-      let gameOrders = await getGameOrderCalculationByGameId(
-        setDataType(gameId._id, "s")
-      );
-      let calResult = calCulationNumberPridiction(gameOrders);
+      let gameOrders = await getGameOrderCalculationByGameId();
+      let calResult = calCulationNumberPridiction(gameOrders,setDataType(gameId._id, "s"));
       updateGame(setDataType(gameId._id, "s"), calResult);
       for (let order of all_orders) {
         if (order.type === 2) {
@@ -60,9 +65,15 @@ exports.gameInterval = async (req, res, next) => {
             }
           }
         }
+        if (order_cal.status === 1) {
+          total_winner_pick_count++;
+        } else {
+          total_loser_pick_count++;
+        }
         plusUserMoney(setDataType(order.user_id, "s"), {
           money: order_cal.amount,
         });
+        gameBudgetAmmount.push(order_cal.amount);
         updateOrder(
           setDataType(order._id, "s"),
           merge_object(
@@ -74,6 +85,14 @@ exports.gameInterval = async (req, res, next) => {
             order_cal
           )
         );
+      }
+      if(checkArray(gameOrders) && setDataType(find_one(gameOrders).game_id,"s") === setDataType(gameId._id, "s")){
+        manageGameBudget(setDataType(gameId._id, "s"), {
+          total_amount: gameOrders[0].total_price.total_amount,
+          total_delivery: sum_of_array(gameBudgetAmmount),
+          winner_pick_count: total_winner_pick_count,
+          loser_pick_count: total_loser_pick_count,
+        });
       }
     }
     let period = setDataType(1, "padStart");

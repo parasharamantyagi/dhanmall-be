@@ -96,7 +96,7 @@ exports.saveOrders = async (req, res, next) => {
       invest_money =
         checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2
           ? invest_money * 9
-          : invest_money;
+          : invest_money * 2;
       // inputData.invest_money = invest_money;
       inputData.fee = invest_money * GDM_CHARGES_FEE;
       inputData.delivery = invest_money - inputData.fee;
