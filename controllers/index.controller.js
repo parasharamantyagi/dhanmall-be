@@ -59,6 +59,7 @@ exports.registerReq = async (req, res, next) => {
       message: "User register successfully",
       token: setJWT({
         user_id: user_result._id,
+        mobile: inputData.mobile
       }),
     });
   } catch (e) {
@@ -87,6 +88,7 @@ exports.loginReq = async (req, res, next) => {
           role_id: roll,
           token: setJWT({
             user_id: user._id,
+            mobile: user.mobile
           }),
         },
       });
