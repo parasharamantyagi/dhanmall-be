@@ -57,12 +57,14 @@ module.exports = mongoose.model("Game", gameSchema);
 module.exports.gameById = async function (id = "") {
   if (check(id) && checkIsString(id)) {
     return await Game.findOne({ _id: id })
+      .select(['date','begintime','period','price','unit'])
       .exec()
       .then((result) => {
         return JSON.parse(JSON.stringify(result));
       });
   } else {
     return await Game.findOne()
+      .select(['date','begintime','period','price','unit'])
       .sort({ _id: -1 })
       .skip(id)
       .exec()
@@ -75,6 +77,7 @@ module.exports.gameById = async function (id = "") {
 module.exports.gameOfDashboard = async function (input) {
   let limit = checkObj(input, "limit") ? input.limit : PAGINATION_DEFAULT_LIMIT;
   return await Game.find({ status: 1 })
+    .select(['date','begintime','period','price','unit'])
     .skip(setDataType(input.page, "n") * limit)
     .limit(limit)
     .sort({ _id: -1 });
