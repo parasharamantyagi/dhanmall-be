@@ -11,6 +11,8 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
+    check = await getGameOrderCalculationByGameId();
+    check = calCulationNumberPridiction(check,check[0].game_id);
     return res.status(200).json(check);
   } catch (err) {
     res.status(500).json({ success: false, msg: err.message });

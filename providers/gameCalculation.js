@@ -26,7 +26,7 @@ module.exports.calCulationNumberPridiction = (gameOrders, current_game) => {
       sum_of_array(filterArrayKey(filterArrayKey(gameOrders, "game_budget"),"total_amount")) -
       sum_of_array(filterArrayKey(filterArrayKey(gameOrders, "game_budget"),"total_delivery"));
       if (currentGame.total_price.total_amount * 2 > currentGame.total_price.total_delivery) {
-      if (currentGame.total_price.total_delivery > changePositiveNumber(last_five_transaction)) {
+      if (currentGame.total_price.total_delivery < changePositiveNumber(last_five_transaction)) {
         if (currentGame.pick_red.total_delivery < currentGame.pick_green.total_delivery) {
           unitArray.push(1); // green pick
           unitArray.push(3);
