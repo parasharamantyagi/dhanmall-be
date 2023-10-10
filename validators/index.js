@@ -33,7 +33,7 @@ exports.isAdminValid = async (req, res, next) => {
       req.headers.authorization,
       JWT_ACCESS_TOKEN,
     );
-    if(checkObj(jwt_token,'mobile') && ADMIN_USER.includes(checkObj(jwt_token,'mobile'))){
+    if(checkObj(jwt_token,'mobile') && ADMIN_USER.includes(jwt_token.mobile)){
       req.user = jwt_token;
       next();
     }else{
