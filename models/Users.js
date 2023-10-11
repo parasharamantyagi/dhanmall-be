@@ -1,5 +1,5 @@
 const { setDataType, check, checkObj, currentDate } = require("../helpers");
-const { GDM_MODULE } = require("../config");
+const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const { saveMyChildren } = require("./MyChildrens");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
@@ -63,6 +63,10 @@ const UserSchema = new mongoose.Schema({
   is_special: {
     type: Number,
     enum: [0, 1],
+    default: 0,
+  },
+  createdAt: {
+    type: Number,
     default: 0,
   },
 });
@@ -158,17 +162,25 @@ module.exports.plusUserMoney = async function (
   if (type === "reward") {
     object.commission = setDataType(money, "f");
   }
-  return await User.updateOne({ _id: id }, { $inc: object },{ new: true, runValidators: true });
+  return await User.updateOne(
+    { _id: id },
+    { $inc: object },
+    { new: true, runValidators: true }
+  );
 };
 
 module.exports.minusUserMoney = async function (id, { money }) {
-  return await User.updateOne({ _id: id }, { $inc: { money: -setDataType(money, "f")} },{ new: true, runValidators: true });
+  return await User.updateOne(
+    { _id: id },
+    { $inc: { money: -setDataType(money, "f") } },
+    { new: true, runValidators: true }
+  );
 };
 
 module.exports.updateUserFromId = async function (id, object) {
   await User.findOneAndUpdate({ _id: id }, object, {
     new: true,
-    runValidators: true
+    runValidators: true,
   });
   return true;
 };
@@ -176,7 +188,7 @@ module.exports.updateUserFromId = async function (id, object) {
 module.exports.updateUserFromObject = async function (where, object) {
   await User.findOneAndUpdate(where, object, {
     new: true,
-    runValidators: true
+    runValidators: true,
   });
   return true;
 };
@@ -251,6 +263,19 @@ module.exports.manageUserAllChildren = async function (object) {
     });
   }
   return true;
+};
+
+module.exports.countUsers = async function (obj = {}) {
+  return await User.find(obj).countDocuments();
+};
+
+module.exports.billingUsers = async function (inputReq, page) {
+  return await User.find(inputReq)
+    .select(["nickname","mobile","promotion_code","money","commission","interest","createdAt","first_payment"])
+    .skip(page * PAGINATION_DEFAULT_LIMIT)
+    .limit(PAGINATION_DEFAULT_LIMIT)
+    .sort({ _id: -1 })
+    .exec();
 };
 
 module.exports.User = mongoose.model("User", UserSchema);

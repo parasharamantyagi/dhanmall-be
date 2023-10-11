@@ -18,6 +18,7 @@ const {
   updatedRechargeModule,
   getRechargeDetail,
 } = require("../../models/Recharges");
+const { billingUsers, countUsers } = require("../../models/Users");
 const { handlePaymentRequest } = require("../payment.controller");
 
 exports.rechargeReq = async (req, res, next) => {
@@ -158,6 +159,26 @@ exports.setGameUnit = async (req, res, next) => {
       status: 1,
       message: "Set game list",
       data: inputData,
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    let { page } = objectFormat(req.query, [{ page: 0 }]);
+    let inputData = objectFormat(req.body,['mobile','promotion_code']);
+    let count = await countUsers(inputData);
+    let userList = await billingUsers(inputData, setDataType(page, "n"));
+    return res.status(200).json({
+      status: 1,
+      message: "User list",
+      data: {
+        count: count,
+        result: userList,
+      },
     });
   } catch (e) {
     return res.json();

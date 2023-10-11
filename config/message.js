@@ -20,4 +20,5 @@ module.exports = {
   WITHDRAW_REQUEST_AMMOUNT: "You have insufficient balance in your wallet",
   GET_WITHDRAW_REQUEST: "Your Withdraw req get successfully",
   STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
+  TIME_OUT: "Time has been out",
 };

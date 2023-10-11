@@ -6,6 +6,8 @@ const {
   checkObj,
   gameNowTime,
   setDataType,
+  currentDate,
+  isPositiveNumber,
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById } = require("../models/Games");
 const { saveOrder, orderOfUser, countUserOrders } = require("../models/Orders");
@@ -77,7 +79,7 @@ exports.saveOrders = async (req, res, next) => {
       "pick",
       "game_id",
     ]);
-    let gameDetail = await gameById({ game: inputData.game_id });
+    let gameDetail = await gameById({ game: inputData.game_id,selected: ['date','begintime','period','price'] });
     let user = await userById(inputData.user_id, "money");
     inputData.contract_money = arrayOfObject(contract_type, { id: inputData.contract_type }, "ammount");
     let invest_money = inputData.contract_money * inputData.contract_number;
@@ -87,25 +89,32 @@ exports.saveOrders = async (req, res, next) => {
         message: MESSAGE.insufficient_balance,
         data: {},
       });
-    } else {
-      minusUserMoney(inputData.user_id, { money: invest_money });
-      inputData.fee = invest_money * GDM_CHARGES_FEE;
-      inputData.invest = invest_money - inputData.fee;
-      inputData.delivery = checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2 ? inputData.invest * 9 : inputData.invest * 2;
-      inputData.project_id = 1;
-      inputData.goods_id = 11;
-      inputData.price = gameDetail.price;
-      inputData.details = {
-        game_period: gameDetail.period,
-        game_date: gameDetail.date,
-      };
-      inputData.fee = int_toFixed(inputData.fee);
-      let order = await saveOrder(inputData);
-      updateGameOrderCalculation(inputData.game_id, inputData);
-      return res
-        .status(200)
-        .json({ status: 1, message: MESSAGE.SAVE_ORDER, data: inputData });
     }
+    let gameTime = currentDate() - gameDetail.begintime;
+    if(isPositiveNumber(gameTime) && gameTime > 150){
+      return res.status(200).json({
+        status: 0,
+        message: MESSAGE.TIME_OUT,
+        data: {},
+      });
+    }
+    minusUserMoney(inputData.user_id, { money: invest_money });
+    inputData.fee = invest_money * GDM_CHARGES_FEE;
+    inputData.invest = invest_money - inputData.fee;
+    inputData.delivery = checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2 ? inputData.invest * 9 : inputData.invest * 2;
+    inputData.project_id = 1;
+    inputData.goods_id = 11;
+    inputData.price = gameDetail.price;
+    inputData.details = {
+      game_period: gameDetail.period,
+      game_date: gameDetail.date,
+    };
+    inputData.fee = int_toFixed(inputData.fee);
+    let order = await saveOrder(inputData);
+    updateGameOrderCalculation(inputData.game_id, inputData);
+    return res
+      .status(200)
+      .json({ status: 1, message: MESSAGE.SAVE_ORDER, data: inputData });
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

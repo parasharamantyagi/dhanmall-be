@@ -1,5 +1,5 @@
 const { MESSAGE } = require("../config");
-const { checkObj, objectFormat, check, setDataType } = require("../helpers");
+const { checkObj, objectFormat, check, setDataType, currentDate } = require("../helpers");
 const {
   encrypted,
   dencrypted,
@@ -51,6 +51,7 @@ exports.registerReq = async (req, res, next) => {
     }
     inputData.password = encrypted(inputData.password);
     inputData.promotion_code = promotionCode();
+    inputData.createdAt = currentDate()
     const saveuser = new userModel(inputData);
     let user_result = await saveuser.save();
     userModel.manageUserAllChildren(user_result);
