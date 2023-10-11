@@ -54,19 +54,20 @@ const gameSchema = new mongoose.Schema({
 const Game = (module.exports = mongoose.model("Game", gameSchema));
 module.exports = mongoose.model("Game", gameSchema);
 
-module.exports.gameById = async function (id = "") {
-  if (check(id) && checkIsString(id)) {
-    return await Game.findOne({ _id: id })
-      .select(['date','begintime','period','price','unit'])
+module.exports.gameById = async function (object) {
+  let selected = checkObj(object,'selected') ? object.selected : ['date','begintime','period','price','unit'];
+  if (check(object.id) && checkIsString(object.id)) {
+    return await Game.findOne({ _id: object.id })
+      .select(selected)
       .exec()
       .then((result) => {
         return JSON.parse(JSON.stringify(result));
       });
   } else {
     return await Game.findOne()
-      .select(['date','begintime','period','price','unit'])
+      .select(selected)
       .sort({ _id: -1 })
-      .skip(id)
+      .skip(object.id)
       .exec()
       .then((result) => {
         return JSON.parse(JSON.stringify(result));

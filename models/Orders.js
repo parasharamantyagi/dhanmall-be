@@ -1,6 +1,7 @@
 const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 const { currentDate, check, checkObj, setDataType } = require("../helpers");
+var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const orderSchema = new mongoose.Schema({
   user_id: {
@@ -32,11 +33,15 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
   delivery: {
-    type: String,
+    type: Float,
     required: true,
   },
   fee: {
-    type: String,
+    type: Float,
+    required: true,
+  },
+  invest: {
+    type: Float,
     required: true,
   },
   status: {
@@ -71,7 +76,7 @@ const orderSchema = new mongoose.Schema({
     // required: true,
   },
   amount: {
-    type: String,
+    type: Float,
     default: null,
     // required: true,
   },
@@ -101,7 +106,9 @@ module.exports.countUserOrders = async function (user_id) {
 
 module.exports.orderOfUser = async function (user_id, object = {}) {
   if (checkObj(object, "page")) {
-    let limit = checkObj(object, "limit") ? object.limit : PAGINATION_DEFAULT_LIMIT;
+    let limit = checkObj(object, "limit")
+      ? object.limit
+      : PAGINATION_DEFAULT_LIMIT;
     return await Order.find({ user_id: user_id })
       .skip(setDataType(object.page, "n") * limit)
       .limit(limit)

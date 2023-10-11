@@ -35,7 +35,7 @@ exports.dashboardScreen = async (req, res, next) => {
 
 exports.gameNow = async (req, res, next) => {
   try {
-    let result = await gameById(0);
+    let result = await gameById({ game: 0 });
     result.ammount = await userById(req.user.user_id, "money").then((res) => {
       return res.money;
     });
@@ -70,20 +70,16 @@ exports.getOrders = async (req, res, next) => {
 exports.saveOrders = async (req, res, next) => {
   try {
     let inputData = objectFormat(req.body, [
+      { user_id: req.user.user_id },
       "contract_type",
       "contract_number",
       "type",
       "pick",
       "game_id",
     ]);
-    let gameDetail = await gameById(inputData.game_id);
-    inputData.user_id = req.user.user_id;
+    let gameDetail = await gameById({ game: inputData.game_id });
     let user = await userById(inputData.user_id, "money");
-    inputData.contract_money = arrayOfObject(
-      contract_type,
-      { id: inputData.contract_type },
-      "ammount"
-    );
+    inputData.contract_money = arrayOfObject(contract_type, { id: inputData.contract_type }, "ammount");
     let invest_money = inputData.contract_money * inputData.contract_number;
     if (invest_money > user.money) {
       return res.status(200).json({
@@ -93,13 +89,9 @@ exports.saveOrders = async (req, res, next) => {
       });
     } else {
       minusUserMoney(inputData.user_id, { money: invest_money });
-      invest_money =
-        checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2
-          ? invest_money * 9
-          : invest_money * 2;
-      // inputData.invest_money = invest_money;
       inputData.fee = invest_money * GDM_CHARGES_FEE;
-      inputData.delivery = invest_money - inputData.fee;
+      inputData.invest = invest_money - inputData.fee;
+      inputData.delivery = checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2 ? inputData.invest * 9 : inputData.invest * 2;
       inputData.project_id = 1;
       inputData.goods_id = 11;
       inputData.price = gameDetail.price;
@@ -121,7 +113,7 @@ exports.saveOrders = async (req, res, next) => {
 
 exports.GameHistory = async (req, res, next) => {
   try {
-    let lastGameId = await gameById(1);
+    let lastGameId = await gameById({ game: 1 });
     let all_orders = await getGameOrderCalculationByGameId(
       setDataType(lastGameId._id, "s")
     );
