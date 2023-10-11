@@ -127,7 +127,7 @@ exports.gameInterval = async (req, res, next) => {
 
 exports.customSetting = async (req, res, next) => {
   try {
-    let object = {};
+    let object = "okkkkkk";
     await removeGame({ date: { $lt: todayDate() } });
     await removeGameOrderCalculation({ date: { $lt: todayDate() } });
     await removeOtpVerification({ date: { $lt: todayDate() } });

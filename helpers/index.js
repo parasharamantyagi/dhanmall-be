@@ -13,7 +13,7 @@ exports.lastMonthDate = () => {
   // 👈 return only current date and time
   let currentDate = moment();
   let lastMonthDate = currentDate.subtract(1, 'months');
-  return lastMonthDate.format('YYYY-MM-DD');
+  return lastMonthDate.unix();
 };
 
 exports.currentDate = () => {
