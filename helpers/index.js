@@ -9,6 +9,13 @@ exports.todayDate = () => {
   return moment().tz("Asia/Kolkata").format("YYYYMMDD");
 };
 
+exports.lastMonthDate = () => {
+  // 👈 return only current date and time
+  let currentDate = moment();
+  let lastMonthDate = currentDate.subtract(1, 'months');
+  return lastMonthDate.format('YYYY-MM-DD');
+};
+
 exports.currentDate = () => {
   // 👈 return only current date and time
   // 'YYYY-MM-DD - HH:mm:00'

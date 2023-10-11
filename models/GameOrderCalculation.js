@@ -111,8 +111,6 @@ module.exports.getGameOrderCalculation = async function () {
 };
 
 module.exports.getGameOrderCalculationByGameId = async function () {
-  // .limit(limit)
-  // return await GameOrderCalculation.findOne({ game_id: game_id }).exec();
   return await GameOrderCalculation.find({ "total_price.total_amount": { $ne: 0 } }).limit(4).sort({ date: -1 }).exec();
 };
 
@@ -157,3 +155,7 @@ module.exports.manageGameBudget = async function (game_id,object) {
     {game_budget: object}
   );
 }
+
+module.exports.removeGameOrderCalculation = async function (input) {
+  return await GameOrderCalculation.deleteMany(input);
+};

@@ -70,3 +70,7 @@ module.exports.saveOtpVerification = async function (input) {
     return false;
   }
 };
+
+module.exports.removeOtpVerification = async function (input) {
+  return await OtpVerification.deleteMany(input);
+};

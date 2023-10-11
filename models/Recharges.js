@@ -77,3 +77,7 @@ module.exports.saveRecharge = async function (input) {
   let result = await res.save();
   return result;
 };
+
+module.exports.removeRecharge = async function (input) {
+  return await Recharge.deleteMany(input);
+};

@@ -8,11 +8,13 @@ const {
   sum_of_array,
   checkArray,
   find_one,
+  lastMonthDate,
 } = require("../helpers");
 const {
   saveGameOrderCalculation,
   getGameOrderCalculationByGameId,
   manageGameBudget,
+  removeGameOrderCalculation,
 } = require("../models/GameOrderCalculation");
 const {
   saveGame,
@@ -20,7 +22,10 @@ const {
   updateGame,
   removeGame,
 } = require("../models/Games");
-const { orderByGameId, updateOrder } = require("../models/Orders");
+const { orderByGameId, updateOrder, removeOrder } = require("../models/Orders");
+const { removeOtpVerification } = require("../models/OtpVerifications");
+const { removePayment } = require("../models/Payments");
+const { removeRecharge } = require("../models/Recharges");
 const { plusUserMoney } = require("../models/Users");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
@@ -122,7 +127,15 @@ exports.gameInterval = async (req, res, next) => {
 
 exports.customSetting = async (req, res, next) => {
   try {
-    let object = await removeGame({ date: { $lt: todayDate() } });
+    let object = {};
+    await removeGame({ date: { $lt: todayDate() } });
+    await removeGameOrderCalculation({ date: { $lt: todayDate() } });
+    await removeOtpVerification({ date: { $lt: todayDate() } });
+
+
+    await removePayment({ date: { $lt: lastMonthDate() } });
+    await removeRecharge({ date: { $lt: lastMonthDate() } });
+    await removeOrder({ date: { $lt: lastMonthDate() } }); // previews 30 days
     return res.status(200).json(object);
   } catch (e) {
     return res.json({ status: 0, message: e.message });

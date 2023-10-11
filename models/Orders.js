@@ -68,24 +68,20 @@ const orderSchema = new mongoose.Schema({
   unit: {
     type: Number,
     default: null,
-    // required: true,
   },
   color: {
     type: String,
     default: null,
-    // required: true,
   },
   amount: {
     type: Float,
     default: null,
-    // required: true,
   },
   details: {
     type: Object,
     default: {},
   },
 });
-// module.exports = mongoose.model("orders", orderSchema);
 
 const Order = (module.exports = mongoose.model("orders", orderSchema));
 module.exports = mongoose.model("orders", orderSchema);
@@ -129,4 +125,8 @@ module.exports.updateOrder = async function (order_id, input) {
     upsert: true,
   });
   return data;
+};
+
+module.exports.removeOrder = async function (input) {
+  return await Order.deleteMany(input);
 };

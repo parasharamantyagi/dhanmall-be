@@ -37,3 +37,7 @@ module.exports.savePayment = async function (input) {
   let result = await res.save();
   return result;
 };
+
+module.exports.removePayment = async function (input) {
+  return await Payment.deleteMany(input);
+};
