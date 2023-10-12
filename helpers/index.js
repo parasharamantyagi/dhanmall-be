@@ -101,11 +101,11 @@ exports.objectFormat = (obj = {}, keys = []) => {
   if (this.checkArray(keys)) {
     keys.map((key) => {
       if (this.checkObj(obj, key)) {
-        return_obj[key] = obj[key].trim();
+        return_obj[key] = obj[key];
       } else {
         if (this.checkObj(key)) {
           object_key = Object.keys(key)[0];
-          return_obj[object_key] = this.checkObj(obj, object_key) ? obj[object_key] : key[object_key].trim();
+          return_obj[object_key] = this.checkObj(obj, object_key) ? obj[object_key] : key[object_key];
         }
       }
     });
