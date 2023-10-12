@@ -122,10 +122,8 @@ exports.saveOrders = async (req, res, next) => {
 
 exports.GameHistory = async (req, res, next) => {
   try {
-    let lastGameId = await gameById({ game: 1 });
-    let all_orders = await getGameOrderCalculationByGameId(
-      setDataType(lastGameId._id, "s")
-    );
+    // let lastGameId = await gameById({ game: 1 });
+    let all_orders = await getGameOrderCalculationByGameId();
     return res.status(200).json({
       status: 1,
       message: "Previews game history",
