@@ -105,7 +105,7 @@ exports.objectFormat = (obj = {}, keys = []) => {
       } else {
         if (this.checkObj(key)) {
           object_key = Object.keys(key)[0];
-          return_obj[object_key] = this.checkObj(obj, object_key) ? obj[object_key].trim() : key[object_key].trim();
+          return_obj[object_key] = this.checkObj(obj, object_key) ? obj[object_key] : key[object_key].trim();
         }
       }
     });
