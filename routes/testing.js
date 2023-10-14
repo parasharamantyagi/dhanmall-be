@@ -4,6 +4,7 @@ const { plusUserMoney, updateUserFromObject } = require("../models/Users");
 const { setDataType, sum_of_array, getSmallerAmount } = require("../helpers");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 const { manageGameBudget, getGameOrderCalculationByGameId } = require("../models/GameOrderCalculation");
+const { gameById } = require("../models/Games");
 
 var router = express.Router();
 
@@ -11,8 +12,9 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
+    let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
     check = await getGameOrderCalculationByGameId();
-    check = calCulationNumberPridiction(check,check[0]);
+    check = calCulationNumberPridiction(check,gameId);
     return res.status(200).json(check);
   } catch (err) {
     res.status(500).json({ success: false, msg: err.message });

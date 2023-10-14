@@ -21,7 +21,10 @@ module.exports.calCulationNumberPridiction = (gameOrders, current_game) => {
   if (checkObj(current_game, "detail") && check(current_game.detail.set_unit)) {
     unitArray.push(current_game.detail.set_value);
   } else {
-    if (setDataType(currentGame.game_id, "s") === setDataType(current_game._id, "s")) {
+    if (
+      setDataType(currentGame.game_id._id, "s") ===
+      setDataType(current_game._id, "s")
+    ) {
       gameOrders = gameOrders.slice(1);
       let last_five_transaction =
         sum_of_array(
