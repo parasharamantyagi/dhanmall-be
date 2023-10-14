@@ -33,7 +33,7 @@ module.exports = {
   GDM_CHARGES_FEE: 0.05,
   PAGINATION_DEFAULT_LIMIT: 10,
   USER_FIRST_COMMISION: {
-    LAVEL_1: 20,
+    LAVEL_1: 30,
     LAVEL_2: 10,
     LAVEL_3: 5,
     LAVEL_4: 2,
