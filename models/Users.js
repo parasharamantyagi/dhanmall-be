@@ -74,17 +74,10 @@ const UserSchema = new mongoose.Schema({
 const User = (module.exports = mongoose.model("User", UserSchema));
 
 module.exports.userById = async function (_id, field = "") {
-  let select = check(field)
-    ? field
-    : "user_id nickname email mobile money commission interest contribution promotion_code first_payment";
-  return await User.findOne(
-    { _id: _id }
-    // { password: 0, verification_code: 0 }
-  )
-    .select(select)
-    .then((result) => {
-      return JSON.parse(JSON.stringify(result));
-    });
+  let select = check(field) ? field : "user_id nickname email mobile money commission interest contribution promotion_code first_payment";
+  return await User.findOne({ _id: _id }).select(select).exec().then((result) => {
+    return JSON.parse(JSON.stringify(result));
+  });
 };
 
 module.exports.getChildren = async function (_id) {
@@ -163,7 +156,7 @@ module.exports.plusUserMoney = async function (
     object.commission = setDataType(money, "f");
   }
   return await User.updateOne(
-    { _id: id },
+    { _id: setDataType(id,"s") },
     { $inc: object },
     { new: true, runValidators: true }
   );

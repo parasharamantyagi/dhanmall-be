@@ -35,7 +35,7 @@ exports.resetPasswordValidator = [
 
 exports.addRechargeValidator = [
   body("ammount").exists().isLength({ min: 3 }).withMessage("Provide valid ammount"),
-  body("transaction_id").isLength({ min: 12 }).exists().withMessage("Transaction id is required"),
+  body("transaction_id").exists().withMessage("Transaction id is required").isLength({ min: 8 }).withMessage("This is invalid Transaction id"),
 ];
 
 exports.verifyNumberValidator = [
