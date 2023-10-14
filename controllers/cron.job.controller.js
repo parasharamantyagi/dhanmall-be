@@ -91,7 +91,7 @@ exports.gameInterval = async (req, res, next) => {
           )
         );
       }
-      if(checkArray(gameOrders) && setDataType(find_one(gameOrders).game_id,"s") === setDataType(gameId._id, "s")){
+      if(checkArray(gameOrders) && setDataType(find_one(gameOrders).game_id._id,"s") === setDataType(gameId._id, "s")){
         manageGameBudget(setDataType(gameId._id, "s"), {
           total_amount: gameOrders[0].total_price.total_amount,
           total_delivery: sum_of_array(gameBudgetAmmount),

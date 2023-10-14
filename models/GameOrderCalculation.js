@@ -153,6 +153,7 @@ module.exports.updateGameOrderCalculation = async function (game_id,object) {
 };
 
 module.exports.manageGameBudget = async function (game_id,object) {
+  console.log(object);
   return await GameOrderCalculation.updateOne(
     { game_id: game_id },
     {game_budget: object}
