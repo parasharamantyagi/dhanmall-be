@@ -24,8 +24,6 @@ exports.dashboardScreen = async (req, res, next) => {
     let countGame = await countOfGame();
     let resultGame = await gameOfDashboard(inputData);
     let result = {
-      // color_list: colors1,
-      // number_list: colors2,
       game_page: countGame,
       game_history: resultGame,
     };

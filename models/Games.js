@@ -55,7 +55,9 @@ const Game = (module.exports = mongoose.model("Game", gameSchema));
 module.exports = mongoose.model("Game", gameSchema);
 
 module.exports.gameById = async function (object) {
-  let selected = checkObj(object,'selected') ? object.selected : ['date','begintime','period','price','unit'];
+  let selected = checkObj(object, "selected")
+    ? object.selected
+    : ["date", "begintime", "period", "price", "unit"];
   if (check(object.id) && checkIsString(object.id)) {
     return await Game.findOne({ _id: object.id })
       .select(selected)
@@ -75,10 +77,14 @@ module.exports.gameById = async function (object) {
   }
 };
 
+module.exports.findAllGame = async function (input = {}) {
+  return await Game.find(input).sort({ _id: -1 }).exec();
+};
+
 module.exports.gameOfDashboard = async function (input) {
   let limit = checkObj(input, "limit") ? input.limit : PAGINATION_DEFAULT_LIMIT;
   return await Game.find({ status: 1 })
-    .select(['date','begintime','period','price','unit'])
+    .select(["date", "begintime", "period", "price", "unit"])
     .skip(setDataType(input.page, "n") * limit)
     .limit(limit)
     .sort({ _id: -1 });

@@ -12,7 +12,7 @@ const {
   manageGameBudget,
   getGameOrderCalculationByGameId,
 } = require("../models/GameOrderCalculation");
-const { gameById } = require("../models/Games");
+const { gameById, findAllGame, updateGame } = require("../models/Games");
 
 var router = express.Router();
 
@@ -20,16 +20,15 @@ var router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
-    check = await findAllUsers();
+    check = await findAllGame();
     for (let users of check) {
-      updateUserFromId(setDataType(users._id, "s"), {
-        money: 0,
-        commission: 0,
-        interest: 0,
-        first_payment: 0,
+      check = await updateGame(setDataType(users._id, "s"), {
+        status: 1,
+        unit: 3,
+        price: 1111,
+        color: "green",
       });
     }
-
     // let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
     // check = await getGameOrderCalculationByGameId();
     // check = calCulationNumberPridiction(check,gameId);
