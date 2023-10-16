@@ -40,7 +40,7 @@ exports.gameInterval = async (req, res, next) => {
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
       let gameOrders = await getGameOrderCalculationByGameId();
-      if(checkArray(all_orders) && checkArray(gameOrders)){
+      if(checkArray(gameOrders)){
         let calResult = calCulationNumberPridiction(gameOrders,gameId);
         updateGame(setDataType(gameId._id, "s"), calResult);
         for (let order of all_orders) {

@@ -26,8 +26,8 @@ exports.dashboardScreen = async (req, res, next) => {
     let result = {
       // color_list: colors1,
       // number_list: colors2,
-      game_history: resultGame,
       game_page: countGame,
+      game_history: resultGame,
     };
     return res.status(200).json({ status: 1, data: result });
   } catch (e) {
