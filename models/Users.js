@@ -162,6 +162,12 @@ module.exports.plusUserMoney = async function (
   );
 };
 
+
+module.exports.findAllUsers = async function () {
+  return await User.find().exec();
+};
+
+
 module.exports.minusUserMoney = async function (id, { money }) {
   return await User.updateOne(
     { _id: id },
