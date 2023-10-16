@@ -40,20 +40,12 @@ exports.gameInterval = async (req, res, next) => {
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
       let gameOrders = await getGameOrderCalculationByGameId();
-      let calResult = calCulationNumberPridiction(gameOrders,gameId);
-      updateGame(setDataType(gameId._id, "s"), calResult);
-      for (let order of all_orders) {
-        if (order.type === 2) {
-          if (order.pick === setDataType(calResult.unit, "s")) {
-            order_cal.amount = setDataType(order.delivery, "f");
-            order_cal.status = 1;
-          } else {
-            order_cal.amount = 0;
-            order_cal.status = 2;
-          }
-        } else {
-          if (str_to_array(calResult.color).length === 1) {
-            if (order.pick === calResult.color) {
+      if(checkArray(all_orders) && checkArray(gameOrders)){
+        let calResult = calCulationNumberPridiction(gameOrders,gameId);
+        updateGame(setDataType(gameId._id, "s"), calResult);
+        for (let order of all_orders) {
+          if (order.type === 2) {
+            if (order.pick === setDataType(calResult.unit, "s")) {
               order_cal.amount = setDataType(order.delivery, "f");
               order_cal.status = 1;
             } else {
@@ -61,43 +53,53 @@ exports.gameInterval = async (req, res, next) => {
               order_cal.status = 2;
             }
           } else {
-            if (str_to_array(calResult.color).includes(order.pick)) {
-              order_cal.amount = order.invest + setDataType(order.invest, "f") / 2;
-              order_cal.status = 1;
+            if (str_to_array(calResult.color).length === 1) {
+              if (order.pick === calResult.color) {
+                order_cal.amount = setDataType(order.delivery, "f");
+                order_cal.status = 1;
+              } else {
+                order_cal.amount = 0;
+                order_cal.status = 2;
+              }
             } else {
-              order_cal.amount = 0;
-              order_cal.status = 2;
+              if (str_to_array(calResult.color).includes(order.pick)) {
+                order_cal.amount = order.invest + setDataType(order.invest, "f") / 2;
+                order_cal.status = 1;
+              } else {
+                order_cal.amount = 0;
+                order_cal.status = 2;
+              }
             }
           }
+          if (order_cal.status === 1) {
+            total_winner_pick_count++;
+          } else {
+            total_loser_pick_count++;
+          }
+          plusUserMoney(setDataType(order.user_id, "s"), {
+            money: order_cal.amount,
+          });
+          gameBudgetAmmount.push(order_cal.amount);
+          updateOrder(
+            setDataType(order._id, "s"),
+            merge_object(
+              {
+                unit: calResult.unit,
+                color: calResult.color,
+                price: calResult.price,
+              },
+              order_cal
+            )
+          );
         }
-        if (order_cal.status === 1) {
-          total_winner_pick_count++;
-        } else {
-          total_loser_pick_count++;
+        if(checkArray(gameOrders) && setDataType(find_one(gameOrders).game_id._id,"s") === setDataType(gameId._id, "s")){
+          manageGameBudget(setDataType(gameId._id, "s"), {
+            total_amount: gameOrders[0].total_price.total_amount,
+            total_delivery: sum_of_array(gameBudgetAmmount),
+            winner_pick_count: total_winner_pick_count,
+            loser_pick_count: total_loser_pick_count,
+          });
         }
-        plusUserMoney(setDataType(order.user_id, "s"), {
-          money: order_cal.amount,
-        });
-        gameBudgetAmmount.push(order_cal.amount);
-        updateOrder(
-          setDataType(order._id, "s"),
-          merge_object(
-            {
-              unit: calResult.unit,
-              color: calResult.color,
-              price: calResult.price,
-            },
-            order_cal
-          )
-        );
-      }
-      if(checkArray(gameOrders) && setDataType(find_one(gameOrders).game_id._id,"s") === setDataType(gameId._id, "s")){
-        manageGameBudget(setDataType(gameId._id, "s"), {
-          total_amount: gameOrders[0].total_price.total_amount,
-          total_delivery: sum_of_array(gameBudgetAmmount),
-          winner_pick_count: total_winner_pick_count,
-          loser_pick_count: total_loser_pick_count,
-        });
       }
     }
     let period = setDataType(1, "padStart");
