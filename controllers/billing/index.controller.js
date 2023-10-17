@@ -123,7 +123,10 @@ exports.rechargeDetails = async (req, res, next) => {
 exports.currentGame = async (req, res, next) => {
   try {
     let current_game = await getGameOrderCalculationByGameId({ type: 'current' });
-    let game_record = await getGameOrderCalculationByGameId({selected: ['game_budget']});
+    let game_record = [];
+    if(checkObj(current_game) && checkObj(current_game.game_id)){
+      game_record = await getGameOrderCalculationByGameId({current_game: setDataType(current_game.game_id._id,'s'), selected: ['game_budget']});
+    }
     return res.status(200).json({
       status: 1,
       message: "Current list",
