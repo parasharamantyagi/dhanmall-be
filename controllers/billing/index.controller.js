@@ -8,7 +8,6 @@ const {
 } = require("../../helpers");
 const { getOneBankCardModule } = require("../../models/BankCards");
 const {
-  currentGameOrderCalculation,
   getGameOrderCalculationByGameId,
 } = require("../../models/GameOrderCalculation");
 const { updateGame } = require("../../models/Games");
@@ -124,12 +123,7 @@ exports.rechargeDetails = async (req, res, next) => {
 exports.currentGame = async (req, res, next) => {
   try {
     let inputData = objectFormat(req.query, [{ game_id: "" }]);
-    let respone = "";
-    if (checkObj(inputData, "game_id") && check(inputData.game_id)) {
-      respone = await getGameOrderCalculationByGameId(inputData.game_id);
-    } else {
-      respone = await currentGameOrderCalculation();
-    }
+    let respone = await getGameOrderCalculationByGameId({ type: 'current' });
     let game_record = await getGameOrderCalculationByGameId();
     return res.status(200).json({
       status: 1,

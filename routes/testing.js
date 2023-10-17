@@ -10,7 +10,6 @@ const { setDataType, sum_of_array, getSmallerAmount } = require("../helpers");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 const {
   manageGameBudget,
-  getGameOrderCalculationByGameId,
 } = require("../models/GameOrderCalculation");
 const { gameById, findAllGame, updateGame } = require("../models/Games");
 
@@ -30,7 +29,6 @@ router.get("/", async function (req, res, next) {
       });
     }
     // let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
-    // check = await getGameOrderCalculationByGameId();
     // check = calCulationNumberPridiction(check,gameId);
     return res.status(200).json(check);
   } catch (err) {

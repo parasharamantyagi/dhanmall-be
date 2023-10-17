@@ -1,7 +1,7 @@
 const { GDM_MODULE } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
-const { currentDate, merge_object } = require("../helpers");
+const { currentDate, merge_object, check, checkObj } = require("../helpers");
 
 const gameOrderCalculationSchema = new mongoose.Schema({
   game_id: {
@@ -101,20 +101,15 @@ module.exports.saveGameOrderCalculation = async function (input) {
   return result;
 };
 
-module.exports.currentGameOrderCalculation = async function () {
-  return await GameOrderCalculation.findOne().populate({ path: "game_id" }).sort({ date: -1 }).exec();
-};
 
-
-module.exports.getGameOrderCalculation = async function () {
-  return await GameOrderCalculation.find().exec();
-};
-
-module.exports.getGameOrderCalculationByGameId = async function () {
-  // { "total_price.total_amount": { $ne: 0 } }
-  return await GameOrderCalculation.find({ "total_price.total_amount": { $ne: 0 } })
-              .populate({ path: "game_id" })
-              .limit(8).sort({ date: -1 }).exec();
+module.exports.getGameOrderCalculationByGameId = async function (obj = {}) {
+  if(checkObj(obj,'type') && obj.type === 'current'){
+    return await GameOrderCalculation.findOne().populate({ path: "game_id" }).sort({ date: -1 }).exec();
+  }else{
+    return await GameOrderCalculation.find({ "total_price.total_amount": { $ne: 0 } })
+    .populate({ path: "game_id" })
+    .limit(8).sort({ date: -1 }).exec();
+  }
 };
 
 module.exports.updateGameOrderCalculation = async function (game_id,object) {
