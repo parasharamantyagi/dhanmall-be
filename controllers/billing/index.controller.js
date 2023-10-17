@@ -122,13 +122,12 @@ exports.rechargeDetails = async (req, res, next) => {
 
 exports.currentGame = async (req, res, next) => {
   try {
-    let inputData = objectFormat(req.query, [{ game_id: "" }]);
-    let respone = await getGameOrderCalculationByGameId({ type: 'current' });
-    let game_record = await getGameOrderCalculationByGameId();
+    let current_game = await getGameOrderCalculationByGameId({ type: 'current' });
+    let game_record = await getGameOrderCalculationByGameId({selected: ['game_budget']});
     return res.status(200).json({
       status: 1,
       message: "Current list",
-      data: {current_game: respone, game_record : game_record},
+      data: {current_game: current_game, game_record : game_record},
     });
   } catch (e) {
     return res.json();
