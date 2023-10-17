@@ -67,13 +67,15 @@ exports.rechargeStatus = async (req, res, next) => {
     let inputData = objectFormat(req.body, ["status"]);
     if (inputData.status === "success") {
       let rechargeDetail = await getRechargeDetail({ _id: rechargeId });
-      updatedRechargeModule(rechargeId, inputData);
+      await updatedRechargeModule(rechargeId, inputData);
       handlePaymentRequest({
         user_id: setDataType(rechargeDetail.user_id._id, "s"),
         ammount: setDataType(rechargeDetail.ammount, "f"),
         type: "created",
         date: rechargeDetail.date,
       });
+    }else if(inputData.status === "failure"){
+      await updatedRechargeModule(rechargeId, inputData);
     }
     return res.status(200).json({
       status: 1,

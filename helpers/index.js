@@ -3,16 +3,48 @@
 var moment = require("moment-timezone");
 const my_date_format = "YYYY-MM-DD HH:mm:00";
 
-exports.todayDate = () => {
+exports.check = (value) => {
+  // 👈 check string is valid or not
+  return (
+    value &&
+    value !== "" &&
+    value !== "NaN" &&
+    value !== "false" &&
+    value !== "undefined" &&
+    value !== "null"
+  );
+};
+
+exports.todayDate = (date = 0) => {
   // 👈 return only current date and time
-  // 'YYYY-MM-DD - HH:mm:00'
-  return moment().tz("Asia/Kolkata").format("YYYYMMDD");
+  let today = moment();
+  if(this.check(date)){
+    today = today.subtract(Math.abs(date), "days");
+  }
+  return today.tz("Asia/Kolkata").format("YYYYMMDD");
 };
 
 exports.lastMonthDate = () => {
   // 👈 return only current date and time
   let currentDate = moment();
-  let lastMonthDate = currentDate.subtract(1, 'months');
+  let lastMonthDate = currentDate.subtract(1, "months");
+  return lastMonthDate.unix();
+};
+
+exports.lastDateByDays = (days = 1, type = "") => {
+  // 👈 return only current date and time
+  var now = new Date(); // now
+  if(type === 'first'){
+    now.setHours(0); // set hours to 0
+    now.setMinutes(1); // set minutes to 0
+    now.setSeconds(0); // set seconds to 0
+  }else if(type === 'last'){
+    now.setHours(23); // set hours to 0
+    now.setMinutes(59); // set minutes to 0
+    now.setSeconds(59); // set seconds to 0
+  }
+  let currentDate = moment(now);
+  let lastMonthDate = currentDate.subtract(days, "days");
   return lastMonthDate.unix();
 };
 
@@ -44,17 +76,7 @@ exports.find_one = (inputArray, my_key = null) => {
   return response;
 };
 
-exports.check = (value) => {
-  // 👈 check string is valid or not
-  return (
-    value &&
-    value !== "" &&
-    value !== "NaN" &&
-    value !== "false" &&
-    value !== "undefined" &&
-    value !== "null"
-  );
-};
+
 
 exports.checkIsString = (value) => {
   // 👈 check value type is string
@@ -105,7 +127,9 @@ exports.objectFormat = (obj = {}, keys = []) => {
       } else {
         if (this.checkObj(key)) {
           object_key = Object.keys(key)[0];
-          return_obj[object_key] = this.checkObj(obj, object_key) ? obj[object_key] : key[object_key];
+          return_obj[object_key] = this.checkObj(obj, object_key)
+            ? obj[object_key]
+            : key[object_key];
         }
       }
     });
@@ -235,19 +259,23 @@ exports.getSmallerAmount = (arrayOfObjects) => {
   let smallestObjects = [];
   for (const obj of arrayOfObjects) {
     if (
-      typeof obj.value === 'number' &&
+      typeof obj.value === "number" &&
       !isNaN(obj.value) &&
       obj.value === smallestValue
     ) {
       smallestObjects.push(obj);
-    } else if (typeof obj.value === 'number' && !isNaN(obj.value) && obj.value < smallestValue) {
+    } else if (
+      typeof obj.value === "number" &&
+      !isNaN(obj.value) &&
+      obj.value < smallestValue
+    ) {
       smallestValue = obj.value;
       smallestObjects = [obj];
     }
   }
-  return this.filterArrayKey(smallestObjects,'no');
+  return this.filterArrayKey(smallestObjects, "no");
 };
 
-exports.isPositiveNumber = (number) => number > 0 ? true : number < 0 ? false : false;
+exports.isPositiveNumber = (number) =>
+  number > 0 ? true : number < 0 ? false : false;
 exports.changePositiveNumber = (number) => Math.abs(number);
-

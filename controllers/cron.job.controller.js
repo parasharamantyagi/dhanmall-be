@@ -1,3 +1,5 @@
+const { check } = require("express-validator");
+const { LDM_USER_INTEREST } = require("../config");
 const {
   currentDate,
   checkObj,
@@ -9,6 +11,7 @@ const {
   checkArray,
   find_one,
   lastMonthDate,
+  lastDateByDays,
 } = require("../helpers");
 const {
   saveGameOrderCalculation,
@@ -25,7 +28,7 @@ const {
 const { orderByGameId, updateOrder, removeOrder } = require("../models/Orders");
 const { removeOtpVerification } = require("../models/OtpVerifications");
 const { removePayment } = require("../models/Payments");
-const { removeRecharge } = require("../models/Recharges");
+const { removeRecharge, rechargeBetweenTwoDate, saveRecharge, getRechargeDetail } = require("../models/Recharges");
 const { plusUserMoney } = require("../models/Users");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
@@ -122,6 +125,34 @@ exports.gameInterval = async (req, res, next) => {
       date: currentDate(),
     });
     return res.status(200).json(true);
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};
+
+exports.setUserInterest = async (req, res, next) => {
+  try {
+    let object = true;
+    let checkRecharge = await getRechargeDetail({ type: 'interest', createdDate: todayDate(0)});
+    if(!checkObj(checkRecharge)){
+      let rechargeLists =  await rechargeBetweenTwoDate(lastDateByDays(1,'first'),lastDateByDays(1,'last'));
+      for(let recharge of rechargeLists){
+          if(checkObj(recharge) && checkObj(recharge.details,'transaction_id')){
+            let cal_money = LDM_USER_INTEREST * recharge.ammount
+            saveRecharge({
+              user_id: recharge.user_id,
+              type: "interest",
+              ammount: cal_money,
+              status: "success",
+              date: currentDate(),
+              createdDate: todayDate(),
+              details: {},
+            });
+            plusUserMoney(recharge.user_id, { money: cal_money }, 'interest');
+          }
+      }
+    }
+    return res.status(200).json(object);
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

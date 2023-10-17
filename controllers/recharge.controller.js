@@ -5,6 +5,7 @@ const {
   check,
   checkObj,
   setDataType,
+  todayDate,
 } = require("../helpers");
 const {
   saveBankCardModule,
@@ -58,6 +59,7 @@ exports.addRecharge = async (req, res, next) => {
       ammount: inputData.ammount,
       status: "processing",
       date: currentDate(),
+      createdDate: todayDate(),
       details: {
         type: inputData.type,
         transaction_id: inputData.transaction_id,
@@ -136,6 +138,7 @@ exports.addWithdrawRequest = async (req, res, next) => {
           ammount: inputData.ammount,
           status: "processing",
           date: currentDate(),
+          createdDate: todayDate(),
           details: {
             bank_card: inputData.bank_card,
           },

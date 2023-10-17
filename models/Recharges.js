@@ -1,7 +1,7 @@
 const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
 const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
-const { currentDate, checkObj, setDataType } = require("../helpers");
+const { setDataType } = require("../helpers");
 
 const rechargeSchema = new mongoose.Schema({
   user_id: {
@@ -10,7 +10,7 @@ const rechargeSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["recharge", "withdraw"],
+    enum: ["recharge", "withdraw", "interest"],
     default: "recharge",
   },
   ammount: {
@@ -26,6 +26,10 @@ const rechargeSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  createdDate: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Recharge = (module.exports = mongoose.model("Recharge", rechargeSchema));
@@ -36,6 +40,10 @@ module.exports.getRechargeDetail = async function (where) {
     .then((result) => {
       return JSON.parse(JSON.stringify(result));
     });
+};
+
+module.exports.rechargeBetweenTwoDate = async function (min,max) {
+  return await Recharge.find({ date: { $gte: min, $lte: max }, type: "recharge", status: "success" }).sort({ date: -1 }).exec();
 };
 
 module.exports.getRechargeModule = async function (where, object) {

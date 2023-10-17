@@ -31,6 +31,7 @@ module.exports = {
     rn: require("random-number"),
   },
   GDM_CHARGES_FEE: 0.05,
+  LDM_USER_INTEREST: 0.02,
   PAGINATION_DEFAULT_LIMIT: 10,
   USER_FIRST_COMMISION: {
     LAVEL_1: 30,

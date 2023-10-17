@@ -154,6 +154,8 @@ module.exports.plusUserMoney = async function (
   };
   if (type === "reward") {
     object.commission = setDataType(money, "f");
+  }else if(type === "interest"){
+    object.interest = setDataType(money, "f");
   }
   return await User.updateOne(
     { _id: setDataType(id,"s") },
