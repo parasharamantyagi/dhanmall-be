@@ -107,10 +107,14 @@ module.exports.getGameOrderCalculationByGameId = async function (obj = {}) {
     return await GameOrderCalculation.findOne().populate({ path: "game_id" }).sort({ date: -1 }).exec();
   }else{
     let selected = checkObj(obj,'selected') ? obj.selected : [];
-    return await GameOrderCalculation.find({ "total_price.total_amount": { $ne: 0 } })
+    let where = { "total_price.total_amount": { $ne: 0 } };
+    if(checkObj(obj,'game_not_id')){
+      where = merge_object(where,{ game_id: { $ne: obj.game_not_id } });
+    }
+    return await GameOrderCalculation.find(where)
     .select(selected)
-    .populate({ path: "game_id" })
-    .limit(8).sort({ date: -1 }).exec();
+    // .populate({ path: "game_id" })
+    .limit(4).sort({ date: -1 }).exec();
   }
 };
 
@@ -150,7 +154,6 @@ module.exports.updateGameOrderCalculation = async function (game_id,object) {
 };
 
 module.exports.manageGameBudget = async function (game_id,object) {
-  console.log(object);
   return await GameOrderCalculation.updateOne(
     { game_id: game_id },
     {game_budget: object}

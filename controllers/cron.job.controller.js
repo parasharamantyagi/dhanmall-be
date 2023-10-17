@@ -28,13 +28,21 @@ const {
 const { orderByGameId, updateOrder, removeOrder } = require("../models/Orders");
 const { removeOtpVerification } = require("../models/OtpVerifications");
 const { removePayment } = require("../models/Payments");
-const { removeRecharge, rechargeBetweenTwoDate, saveRecharge, getRechargeDetail } = require("../models/Recharges");
+const {
+  removeRecharge,
+  rechargeBetweenTwoDate,
+  saveRecharge,
+  getRechargeDetail,
+} = require("../models/Recharges");
 const { plusUserMoney } = require("../models/Users");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
 exports.gameInterval = async (req, res, next) => {
   try {
-    let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
+    let gameId = await gameById({
+      game: 0,
+      selected: ["_id", "period", "detail"],
+    });
     let all_orders = [];
     let order_cal = { amount: 0 };
     let gameBudgetAmmount = [0];
@@ -42,9 +50,19 @@ exports.gameInterval = async (req, res, next) => {
     let total_loser_pick_count = 0;
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-      let gameOrders = await getGameOrderCalculationByGameId();
-      if(checkArray(gameOrders)){
-        let calResult = calCulationNumberPridiction(gameOrders,gameId);
+      let currentGameOrders = await getGameOrderCalculationByGameId({
+        type: "current",
+      });
+      let gameOrders = await getGameOrderCalculationByGameId({
+        game_not_id: setDataType(gameId._id, "s"),
+        selected: ["game_budget"],
+      });
+      if (checkArray(gameOrders)) {
+        let calResult = calCulationNumberPridiction(
+          currentGameOrders,
+          gameOrders,
+          gameId
+        );
         updateGame(setDataType(gameId._id, "s"), calResult);
         for (let order of all_orders) {
           if (order.type === 2) {
@@ -66,7 +84,8 @@ exports.gameInterval = async (req, res, next) => {
               }
             } else {
               if (str_to_array(calResult.color).includes(order.pick)) {
-                order_cal.amount = order.invest + setDataType(order.invest, "f") / 2;
+                order_cal.amount =
+                  order.invest + setDataType(order.invest, "f") / 2;
                 order_cal.status = 1;
               } else {
                 order_cal.amount = 0;
@@ -95,14 +114,12 @@ exports.gameInterval = async (req, res, next) => {
             )
           );
         }
-        if(checkArray(gameOrders) && setDataType(find_one(gameOrders).game_id._id,"s") === setDataType(gameId._id, "s")){
-          manageGameBudget(setDataType(gameId._id, "s"), {
-            total_amount: gameOrders[0].total_price.total_amount,
-            total_delivery: sum_of_array(gameBudgetAmmount),
-            winner_pick_count: total_winner_pick_count,
-            loser_pick_count: total_loser_pick_count,
-          });
-        }
+        manageGameBudget(setDataType(gameId._id, "s"), {
+          total_amount: currentGameOrders.total_price.total_amount,
+          total_delivery: sum_of_array(gameBudgetAmmount),
+          winner_pick_count: total_winner_pick_count,
+          loser_pick_count: total_loser_pick_count,
+        });
       }
     }
     let period = setDataType(1, "padStart");
@@ -133,23 +150,32 @@ exports.gameInterval = async (req, res, next) => {
 exports.setUserInterest = async (req, res, next) => {
   try {
     let object = true;
-    let checkRecharge = await getRechargeDetail({ type: 'interest', createdDate: todayDate(0)});
-    if(!checkObj(checkRecharge)){
-      let rechargeLists =  await rechargeBetweenTwoDate(lastDateByDays(1,'first'),lastDateByDays(1,'last'));
-      for(let recharge of rechargeLists){
-          if(checkObj(recharge) && checkObj(recharge.details,'transaction_id')){
-            let cal_money = LDM_USER_INTEREST * recharge.ammount
-            saveRecharge({
-              user_id: recharge.user_id,
-              type: "interest",
-              ammount: cal_money,
-              status: "success",
-              date: currentDate(),
-              createdDate: todayDate(),
-              details: {},
-            });
-            plusUserMoney(recharge.user_id, { money: cal_money }, 'interest');
-          }
+    let checkRecharge = await getRechargeDetail({
+      type: "interest",
+      createdDate: todayDate(0),
+    });
+    if (!checkObj(checkRecharge)) {
+      let rechargeLists = await rechargeBetweenTwoDate(
+        lastDateByDays(1, "first"),
+        lastDateByDays(1, "last")
+      );
+      for (let recharge of rechargeLists) {
+        if (
+          checkObj(recharge) &&
+          checkObj(recharge.details, "transaction_id")
+        ) {
+          let cal_money = LDM_USER_INTEREST * recharge.ammount;
+          saveRecharge({
+            user_id: recharge.user_id,
+            type: "interest",
+            ammount: cal_money,
+            status: "success",
+            date: currentDate(),
+            createdDate: todayDate(),
+            details: {},
+          });
+          plusUserMoney(recharge.user_id, { money: cal_money }, "interest");
+        }
       }
     }
     return res.status(200).json(object);
@@ -164,7 +190,6 @@ exports.customSetting = async (req, res, next) => {
     await removeGame({ date: { $lt: todayDate() } });
     await removeGameOrderCalculation({ date: { $lt: todayDate() } });
     await removeOtpVerification({ date: { $lt: todayDate() } });
-
 
     await removePayment({ date: { $lt: lastMonthDate() } });
     await removeRecharge({ date: { $lt: lastMonthDate() } });

@@ -203,9 +203,13 @@ exports.filterArrayKey = (target, input) => {
 };
 
 exports.sum_of_array = (arr) => {
-  return arr.reduce(function (a, b) {
-    return a + b;
-  }, 0);
+  if(this.checkArray(arr)){
+    return arr.reduce(function (a, b) {
+      return a + b;
+    }, 0);
+  }else{
+    return 0;
+  }
 };
 
 exports.setDataType = (value, type) => {

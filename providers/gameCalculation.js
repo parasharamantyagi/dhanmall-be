@@ -14,10 +14,9 @@ const {
 } = require("../helpers");
 const { colors2 } = require("./colors");
 
-module.exports.calCulationNumberPridiction = (gameOrders, current_game) => {
+module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_game) => {
   let unit = GDM_MODULE.rn({ min: 0, max: 9, integer: true });
   let unitArray = [];
-  let currentGame = gameOrders[0];
   if (checkObj(current_game, "detail") && check(current_game.detail.set_unit)) {
     unitArray.push(current_game.detail.set_value);
   } else {
@@ -25,7 +24,6 @@ module.exports.calCulationNumberPridiction = (gameOrders, current_game) => {
       setDataType(currentGame.game_id._id, "s") ===
       setDataType(current_game._id, "s")
     ) {
-      gameOrders = gameOrders.slice(1);
       let last_five_transaction =
         sum_of_array(
           filterArrayKey(
