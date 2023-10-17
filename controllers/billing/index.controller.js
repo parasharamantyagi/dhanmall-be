@@ -128,10 +128,11 @@ exports.currentGame = async (req, res, next) => {
     } else {
       respone = await currentGameOrderCalculation();
     }
+    let game_record = await getGameOrderCalculationByGameId();
     return res.status(200).json({
       status: 1,
       message: "Current list",
-      data: respone,
+      data: {current_game: respone, game_record : game_record},
     });
   } catch (e) {
     return res.json();
