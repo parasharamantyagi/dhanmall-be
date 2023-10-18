@@ -1,4 +1,4 @@
-const { GDM_MODULE } = require("../config");
+const { GDM_MODULE, GDM_CHARGES_FEE } = require("../config");
 const {
   arrayOfObject,
   setDataType,
@@ -6,8 +6,6 @@ const {
   checkObj,
   filterArrayKey,
   sum_of_array,
-  isPositiveNumber,
-  changePositiveNumber,
   checkArray,
   getSmallerAmount,
   check,
@@ -37,13 +35,10 @@ module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_g
             "total_delivery"
           )
         );
-      if (
-        currentGame.total_price.total_amount * 2 >
-        currentGame.total_price.total_delivery
-      ) {
+      if (currentGame.total_price.total_amount * 2 > currentGame.total_price.total_delivery) {
         if (
           currentGame.total_price.total_delivery <
-          changePositiveNumber(last_five_transaction)
+          last_five_transaction
         ) {
           if (
             currentGame.pick_red.total_delivery <
@@ -60,10 +55,7 @@ module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_g
             unitArray.push(8);
           }
         } else {
-          if (
-            currentGame.pick_red.total_delivery <
-            currentGame.pick_green.total_delivery
-          ) {
+          if (currentGame.pick_red.total_delivery < currentGame.pick_green.total_delivery) {
             if (
               currentGame.pick_red.total_delivery <
               currentGame.pick_green.total_delivery / 2
@@ -76,10 +68,7 @@ module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_g
               unitArray.push(0);
             }
           } else {
-            if (
-              currentGame.pick_red.total_delivery / 2 >
-              currentGame.pick_green.total_delivery
-            ) {
+            if (currentGame.pick_red.total_delivery / 2 > currentGame.pick_green.total_delivery) {
               unitArray.push(1); // green pick
               unitArray.push(3);
               unitArray.push(7);

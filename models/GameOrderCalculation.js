@@ -114,7 +114,7 @@ module.exports.getGameOrderCalculationByGameId = async function (obj = {}) {
     return await GameOrderCalculation.find(where)
     .select(selected)
     // .populate({ path: "game_id" })
-    .limit(4).sort({ date: -1 }).exec();
+    .limit(8).sort({ date: -1 }).exec();
   }
 };
 
