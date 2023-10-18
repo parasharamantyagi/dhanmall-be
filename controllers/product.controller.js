@@ -15,7 +15,7 @@ const { userById, minusUserMoney } = require("../models/Users");
 const { contract_type } = require("../providers/colors");
 const {
   updateGameOrderCalculation,
-  getGameOrderCalculationByGameId,
+  getGameTrend,
 } = require("../models/GameOrderCalculation");
 
 exports.dashboardScreen = async (req, res, next) => {
@@ -122,7 +122,7 @@ exports.saveOrders = async (req, res, next) => {
 exports.GameHistory = async (req, res, next) => {
   try {
     // let lastGameId = await gameById({ game: 1 });
-    let all_orders = await getGameOrderCalculationByGameId();
+    let all_orders = await getGameTrend();
     return res.status(200).json({
       status: 1,
       message: "Previews game history",

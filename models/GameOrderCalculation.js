@@ -118,6 +118,14 @@ module.exports.getGameOrderCalculationByGameId = async function (obj = {}) {
   }
 };
 
+module.exports.getGameTrend = async function () {
+  // { "total_price.total_amount": { $ne: 0 } }
+  return await GameOrderCalculation.find()
+    .select([])
+    .populate({ path: "game_id" })
+    .limit(8).sort({ date: -1 }).exec();
+}
+
 module.exports.updateGameOrderCalculation = async function (game_id,object) {
   let updateObj = { "total_price.total_amount": (object.contract_money * object.contract_number),"total_price.total_delivery": object.delivery,"total_price.pick_count": 1 };
   if(object.pick === 'red'){
