@@ -76,6 +76,7 @@ exports.saveOrders = async (req, res, next) => {
       "type",
       "pick",
       "game_id",
+      {date: currentDate()}
     ]);
     let gameDetail = await gameById({ game: inputData.game_id,selected: ['date','begintime','period','price'] });
     let user = await userById(inputData.user_id, "money");
@@ -88,7 +89,7 @@ exports.saveOrders = async (req, res, next) => {
         data: {},
       });
     }
-    let gameTime = currentDate() - gameDetail.begintime;
+    let gameTime = inputData.date - gameDetail.begintime;
     if(isPositiveNumber(gameTime) && gameTime > 150){
       return res.status(200).json({
         status: 0,
