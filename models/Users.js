@@ -279,4 +279,9 @@ module.exports.billingUsers = async function (inputReq, page) {
     .exec();
 };
 
+
+module.exports.findAllUsersForInterest = async function () {
+  return await User.find({ money: { $gte: 200 }, first_payment: 1 }).exec();
+};
+
 module.exports.User = mongoose.model("User", UserSchema);
