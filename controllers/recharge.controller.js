@@ -1,4 +1,4 @@
-const { MESSAGE } = require("../config");
+const { MESSAGE, WITHDRAW_MINIMUM_AMOUNT } = require("../config");
 const {
   objectFormat,
   currentDate,
@@ -128,26 +128,33 @@ exports.addWithdrawRequest = async (req, res, next) => {
       "nickname money first_payment"
     );
     if (checkObj(getUser) && check(getUser.first_payment)) {
-      if (
-        setDataType(inputData.ammount, "f") <= setDataType(getUser.money, "f")
-      ) {
-        minusUserMoney(inputData.user_id, { money: inputData.ammount });
-        saveRecharge({
-          user_id: inputData.user_id,
-          type: "withdraw",
-          ammount: inputData.ammount,
-          status: "processing",
-          date: currentDate(),
-          createdDate: todayDate(),
-          details: {
-            bank_card: inputData.bank_card,
-          },
-        });
-        return res.status(200).json({
-          status: 1,
-          message: MESSAGE.ADD_WITHDRAW_REQUEST,
-          data: inputData,
-        });
+      if (setDataType(inputData.ammount, "f") <= setDataType(getUser.money, "f")) {
+        let leftAmmount =  setDataType(getUser.money, "f") - setDataType(inputData.ammount, "f");
+        if(leftAmmount > WITHDRAW_MINIMUM_AMOUNT){
+          minusUserMoney(inputData.user_id, { money: inputData.ammount });
+          saveRecharge({
+            user_id: inputData.user_id,
+            type: "withdraw",
+            ammount: inputData.ammount,
+            status: "processing",
+            date: currentDate(),
+            createdDate: todayDate(),
+            details: {
+              bank_card: inputData.bank_card,
+            },
+          });
+          return res.status(200).json({
+            status: 1,
+            message: MESSAGE.ADD_WITHDRAW_REQUEST,
+            data: inputData,
+          });
+        }else{
+          return res.status(200).json({
+            status: 0,
+            message: MESSAGE.WITHDRAW_AMMOUNT_LIMIT,
+            data: inputData,
+          });
+        }
       } else {
         return res.status(200).json({
           status: 0,

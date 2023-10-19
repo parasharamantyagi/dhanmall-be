@@ -18,6 +18,7 @@ module.exports = {
   ADD_WITHDRAW_REQUEST: "Your Withdraw req submitted successfully",
   WITHDRAW_REQUEST_FIRST: "Your Withdrawal request not submitted unless you do not make a recharge",
   WITHDRAW_REQUEST_AMMOUNT: "You have insufficient balance in your wallet",
+  WITHDRAW_AMMOUNT_LIMIT: "Your wallet balance should be minimum 300 rs.",
   GET_WITHDRAW_REQUEST: "Your Withdraw req get successfully",
   STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
   TIME_OUT: "Time has been out",
