@@ -237,9 +237,9 @@ exports.updateBankCardById = async (req, res, next) => {
       {type: 'upi'},
       { date: currentDate() },
     ]);
-    let checkBankDetail = await getOneBankCardModule({
-      bank_account: inputData.bank_account,
-    });
+    // let checkBankDetail = await getOneBankCardModule({
+    //   bank_account: inputData.bank_account,
+    // });
     // if (checkObj(checkBankDetail,'is_valid') && checkBankDetail.is_valid === 0) {
       updateBankCardModule(bankId, inputData);
       return res.status(200).json({

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_DB } = require("./config");
 
-// const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB}.1djbkde.mongodb.net/?retryWrites=true&w=majority`;
-const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB}.voduwry.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB}.1djbkde.mongodb.net/?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_DB}.voduwry.mongodb.net/?retryWrites=true&w=majority`;
 
 exports.connectDB = async () => {
   try {
