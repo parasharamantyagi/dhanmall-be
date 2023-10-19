@@ -1,4 +1,4 @@
-const { MESSAGE, WITHDRAW_MINIMUM_AMOUNT } = require("../config");
+const { MESSAGE, WITHDRAW_MINIMUM_AMOUNT, GDM_CHARGES_FEE } = require("../config");
 const {
   objectFormat,
   currentDate,
@@ -141,6 +141,8 @@ exports.addWithdrawRequest = async (req, res, next) => {
             createdDate: todayDate(),
             details: {
               bank_card: inputData.bank_card,
+              charges: GDM_CHARGES_FEE,
+              withdraw_amount: inputData.ammount - (GDM_CHARGES_FEE * inputData.ammount)
             },
           });
           return res.status(200).json({
