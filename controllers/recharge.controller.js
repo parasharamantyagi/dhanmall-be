@@ -211,7 +211,7 @@ exports.addBankCard = async (req, res, next) => {
         message: MESSAGE.BANK_CARD_EXIT,
       });
     }
-    // saveBankCardModule(inputData);
+    saveBankCardModule(inputData);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.ADD_BANK_CARD,
