@@ -48,6 +48,11 @@ const bankCardSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  type: {
+    type: String,
+    enum: ["bank", "upi"],
+    default: "upi",
+  },
   is_valid: {
     type: Number,
     default: 0,

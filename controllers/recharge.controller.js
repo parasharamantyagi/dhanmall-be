@@ -199,6 +199,7 @@ exports.addBankCard = async (req, res, next) => {
       "city",
       "address",
       "email",
+      {type: 'upi'},
       { date: currentDate() },
     ]);
     let checkBankDetail = await getOneBankCardModule({
@@ -210,7 +211,7 @@ exports.addBankCard = async (req, res, next) => {
         message: MESSAGE.BANK_CARD_EXIT,
       });
     }
-    saveBankCardModule(inputData);
+    // saveBankCardModule(inputData);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.ADD_BANK_CARD,
@@ -233,25 +234,26 @@ exports.updateBankCardById = async (req, res, next) => {
       "city",
       "address",
       "email",
+      {type: 'upi'},
       { date: currentDate() },
     ]);
     let checkBankDetail = await getOneBankCardModule({
       bank_account: inputData.bank_account,
     });
-    if (!check(checkBankDetail.is_valid)) {
+    // if (checkObj(checkBankDetail,'is_valid') && checkBankDetail.is_valid === 0) {
       updateBankCardModule(bankId, inputData);
       return res.status(200).json({
         status: 1,
         message: MESSAGE.UPDATE_BANK_CARD,
         data: {},
       });
-    }else{
-      return res.status(200).json({
-        status: 0,
-        message: MESSAGE.UNABLE_BANK_CARD,
-        data: {},
-      });
-    }
+    // }else{
+    //   return res.status(200).json({
+    //     status: 0,
+    //     message: MESSAGE.UNABLE_BANK_CARD,
+    //     data: {},
+    //   });
+    // }
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }
