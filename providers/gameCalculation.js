@@ -12,116 +12,146 @@ const {
 } = require("../helpers");
 const { colors2 } = require("./colors");
 
-module.exports.calCulationNumberPridiction = ({game, gameOrder, prevGameOrders, allOrders}) => {
+const last_five_transaction = (prevGameOrders) => {
+  return sum_of_array(
+    filterArrayKey(
+      filterArrayKey(prevGameOrders, "game_budget"),
+      "total_amount"
+    )
+  ) -
+  sum_of_array(
+    filterArrayKey(
+      filterArrayKey(prevGameOrders, "game_budget"),
+      "total_delivery"
+    )
+  )
+}
+
+const calWithuserOrders = (userOrders) => {
+  if(checkArray(userOrders,1)){
+    if(userOrders[0].user_id.game_winner_contribution < 20 && userOrders[0].invest < 20){
+      if(userOrders[0].type === 1){
+        if(userOrders[0].pick === 'red'){
+          return {
+            status: true,
+            unitArray: [2,4,6,8]
+          }
+        }else if(userOrders[0].pick === 'green'){
+          return {
+            status: true,
+            unitArray: [1,3,7,9]
+          }
+        }
+      }else if(userOrders[0].type === 2){
+        return {
+          status: true,
+          unitArray: [setDataType(userOrders[0].pick,'n')],
+        }
+      }
+    }
+  }
+  return {
+    status: false,
+    unitArray: [],
+  }
+}
+
+module.exports.calCulationNumberPridiction = ({game, gameOrder, prevGameOrders, userOrders = []}) => {
   let unit = GDM_MODULE.rn({ min: 0, max: 9, integer: true });
   let unitArray = [];
   if (checkObj(game, "detail") && check(game.detail.set_unit)) {
     unitArray.push(game.detail.set_value);
   } else {
-    if (
-      setDataType(gameOrder.game_id._id, "s") ===
-      setDataType(game._id, "s")
-    ) {
-      let last_five_transaction =
-        sum_of_array(
-          filterArrayKey(
-            filterArrayKey(prevGameOrders, "game_budget"),
-            "total_amount"
-          )
-        ) -
-        sum_of_array(
-          filterArrayKey(
-            filterArrayKey(prevGameOrders, "game_budget"),
-            "total_delivery"
-          )
-        );
-      if (gameOrder.total_price.total_amount * 2 > gameOrder.total_price.total_delivery) {
-        if (
-          gameOrder.total_price.total_delivery <
-          last_five_transaction
-        ) {
-          if (
-            gameOrder.pick_red.total_delivery <
-            gameOrder.pick_green.total_delivery
-          ) {
-            unitArray.push(1); // green pick
-            unitArray.push(3);
-            unitArray.push(7);
-            unitArray.push(9);
-          } else {
-            unitArray.push(2); // red pick
-            unitArray.push(4);
-            unitArray.push(6);
-            unitArray.push(8);
-          }
-        } else {
-          if (gameOrder.pick_red.total_delivery < gameOrder.pick_green.total_delivery) {
+    if (setDataType(gameOrder.game_id._id, "s") === setDataType(game._id, "s")) {
+      let checkCalWithuserOrders = calWithuserOrders(userOrders);
+      if(checkCalWithuserOrders.status){
+        unitArray = checkCalWithuserOrders.unitArray;
+      }else{
+        if (gameOrder.total_price.total_amount * 2 > gameOrder.total_price.total_delivery) {
+          if (gameOrder.total_price.total_delivery < last_five_transaction(prevGameOrders)) {
             if (
               gameOrder.pick_red.total_delivery <
-              gameOrder.pick_green.total_delivery / 2
+              gameOrder.pick_green.total_delivery
             ) {
-              unitArray.push(2); // red pick
-              unitArray.push(4);
-              unitArray.push(6);
-              unitArray.push(8);
-            } else {
-              unitArray.push(0);
-            }
-          } else {
-            if (gameOrder.pick_red.total_delivery / 2 > gameOrder.pick_green.total_delivery) {
               unitArray.push(1); // green pick
               unitArray.push(3);
               unitArray.push(7);
               unitArray.push(9);
             } else {
-              unitArray.push(5);
+              unitArray.push(2); // red pick
+              unitArray.push(4);
+              unitArray.push(6);
+              unitArray.push(8);
+            }
+          } else {
+            if (gameOrder.pick_red.total_delivery < gameOrder.pick_green.total_delivery) {
+              if (
+                gameOrder.pick_red.total_delivery <
+                gameOrder.pick_green.total_delivery / 2
+              ) {
+                unitArray.push(2); // red pick
+                unitArray.push(4);
+                unitArray.push(6);
+                unitArray.push(8);
+              } else {
+                unitArray.push(0);
+              }
+            } else {
+              if (gameOrder.pick_red.total_delivery / 2 > gameOrder.pick_green.total_delivery) {
+                unitArray.push(1); // green pick
+                unitArray.push(3);
+                unitArray.push(7);
+                unitArray.push(9);
+              } else {
+                unitArray.push(5);
+              }
             }
           }
+        } else {
+          const getVal = [
+            {
+              no: 0,
+              value: gameOrder.pick_0.total_delivery,
+            },
+            {
+              no: 1,
+              value: gameOrder.pick_1.total_delivery,
+            },
+            {
+              no: 2,
+              value: gameOrder.pick_2.total_delivery,
+            },
+            {
+              no: 3,
+              value: gameOrder.pick_3.total_delivery,
+            },
+            {
+              no: 4,
+              value: gameOrder.pick_4.total_delivery,
+            },
+            {
+              no: 5,
+              value: gameOrder.pick_5.total_delivery,
+            },
+            {
+              no: 6,
+              value: gameOrder.pick_6.total_delivery,
+            },
+            {
+              no: 7,
+              value: gameOrder.pick_7.total_delivery,
+            },
+            {
+              no: 8,
+              value: gameOrder.pick_8.total_delivery,
+            },
+            {
+              no: 9,
+              value: gameOrder.pick_9.total_delivery,
+            },
+          ];
+          unitArray = getSmallerAmount(getVal);
         }
-      } else {
-        const getVal = [
-          {
-            no: 0,
-            value: gameOrder.pick_0.total_delivery,
-          },
-          {
-            no: 1,
-            value: gameOrder.pick_1.total_delivery,
-          },
-          {
-            no: 2,
-            value: gameOrder.pick_2.total_delivery,
-          },
-          {
-            no: 3,
-            value: gameOrder.pick_3.total_delivery,
-          },
-          {
-            no: 4,
-            value: gameOrder.pick_4.total_delivery,
-          },
-          {
-            no: 5,
-            value: gameOrder.pick_5.total_delivery,
-          },
-          {
-            no: 6,
-            value: gameOrder.pick_6.total_delivery,
-          },
-          {
-            no: 7,
-            value: gameOrder.pick_7.total_delivery,
-          },
-          {
-            no: 8,
-            value: gameOrder.pick_8.total_delivery,
-          },
-          {
-            no: 9,
-            value: gameOrder.pick_9.total_delivery,
-          },
-        ];
-        unitArray = getSmallerAmount(getVal);
       }
     }
   }

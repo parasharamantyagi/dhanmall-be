@@ -10,18 +10,17 @@ const router = express.Router();
 router.get("/", async function (req, res, next) {
   try {
     let check = true;
-    let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
-    let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-    let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current'});
-    let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["total_price", "game_budget"]});
-
-    let calResult = calCulationNumberPridiction({
-      game: gameId,
-      gameOrder: currentGameOrders,
-      prevGameOrders: prevGameOrders,
-      allOrders: all_orders
-    });
-    return res.status(200).json(calResult);
+    // let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
+    // let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
+    // let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current'});
+    // let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["total_price", "game_budget"]});
+    // let calResult = calCulationNumberPridiction({
+    //   game: gameId,
+    //   gameOrder: currentGameOrders,
+    //   prevGameOrders: prevGameOrders,
+    //   userOrders: all_orders
+    // });
+    return res.status(200).json(check);
   } catch (err) {
     res.status(500).json({ success: false, msg: err.message });
   }

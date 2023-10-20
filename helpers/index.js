@@ -110,7 +110,7 @@ exports.checkArray = (arr, num = 0) => {
     if (!num) {
       return arr.length ? true : false;
     } else {
-      return arr.length && arr.length >= num ? true : false;
+      return arr.length && arr.length === num ? true : false;
     }
   } else {
     return false;

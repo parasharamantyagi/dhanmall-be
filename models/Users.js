@@ -82,7 +82,7 @@ const UserSchema = new mongoose.Schema({
 const User = (module.exports = mongoose.model("User", UserSchema));
 
 module.exports.userById = async function (_id, field = "") {
-  let select = check(field) ? field : "user_id nickname email mobile money commission interest contribution promotion_code first_payment";
+  let select = check(field) ? field : "user_id nickname email mobile money commission interest contribution game_total_contribution game_winner_contribution promotion_code first_payment";
   return await User.findOne({ _id: _id }).select(select).exec().then((result) => {
     return JSON.parse(JSON.stringify(result));
   });
@@ -156,7 +156,6 @@ module.exports.plusUserMoney = async function (id, { money }, type = "payment") 
     money: setDataType(money, "f"),
     contribution: setDataType(money, "f"),
   };
-
   if (type === "reward") {
     object.commission = setDataType(money, "f");
   }else if(type === "interest"){

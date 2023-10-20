@@ -77,6 +77,10 @@ module.exports.gameById = async function (object) {
   }
 };
 
+module.exports.findLastGame = async function () {
+  return await Game.find().limit(5).sort({ _id: -1 }).exec();
+};
+
 module.exports.findAllGame = async function (input = {}) {
   return await Game.find(input).sort({ _id: -1 }).exec();
 };
