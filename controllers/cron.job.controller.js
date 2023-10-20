@@ -43,9 +43,9 @@ exports.gameInterval = async (req, res, next) => {
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
       let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current'});
-      let gameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["game_budget"]});
-      if(checkArray(gameOrders)){
-        let calResult = calCulationNumberPridiction(currentGameOrders,gameOrders,gameId);
+      let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["game_budget"]});
+      if(checkArray(prevGameOrders)){
+        let calResult = calCulationNumberPridiction({game: gameId, gameOrder: currentGameOrders, prevGameOrders: prevGameOrders});
         updateGame(setDataType(gameId._id, "s"), calResult);
         for (let order of all_orders) {
           if (order.type === 2) {
@@ -82,7 +82,7 @@ exports.gameInterval = async (req, res, next) => {
           }
           plusUserMoney(setDataType(order.user_id, "s"), {
             money: order_cal.amount,
-          });
+          },'win');
           gameBudgetAmmount.push(order_cal.amount);
           updateOrder(
             setDataType(order._id, "s"),

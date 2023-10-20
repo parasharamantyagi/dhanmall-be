@@ -46,6 +46,14 @@ const UserSchema = new mongoose.Schema({
     type: Float,
     default: 0,
   },
+  game_total_contribution: {
+    type: Float,
+    default: 0,
+  },
+  game_winner_contribution: {
+    type: Float,
+    default: 0,
+  },
   recommendation_code: {
     type: String,
     default: "",
@@ -143,19 +151,18 @@ module.exports.getUserForCommision = async function (id) {
   return return_data;
 };
 
-module.exports.plusUserMoney = async function (
-  id,
-  { money },
-  type = "payment"
-) {
+module.exports.plusUserMoney = async function (id, { money }, type = "payment") {
   let object = {
     money: setDataType(money, "f"),
     contribution: setDataType(money, "f"),
   };
+
   if (type === "reward") {
     object.commission = setDataType(money, "f");
   }else if(type === "interest"){
     object.interest = setDataType(money, "f");
+  }else if(type === "win"){
+    object.game_winner_contribution = setDataType(money, "f");
   }
   return await User.updateOne(
     { _id: setDataType(id,"s") },
@@ -164,6 +171,14 @@ module.exports.plusUserMoney = async function (
   );
 };
 
+
+module.exports.gameContribution = async function (id, game_contribution) {
+  return await User.updateOne(
+    { _id: setDataType(id,"s") },
+    { $inc: {game_total_contribution: game_contribution} },
+    { new: true, runValidators: true }
+  );
+};
 
 module.exports.findAllUsers = async function () {
   return await User.find().exec();

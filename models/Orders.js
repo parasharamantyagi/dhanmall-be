@@ -93,7 +93,7 @@ module.exports.saveOrder = async function (input) {
 };
 
 module.exports.orderByGameId = async function (game_id) {
-  return await Order.find({ game_id: game_id }).select(['_id','type','user_id','pick','delivery','invest']).exec();
+  return await Order.find({ game_id: game_id }).populate({ path: "user_id", select: ["game_total_contribution","game_winner_contribution"] }).select(['_id','type','user_id','pick','delivery','invest']).exec();
 };
 
 module.exports.countUserOrders = async function (user_id) {

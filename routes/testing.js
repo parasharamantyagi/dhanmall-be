@@ -11,10 +11,16 @@ router.get("/", async function (req, res, next) {
   try {
     let check = true;
     let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
-    // let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
+    let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
     let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current'});
-    let gameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["total_price", "game_budget"]});
-    let calResult = calCulationNumberPridiction(currentGameOrders,gameOrders,gameId);
+    let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["total_price", "game_budget"]});
+
+    let calResult = calCulationNumberPridiction({
+      game: gameId,
+      gameOrder: currentGameOrders,
+      prevGameOrders: prevGameOrders,
+      allOrders: all_orders
+    });
     return res.status(200).json(calResult);
   } catch (err) {
     res.status(500).json({ success: false, msg: err.message });

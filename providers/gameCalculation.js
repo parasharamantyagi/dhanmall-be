@@ -12,37 +12,37 @@ const {
 } = require("../helpers");
 const { colors2 } = require("./colors");
 
-module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_game) => {
+module.exports.calCulationNumberPridiction = ({game, gameOrder, prevGameOrders, allOrders}) => {
   let unit = GDM_MODULE.rn({ min: 0, max: 9, integer: true });
   let unitArray = [];
-  if (checkObj(current_game, "detail") && check(current_game.detail.set_unit)) {
-    unitArray.push(current_game.detail.set_value);
+  if (checkObj(game, "detail") && check(game.detail.set_unit)) {
+    unitArray.push(game.detail.set_value);
   } else {
     if (
-      setDataType(currentGame.game_id._id, "s") ===
-      setDataType(current_game._id, "s")
+      setDataType(gameOrder.game_id._id, "s") ===
+      setDataType(game._id, "s")
     ) {
       let last_five_transaction =
         sum_of_array(
           filterArrayKey(
-            filterArrayKey(gameOrders, "game_budget"),
+            filterArrayKey(prevGameOrders, "game_budget"),
             "total_amount"
           )
         ) -
         sum_of_array(
           filterArrayKey(
-            filterArrayKey(gameOrders, "game_budget"),
+            filterArrayKey(prevGameOrders, "game_budget"),
             "total_delivery"
           )
         );
-      if (currentGame.total_price.total_amount * 2 > currentGame.total_price.total_delivery) {
+      if (gameOrder.total_price.total_amount * 2 > gameOrder.total_price.total_delivery) {
         if (
-          currentGame.total_price.total_delivery <
+          gameOrder.total_price.total_delivery <
           last_five_transaction
         ) {
           if (
-            currentGame.pick_red.total_delivery <
-            currentGame.pick_green.total_delivery
+            gameOrder.pick_red.total_delivery <
+            gameOrder.pick_green.total_delivery
           ) {
             unitArray.push(1); // green pick
             unitArray.push(3);
@@ -55,10 +55,10 @@ module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_g
             unitArray.push(8);
           }
         } else {
-          if (currentGame.pick_red.total_delivery < currentGame.pick_green.total_delivery) {
+          if (gameOrder.pick_red.total_delivery < gameOrder.pick_green.total_delivery) {
             if (
-              currentGame.pick_red.total_delivery <
-              currentGame.pick_green.total_delivery / 2
+              gameOrder.pick_red.total_delivery <
+              gameOrder.pick_green.total_delivery / 2
             ) {
               unitArray.push(2); // red pick
               unitArray.push(4);
@@ -68,7 +68,7 @@ module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_g
               unitArray.push(0);
             }
           } else {
-            if (currentGame.pick_red.total_delivery / 2 > currentGame.pick_green.total_delivery) {
+            if (gameOrder.pick_red.total_delivery / 2 > gameOrder.pick_green.total_delivery) {
               unitArray.push(1); // green pick
               unitArray.push(3);
               unitArray.push(7);
@@ -82,43 +82,43 @@ module.exports.calCulationNumberPridiction = (currentGame, gameOrders, current_g
         const getVal = [
           {
             no: 0,
-            value: currentGame.pick_0.total_delivery,
+            value: gameOrder.pick_0.total_delivery,
           },
           {
             no: 1,
-            value: currentGame.pick_1.total_delivery,
+            value: gameOrder.pick_1.total_delivery,
           },
           {
             no: 2,
-            value: currentGame.pick_2.total_delivery,
+            value: gameOrder.pick_2.total_delivery,
           },
           {
             no: 3,
-            value: currentGame.pick_3.total_delivery,
+            value: gameOrder.pick_3.total_delivery,
           },
           {
             no: 4,
-            value: currentGame.pick_4.total_delivery,
+            value: gameOrder.pick_4.total_delivery,
           },
           {
             no: 5,
-            value: currentGame.pick_5.total_delivery,
+            value: gameOrder.pick_5.total_delivery,
           },
           {
             no: 6,
-            value: currentGame.pick_6.total_delivery,
+            value: gameOrder.pick_6.total_delivery,
           },
           {
             no: 7,
-            value: currentGame.pick_7.total_delivery,
+            value: gameOrder.pick_7.total_delivery,
           },
           {
             no: 8,
-            value: currentGame.pick_8.total_delivery,
+            value: gameOrder.pick_8.total_delivery,
           },
           {
             no: 9,
-            value: currentGame.pick_9.total_delivery,
+            value: gameOrder.pick_9.total_delivery,
           },
         ];
         unitArray = getSmallerAmount(getVal);
