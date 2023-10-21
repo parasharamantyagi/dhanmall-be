@@ -104,7 +104,9 @@ module.exports.saveGameOrderCalculation = async function (input) {
 
 module.exports.getGameOrderCalculationByGameId = async function (obj = {}) {
   if(checkObj(obj,'type') && obj.type === 'current'){
-    return await GameOrderCalculation.findOne().populate({ path: "game_id" }).sort({ date: -1 }).exec();
+    let where = {};
+    where = checkObj(obj, 'game_id') ? { game_id: obj.game_id } : {};
+    return await GameOrderCalculation.findOne(where).populate({ path: "game_id" }).sort({ date: -1 }).exec();
   }else{
     let selected = checkObj(obj,'selected') ? obj.selected : [];
     let where = { "total_price.total_amount": { $ne: 0 } };

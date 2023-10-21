@@ -32,17 +32,15 @@ const { removeRecharge, rechargeBetweenTwoDate, saveRecharge, getRechargeDetail 
 const { plusUserMoney } = require("../models/Users");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
 
-exports.gameInterval = async (req, res, next) => {
-  try {
-    let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
-    let all_orders = [];
+const manageGameInterval = async (gameId) => {
+  let all_orders = [];
     let order_cal = { amount: 0 };
     let gameBudgetAmmount = [0];
     let total_winner_pick_count = 0;
     let total_loser_pick_count = 0;
     if (checkObj(gameId)) {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-      let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current'});
+      let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current', game_id: setDataType(gameId._id, "s")});
       let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["game_budget"]});
       if(checkArray(prevGameOrders)){
         let calResult = calCulationNumberPridiction({game: gameId, gameOrder: currentGameOrders, prevGameOrders: prevGameOrders,userOrders: all_orders });
@@ -125,6 +123,12 @@ exports.gameInterval = async (req, res, next) => {
       game_id: setDataType(newGame._id, "s"),
       date: currentDate(),
     });
+}
+
+exports.gameInterval = async (req, res, next) => {
+  try {
+    let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
+    manageGameInterval(gameId);
     return res.status(200).json(true);
   } catch (e) {
     return res.json({ status: 0, message: e.message });

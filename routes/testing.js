@@ -12,7 +12,8 @@ router.get("/", async function (req, res, next) {
     let check = true;
     // let gameId = await gameById({ game: 0 , selected: ['_id','period','detail']});
     // let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-    // let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current'});
+    // ({type: 'current', game_id: setDataType(gameId._id, "s")});
+    // let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current', game_id: setDataType(gameId._id, "s")});
     // let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["total_price", "game_budget"]});
     // let calResult = calCulationNumberPridiction({
     //   game: gameId,

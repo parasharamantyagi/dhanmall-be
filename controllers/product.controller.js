@@ -75,6 +75,7 @@ exports.saveOrders = async (req, res, next) => {
       "contract_number",
       "type",
       "pick",
+      "period",
       "game_id",
       {date: currentDate()}
     ]);
@@ -90,13 +91,14 @@ exports.saveOrders = async (req, res, next) => {
       });
     }
     let gameTime = inputData.date - gameDetail.begintime;
-    if(isPositiveNumber(gameTime) && gameTime > 150){
+    if((isPositiveNumber(gameTime) && gameTime > 150) || gameDetail.period !== inputData.period){
       return res.status(200).json({
         status: 0,
         message: MESSAGE.TIME_OUT,
         data: {},
       });
     }
+    delete inputData.period;
     minusUserMoney(inputData.user_id, { money: invest_money });
     gameContribution(inputData.user_id, invest_money);
     inputData.fee = invest_money * GDM_CHARGES_FEE;

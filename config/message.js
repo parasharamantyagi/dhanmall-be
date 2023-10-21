@@ -21,7 +21,7 @@ module.exports = {
   WITHDRAW_AMMOUNT_LIMIT: "Your wallet balance should be minimum 300 rs.",
   GET_WITHDRAW_REQUEST: "Your Withdraw req get successfully",
   STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
+  WITHDRAW_PERSION_ADD: "Please add at least 1 persion from you promotion code",
   TIME_OUT: "Time has been out",
-
   BILLING_ORDERS_LIST:"Billing orders list"
 };

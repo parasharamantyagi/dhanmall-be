@@ -1,4 +1,4 @@
-const { MESSAGE, WITHDRAW_MINIMUM_AMOUNT, GDM_CHARGES_FEE } = require("../config");
+const { MESSAGE, WITHDRAW_MINIMUM_AMOUNT, GDM_CHARGES_FEE, WITHDRAW_MINIMUM_USER_ADD } = require("../config");
 const {
   objectFormat,
   currentDate,
@@ -14,6 +14,7 @@ const {
   getBankCardDetailModule,
   updateBankCardModule,
 } = require("../models/BankCards");
+const { countMyChildren } = require("../models/MyChildrens");
 const {
   saveRecharge,
   getRechargeModule,
@@ -127,29 +128,38 @@ exports.addWithdrawRequest = async (req, res, next) => {
       inputData.user_id,
       "nickname money first_payment"
     );
+    let userChildren = await countMyChildren({user_id: inputData.user_id, type: 'lavel_1'});
     if (checkObj(getUser) && check(getUser.first_payment)) {
       if (setDataType(inputData.ammount, "f") <= setDataType(getUser.money, "f")) {
         let leftAmmount =  setDataType(getUser.money, "f") - setDataType(inputData.ammount, "f");
         if(leftAmmount > WITHDRAW_MINIMUM_AMOUNT){
-          minusUserMoney(inputData.user_id, { money: inputData.ammount });
-          saveRecharge({
-            user_id: inputData.user_id,
-            type: "withdraw",
-            ammount: inputData.ammount,
-            status: "processing",
-            date: currentDate(),
-            createdDate: todayDate(),
-            details: {
-              bank_card: inputData.bank_card,
-              charges: GDM_CHARGES_FEE,
-              withdraw_amount: inputData.ammount - (GDM_CHARGES_FEE * inputData.ammount)
-            },
-          });
-          return res.status(200).json({
-            status: 1,
-            message: MESSAGE.ADD_WITHDRAW_REQUEST,
-            data: inputData,
-          });
+          if(userChildren > WITHDRAW_MINIMUM_USER_ADD){
+            minusUserMoney(inputData.user_id, { money: inputData.ammount });
+            saveRecharge({
+              user_id: inputData.user_id,
+              type: "withdraw",
+              ammount: inputData.ammount,
+              status: "processing",
+              date: currentDate(),
+              createdDate: todayDate(),
+              details: {
+                bank_card: inputData.bank_card,
+                charges: GDM_CHARGES_FEE,
+                withdraw_amount: inputData.ammount - (GDM_CHARGES_FEE * inputData.ammount)
+              },
+            });
+            return res.status(200).json({
+              status: 1,
+              message: MESSAGE.ADD_WITHDRAW_REQUEST,
+              data: inputData,
+            });
+          }else{
+            return res.status(200).json({
+              status: 0,
+              message: MESSAGE.WITHDRAW_PERSION_ADD,
+              data: inputData,
+            });
+          }
         }else{
           return res.status(200).json({
             status: 0,
