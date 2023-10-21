@@ -91,7 +91,6 @@ module.exports.findGameContribution = async function (object = {}) {
     invest_price: 0,
     delivery_price: 0,
   };
-
   returnObject.invest_price = await Game.aggregate([
     // { $match: { time: {$gte: a, $lte: tomorrow} } },
     { $group: { _id: null, invest_price: { $sum: "$invest_price" } } },
@@ -138,10 +137,10 @@ module.exports.updateGame = async function (input, update) {
 
 module.exports.manageGameAmount = async function (game_id, object, type = 'invest') {
   let updateObj = {};
-  if(type === 'invest'){
-    updateObj.invest_price = object.invest;
-  }else if(type === 'delivery'){
-    updateObj.delivery_price = object.delivery;
+  if(type === 'invest' && checkObj(object,'contract_money')){
+    updateObj.invest_price = setDataType(object.contract_money,'n');
+  }else if(type === 'delivery' && checkObj(object,'delivery')){
+    updateObj.delivery_price = setDataType(object.delivery,'f');
   }
   if(checkObj(updateObj)){
     return await Game.updateOne({ _id: game_id }, { $inc: updateObj });

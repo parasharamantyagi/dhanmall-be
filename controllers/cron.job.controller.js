@@ -25,6 +25,7 @@ const {
   updateGame,
   removeGame,
   manageGameAmount,
+  findGameContribution,
 } = require("../models/Games");
 const { orderByGameId, updateOrder, removeOrder } = require("../models/Orders");
 const { removeOtpVerification } = require("../models/OtpVerifications");
@@ -43,8 +44,9 @@ const manageGameInterval = async (gameId) => {
       all_orders = await orderByGameId(setDataType(gameId._id, "s"));
       let currentGameOrders = await getGameOrderCalculationByGameId({type: 'current', game_id: setDataType(gameId._id, "s")});
       let prevGameOrders = await getGameOrderCalculationByGameId({game_not_id: setDataType(gameId._id, "s"), selected: ["game_budget"]});
+      let totalGameContribution = await findGameContribution();
       if(checkArray(prevGameOrders)){
-        let calResult = calCulationNumberPridiction({game: gameId, gameOrder: currentGameOrders, prevGameOrders: prevGameOrders,userOrders: all_orders });
+        let calResult = calCulationNumberPridiction({game: gameId, gameOrder: currentGameOrders, prevGameOrders: totalGameContribution,userOrders: all_orders });
         updateGame(setDataType(gameId._id, "s"), calResult);
         for (let order of all_orders) {
           if (order.type === 2) {

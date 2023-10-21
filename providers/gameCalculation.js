@@ -13,18 +13,19 @@ const {
 const { colors2 } = require("./colors");
 
 const last_five_transaction = (prevGameOrders) => {
-  return sum_of_array(
-    filterArrayKey(
-      filterArrayKey(prevGameOrders, "game_budget"),
-      "total_amount"
-    )
-  ) -
-  sum_of_array(
-    filterArrayKey(
-      filterArrayKey(prevGameOrders, "game_budget"),
-      "total_delivery"
-    )
-  )
+  return setDataType(prevGameOrders.invest_price,'f') - setDataType(prevGameOrders.delivery_price,'f');
+  // return sum_of_array(
+  //   filterArrayKey(
+  //     filterArrayKey(prevGameOrders, "game_budget"),
+  //     "total_amount"
+  //   )
+  // ) -
+  // sum_of_array(
+  //   filterArrayKey(
+  //     filterArrayKey(prevGameOrders, "game_budget"),
+  //     "total_delivery"
+  //   )
+  // )
 }
 
 const calWithuserOrders = (userOrders) => {
