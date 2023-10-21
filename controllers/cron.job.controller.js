@@ -24,6 +24,7 @@ const {
   gameById,
   updateGame,
   removeGame,
+  manageGameAmount,
 } = require("../models/Games");
 const { orderByGameId, updateOrder, removeOrder } = require("../models/Orders");
 const { removeOtpVerification } = require("../models/OtpVerifications");
@@ -102,6 +103,7 @@ const manageGameInterval = async (gameId) => {
             winner_pick_count: total_winner_pick_count,
             loser_pick_count: total_loser_pick_count,
           });
+          manageGameAmount(setDataType(gameId._id, "s"),{delivery: sum_of_array(gameBudgetAmmount)},'delivery');
       }
     }
     let period = setDataType(1, "padStart");

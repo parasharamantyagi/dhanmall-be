@@ -171,7 +171,7 @@ module.exports.plusUserMoney = async function (id, { money }, type = "payment") 
 };
 
 
-module.exports.gameContribution = async function (id, game_contribution) {
+module.exports.userGameContribution = async function (id, game_contribution) {
   return await User.updateOne(
     { _id: setDataType(id,"s") },
     { $inc: {game_total_contribution: game_contribution} },

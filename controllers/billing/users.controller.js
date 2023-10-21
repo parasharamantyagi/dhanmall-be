@@ -2,8 +2,20 @@ const { MESSAGE } = require("../../config");
 const {
   objectFormat,
 } = require("../../helpers");
-const { findAllGame } = require("../../models/Games");
+const { findAllGame, findGameContribution } = require("../../models/Games");
 const { billingOrders } = require("../../models/Orders");
+
+exports.gamesContribution = async (req, res, next) => {
+  try {
+    return res.status(200).json({
+      status: 1,
+      message: 'success',
+      data: await findGameContribution(),
+    });
+  } catch (e) {
+    return res.json();
+  }
+}
 
 exports.allGames = async (req, res, next) => {
   try {

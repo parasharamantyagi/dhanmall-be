@@ -11,7 +11,7 @@ const {
 } = require("../helpers");
 const { gameOfDashboard, countOfGame, gameById, manageGameAmount } = require("../models/Games");
 const { saveOrder, orderOfUser, countUserOrders } = require("../models/Orders");
-const { userById, minusUserMoney, gameContribution } = require("../models/Users");
+const { userById, minusUserMoney, userGameContribution } = require("../models/Users");
 const { contract_type } = require("../providers/colors");
 const {
   updateGameOrderCalculation,
@@ -100,9 +100,9 @@ exports.saveOrders = async (req, res, next) => {
     }
     delete inputData.period;
     minusUserMoney(inputData.user_id, { money: invest_money });
-    gameContribution(inputData.user_id, invest_money);
     inputData.fee = invest_money * GDM_CHARGES_FEE;
     inputData.invest = invest_money - inputData.fee;
+    userGameContribution(inputData.user_id, inputData.invest);
     inputData.delivery = checkObj(inputData, "type") && setDataType(inputData.type, "n") === 2 ? inputData.invest * 9 : inputData.invest * 2;
     inputData.project_id = 1;
     inputData.goods_id = 11;
@@ -114,7 +114,7 @@ exports.saveOrders = async (req, res, next) => {
     inputData.fee = int_toFixed(inputData.fee);
     let order = await saveOrder(inputData);
     updateGameOrderCalculation(inputData.game_id, inputData);
-    manageGameAmount(inputData.game_id, inputData);
+    manageGameAmount(inputData.game_id, inputData, 'invest');
     return res
       .status(200)
       .json({ status: 1, message: MESSAGE.SAVE_ORDER, data: inputData });

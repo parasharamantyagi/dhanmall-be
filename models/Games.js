@@ -5,6 +5,7 @@ const {
   check,
   checkIsString,
   setDataType,
+  checkArray,
 } = require("../helpers");
 const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
@@ -85,12 +86,33 @@ module.exports.findLastGame = async function () {
   return await Game.find().limit(5).sort({ _id: -1 }).exec();
 };
 
+module.exports.findGameContribution = async function (object = {}) {
+  let returnObject = {
+    invest_price: 0,
+    delivery_price: 0,
+  };
+
+  returnObject.invest_price = await Game.aggregate([
+    // { $match: { time: {$gte: a, $lte: tomorrow} } },
+    { $group: { _id: null, invest_price: { $sum: "$invest_price" } } },
+  ]).then((res) => {
+    return checkArray(res) ? res[0].invest_price : 0;
+  });
+  returnObject.delivery_price = await Game.aggregate([
+    // { $match: { time: {$gte: a, $lte: tomorrow} } },
+    { $group: { _id: null, delivery_price: { $sum: "$delivery_price" } } },
+  ]).then((res) => {
+    return checkArray(res) ? res[0].delivery_price : 0;
+  });
+  return returnObject;
+};
+
 module.exports.findAllGame = async function (object = {}) {
   return await Game.find()
-  .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
-  .limit(PAGINATION_DEFAULT_LIMIT)
-  .sort({ _id: -1 })
-  .exec();
+    .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
+    .limit(PAGINATION_DEFAULT_LIMIT)
+    .sort({ _id: -1 })
+    .exec();
 };
 
 module.exports.gameOfDashboard = async function (input) {
@@ -114,17 +136,19 @@ module.exports.updateGame = async function (input, update) {
   return data;
 };
 
-
-module.exports.manageGameAmount = async function (game_id,object) {
-  let updateObj = {
-      invest_price: (object.contract_money * object.contract_number),
-      delivery_price: object.delivery
-  };
-  return await Game.updateOne(
-    { _id: game_id },
-    { $inc:  updateObj}
-  );
-}
+module.exports.manageGameAmount = async function (game_id, object, type = 'invest') {
+  let updateObj = {};
+  if(type === 'invest'){
+    updateObj.invest_price = object.invest;
+  }else if(type === 'delivery'){
+    updateObj.delivery_price = object.delivery;
+  }
+  if(checkObj(updateObj)){
+    return await Game.updateOne({ _id: game_id }, { $inc: updateObj });
+  }else{
+    return true;
+  }
+};
 
 module.exports.saveGame = async function (input) {
   const res = new Game(input);
