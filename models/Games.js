@@ -107,7 +107,7 @@ module.exports.findGameContribution = async function (object = {}) {
 };
 
 module.exports.findAllGame = async function (object = {}) {
-  return await Game.find()
+  return await Game.find({ price: { $ne: 0 }, invest_price: { $ne: 0 } })
     .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
     .limit(PAGINATION_DEFAULT_LIMIT)
     .sort({ _id: -1 })
