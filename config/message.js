@@ -22,4 +22,6 @@ module.exports = {
   GET_WITHDRAW_REQUEST: "Your Withdraw req get successfully",
   STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
   TIME_OUT: "Time has been out",
+
+  BILLING_ORDERS_LIST:"Billing orders list"
 };

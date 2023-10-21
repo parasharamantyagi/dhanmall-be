@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
+const { PAGINATION_DEFAULT_LIMIT, GDM_MODULE } = require("../config");
 const {
   checkObj,
-  currentDate,
   check,
   checkIsString,
   setDataType,
 } = require("../helpers");
-const { PAGINATION_DEFAULT_LIMIT } = require("../config");
+const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const gameSchema = new mongoose.Schema({
   project_id: {
@@ -22,7 +22,11 @@ const gameSchema = new mongoose.Schema({
     required: true,
   },
   invest_price: {
-    type: String,
+    type: Float,
+    default: 0,
+  },
+  delivery_price: {
+    type: Float,
     default: 0,
   },
   date: {
@@ -81,8 +85,12 @@ module.exports.findLastGame = async function () {
   return await Game.find().limit(5).sort({ _id: -1 }).exec();
 };
 
-module.exports.findAllGame = async function (input = {}) {
-  return await Game.find(input).sort({ _id: -1 }).exec();
+module.exports.findAllGame = async function (object = {}) {
+  return await Game.find()
+  .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
+  .limit(PAGINATION_DEFAULT_LIMIT)
+  .sort({ _id: -1 })
+  .exec();
 };
 
 module.exports.gameOfDashboard = async function (input) {
@@ -105,6 +113,18 @@ module.exports.updateGame = async function (input, update) {
   });
   return data;
 };
+
+
+module.exports.manageGameAmount = async function (game_id,object) {
+  let updateObj = {
+      invest_price: (object.contract_money * object.contract_number),
+      delivery_price: object.delivery
+  };
+  return await Game.updateOne(
+    { _id: game_id },
+    { $inc:  updateObj}
+  );
+}
 
 module.exports.saveGame = async function (input) {
   const res = new Game(input);

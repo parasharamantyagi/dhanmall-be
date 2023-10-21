@@ -123,6 +123,20 @@ module.exports.orderOfUser = async function (user_id, object = {}) {
   }
 };
 
+module.exports.billingOrders = async function (where={}, object = {}) {
+  let listOrders = {
+    count: 0,
+    result: []
+  }
+  listOrders.count = await Order.find(where).countDocuments();
+  listOrders.result = await Order.find(where)
+      .skip(setDataType(object.page, "n") * PAGINATION_DEFAULT_LIMIT)
+      .limit(PAGINATION_DEFAULT_LIMIT)
+      .sort({ _id: -1 })
+      .exec();
+  return listOrders;
+}
+
 module.exports.updateOrder = async function (order_id, input) {
   let data = await Order.findOneAndUpdate({ _id: order_id }, input, {
     new: true,
