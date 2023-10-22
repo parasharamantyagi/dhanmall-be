@@ -3,7 +3,7 @@ const {
   objectFormat,
 } = require("../../helpers");
 const { findAllGame, findGameContribution } = require("../../models/Games");
-const { getMyChildren } = require("../../models/MyChildrens");
+const { getMyChildren, countMyChildren } = require("../../models/MyChildrens");
 const { billingOrders } = require("../../models/Orders");
 
 exports.gamesContribution = async (req, res, next) => {
@@ -47,12 +47,16 @@ exports.allOrders = async (req, res, next) => {
 
 exports.userChildren = async (req, res, next) => {
   try {
+    let bankId = req.params.user_id;
     let inputQuery = objectFormat(req.query, [{ page: 0 }]);
-    let inputBody = objectFormat(req.parms,['user_id']);
+    let inputBody = objectFormat(req.params,['user_id']);
     return res.status(200).json({
       status: 1,
       message: MESSAGE.BILLING_ORDERS_LIST,
-      data: await getMyChildren(inputBody,inputQuery),
+      data: {
+        count : await countMyChildren(inputBody),
+        result: await getMyChildren(inputBody,inputQuery),
+      }
     });
   } catch (e) {
     return res.json();

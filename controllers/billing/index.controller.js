@@ -169,6 +169,12 @@ exports.getAllUsers = async (req, res, next) => {
   try {
     let { page } = objectFormat(req.query, [{ page: 0 }]);
     let inputData = objectFormat(req.body,['mobile','promotion_code']);
+    if(checkObj(inputData,'mobile')){
+      inputData.mobile = inputData.mobile.trim();
+    }
+    if(checkObj(inputData,'promotion_code')){
+      inputData.mobile = inputData.mobile.trim();
+    }
     let count = await countUsers(inputData);
     let userList = await billingUsers(inputData, setDataType(page, "n"));
     return res.status(200).json({
