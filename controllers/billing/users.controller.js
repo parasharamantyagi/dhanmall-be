@@ -3,6 +3,7 @@ const {
   objectFormat,
 } = require("../../helpers");
 const { findAllGame, findGameContribution } = require("../../models/Games");
+const { getMyChildren } = require("../../models/MyChildrens");
 const { billingOrders } = require("../../models/Orders");
 
 exports.gamesContribution = async (req, res, next) => {
@@ -38,6 +39,20 @@ exports.allOrders = async (req, res, next) => {
       status: 1,
       message: MESSAGE.BILLING_ORDERS_LIST,
       data: await billingOrders(inputBody,inputQuery),
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+exports.userChildren = async (req, res, next) => {
+  try {
+    let inputQuery = objectFormat(req.query, [{ page: 0 }]);
+    let inputBody = objectFormat(req.parms,['user_id']);
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.BILLING_ORDERS_LIST,
+      data: await getMyChildren(inputBody,inputQuery),
     });
   } catch (e) {
     return res.json();
