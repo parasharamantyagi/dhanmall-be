@@ -62,7 +62,7 @@ module.exports = mongoose.model("Game", gameSchema);
 module.exports.gameById = async function (object) {
   let selected = checkObj(object, "selected")
     ? object.selected
-    : ["date", "begintime", "period", "price", "unit"];
+    : ["date", "begintime", "period", "price", "invest_price", "delivery_price", "unit"];
   if (check(object.id) && checkIsString(object.id)) {
     return await Game.findOne({ _id: object.id })
       .select(selected)
@@ -137,8 +137,8 @@ module.exports.updateGame = async function (input, update) {
 
 module.exports.manageGameAmount = async function (game_id, object, type = 'invest') {
   let updateObj = {};
-  if(type === 'invest' && checkObj(object,'contract_money')){
-    updateObj.invest_price = setDataType(object.contract_money,'n');
+  if(type === 'invest' && checkObj(object,'invest')){
+    updateObj.invest_price = setDataType(object.invest,'f');
   }else if(type === 'delivery' && checkObj(object,'delivery')){
     updateObj.delivery_price = setDataType(object.delivery,'f');
   }
