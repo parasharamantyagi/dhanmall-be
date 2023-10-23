@@ -62,7 +62,7 @@ module.exports = mongoose.model("Game", gameSchema);
 module.exports.gameById = async function (object) {
   let selected = checkObj(object, "selected")
     ? object.selected
-    : ["date", "begintime", "period", "price", "invest_price", "delivery_price", "unit"];
+    : ["date", "begintime", "period", "price", "unit"];
   if (check(object.id) && checkIsString(object.id)) {
     return await Game.findOne({ _id: object.id })
       .select(selected)

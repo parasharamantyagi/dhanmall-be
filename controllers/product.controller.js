@@ -24,7 +24,7 @@ exports.dashboardScreen = async (req, res, next) => {
     let countGame = await countOfGame();
     let resultGame = await gameOfDashboard(inputData);
     let result = {
-      game_page: countGame,
+      game_page: (countGame > 480) ? 480 : countGame,
       game_history: resultGame,
     };
     return res.status(200).json({ status: 1, data: result });
