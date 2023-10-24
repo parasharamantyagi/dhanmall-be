@@ -23,5 +23,6 @@ module.exports = {
   STATUS_UPDATE_SUCCESSFULLY: "Status updated successfully",
   WITHDRAW_PERSION_ADD: "Please add at least 1 persion from you promotion code",
   TIME_OUT: "Time has been out",
-  BILLING_ORDERS_LIST:"Billing orders list"
+  BILLING_ORDERS_LIST:"Billing orders list",
+  USER_PAYMENT_HISTORY:"User payments history",
 };

@@ -1,7 +1,7 @@
 const express = require("express");
 const { isAdminValid } = require("../validators");
 const { rechargeReq, currentGame, withdrawalReq, rechargeStatus, rechargeDetails, withdrawalStatus, setGameUnit, getAllUsers } = require("../controllers/billing/index.controller");
-const { allOrders, allGames, gamesContribution, userChildren } = require("../controllers/billing/users.controller");
+const { allOrders, allGames, gamesContribution, userChildren, userRecharge } = require("../controllers/billing/users.controller");
 
 const router = express.Router();
 
@@ -17,6 +17,7 @@ router.route("/set-game").post(isAdminValid, setGameUnit);
 router.route("/users").post(isAdminValid, getAllUsers);
 
 router.route("/games-contribution").get(isAdminValid, gamesContribution);
+router.route("/user-payments").post(isAdminValid, userRecharge);
 router.route("/games").get(isAdminValid, allGames);
 router.route("/orders").post(isAdminValid, allOrders);
 

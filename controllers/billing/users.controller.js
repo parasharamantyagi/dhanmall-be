@@ -5,6 +5,7 @@ const {
 const { findAllGame, findGameContribution } = require("../../models/Games");
 const { getMyChildren, countMyChildren } = require("../../models/MyChildrens");
 const { billingOrders } = require("../../models/Orders");
+const { getRechargeModule } = require("../../models/Recharges");
 
 exports.gamesContribution = async (req, res, next) => {
   try {
@@ -25,6 +26,20 @@ exports.allGames = async (req, res, next) => {
       status: 1,
       message: MESSAGE.BILLING_ORDERS_LIST,
       data: await findAllGame(inputQuery),
+    });
+  } catch (e) {
+    return res.json();
+  }
+};
+
+exports.userRecharge = async (req, res, next) => {
+  try {
+    let inputQuery = objectFormat(req.query, [{ page: 0 }]);
+    let inputBody = objectFormat(req.body,['user_id','type']);
+    return res.status(200).json({
+      status: 1,
+      message: MESSAGE.USER_PAYMENT_HISTORY,
+      data: await getRechargeModule(inputBody,inputQuery),
     });
   } catch (e) {
     return res.json();
