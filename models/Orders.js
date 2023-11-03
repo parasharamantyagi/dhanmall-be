@@ -1,7 +1,8 @@
 const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
-const { currentDate, check, checkObj, setDataType } = require("../helpers");
-var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
+const { currentDate, checkObj, setDataType } = require("../helpers");
+const { saveConfig } = require("./Config");
+const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const orderSchema = new mongoose.Schema({
   user_id: {
@@ -89,6 +90,7 @@ module.exports = mongoose.model("orders", orderSchema);
 module.exports.saveOrder = async function (input) {
   const res = new Order(input);
   let result = await res.save();
+  saveConfig({invest: input.invest},'Order');
   return result;
 };
 

@@ -23,7 +23,6 @@ exports.userGames = async (req, res, next) => {
   try {
     let currentGame = await gameById({ game: 0 }).then(res => {
       return res._id;
-      // return '6544fe4befbe20dcb0ac1417';
     });
     let currentGameOrder = await billingOrderByGame(currentGame);
     return res.status(200).json({
@@ -79,7 +78,7 @@ exports.allOrders = async (req, res, next) => {
 
 exports.userChildren = async (req, res, next) => {
   try {
-    let bankId = req.params.user_id;
+    // let bankId = req.params.user_id;
     let inputQuery = objectFormat(req.query, [{ page: 0 }]);
     let inputBody = objectFormat(req.params,['user_id']);
     return res.status(200).json({

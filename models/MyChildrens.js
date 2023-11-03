@@ -1,7 +1,7 @@
 const { setDataType, checkObj } = require("../helpers");
 const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const mongoose = GDM_MODULE.mongoose;
-var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
+const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const my_childrens = new mongoose.Schema({
   user_id: {

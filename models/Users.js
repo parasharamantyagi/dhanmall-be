@@ -1,8 +1,9 @@
 const { setDataType, check, checkObj, currentDate } = require("../helpers");
 const { GDM_MODULE, PAGINATION_DEFAULT_LIMIT } = require("../config");
 const { saveMyChildren } = require("./MyChildrens");
+const { saveConfig } = require("./Config");
 const mongoose = GDM_MODULE.mongoose;
-var Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
+const Float = GDM_MODULE.mongooseFloat.loadType(mongoose);
 
 const UserSchema = new mongoose.Schema({
   user_id: {
@@ -162,6 +163,10 @@ module.exports.plusUserMoney = async function (id, { money }, type = "payment") 
     object.interest = setDataType(money, "f");
   }else if(type === "win"){
     object.game_winner_contribution = setDataType(money, "f");
+    saveConfig({ delivery: setDataType(money, "f") },'win');
+  }
+  if(type === "payment"){
+    saveConfig({ recharge: setDataType(money, "f") },'payment');
   }
   return await User.updateOne(
     { _id: setDataType(id,"s") },
@@ -185,6 +190,7 @@ module.exports.findAllUsers = async function () {
 
 
 module.exports.minusUserMoney = async function (id, { money }) {
+  saveConfig({ withdraw: setDataType(money, "f") },'withdraw');
   return await User.updateOne(
     { _id: id },
     { $inc: { money: -setDataType(money, "f") } },
