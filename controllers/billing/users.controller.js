@@ -2,9 +2,9 @@ const { MESSAGE } = require("../../config");
 const {
   objectFormat,
 } = require("../../helpers");
-const { findAllGame, findGameContribution } = require("../../models/Games");
+const { findAllGame, findGameContribution, findLastGame, gameById } = require("../../models/Games");
 const { getMyChildren, countMyChildren } = require("../../models/MyChildrens");
-const { billingOrders } = require("../../models/Orders");
+const { billingOrders, orderByGameId, billingOrderByGame } = require("../../models/Orders");
 const { getRechargeModule } = require("../../models/Recharges");
 
 exports.gamesContribution = async (req, res, next) => {
@@ -16,6 +16,23 @@ exports.gamesContribution = async (req, res, next) => {
     });
   } catch (e) {
     return res.json();
+  }
+}
+
+exports.userGames = async (req, res, next) => {
+  try {
+    let currentGame = await gameById({ game: 0 }).then(res => {
+      return res._id;
+      // return '6544fe4befbe20dcb0ac1417';
+    });
+    let currentGameOrder = await billingOrderByGame(currentGame);
+    return res.status(200).json({
+      status: 1,
+      message: 'success',
+      data: currentGameOrder,
+    });
+  } catch (e) {
+    return res.json({status: 0});
   }
 }
 
