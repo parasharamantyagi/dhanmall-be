@@ -24,13 +24,21 @@ const ConfigSchema = new mongoose.Schema({
     type: Float,
     default: 0,
   },
+  set_game_invest: {
+    type: Float,
+    default: 0,
+  },
+  set_game_delivery: {
+    type: Float,
+    default: 0,
+  },
 });
 const Config = (module.exports = mongoose.model("Config", ConfigSchema));
 
 module.exports.saveConfig = async function (object, type = "") {
   let updateObj = {};
   let option = { upsert: true, new: true, setDefaultsOnInsert: true };
-  if(['Order','win','payment','withdraw'].includes(type)){
+  if(['Order','win','payment','withdraw','set_game_invest','set_game_delivery'].includes(type)){
     updateObj = merge_object(updateObj,object);
   }
   if (checkObj(updateObj)) {
