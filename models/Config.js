@@ -47,3 +47,7 @@ module.exports.saveConfig = async function (object, type = "") {
     return true;
   }
 };
+
+module.exports.getConfig = async function () {
+  return await Config.findOne({position: 'one'}).exec();
+}

@@ -202,6 +202,8 @@ exports.filterArrayKey = (target, input) => {
   return return_object;
 };
 
+
+
 exports.sum_of_array = (arr) => {
   if(this.checkArray(arr)){
     return arr.reduce(function (a, b) {
@@ -278,6 +280,24 @@ exports.getSmallerAmount = (arrayOfObjects) => {
     }
   }
   return this.filterArrayKey(smallestObjects, "no");
+};
+
+exports.getHelperGameContribution = (target) => {
+  // 👈 return single value in array format from multidimensional array
+  let game_total_contribution = [];
+  let game_winner_contribution = [];
+  // let all_user = [];
+  if (target.length > 0) {
+    return_object = target.map(function (key) {
+      // all_user.push(key.user_id._id.toString());
+      game_total_contribution.push(key.user_id.game_total_contribution);
+      game_winner_contribution.push(key.user_id.game_winner_contribution);
+    });
+  }
+  return {
+    game_total_contribution: this.sum_of_array(game_total_contribution),
+    game_winner_contribution: this.sum_of_array(game_winner_contribution),
+  };
 };
 
 exports.isPositiveNumber = (number) =>

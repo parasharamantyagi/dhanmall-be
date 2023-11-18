@@ -8,7 +8,6 @@ const {
   str_to_array,
   sum_of_array,
   checkArray,
-  find_one,
   lastMonthDate,
   lastDateByDays,
   check,
@@ -36,9 +35,9 @@ const {
   saveRecharge,
   getRechargeDetail,
 } = require("../models/Recharges");
-const { plusUserMoney } = require("../models/Users");
+const { plusUserMoney, findAllUsers } = require("../models/Users");
 const { calCulationNumberPridiction } = require("../providers/gameCalculation");
-const { saveConfig } = require("../models/Config");
+const { saveConfig, getConfig } = require("../models/Config");
 
 const manageGameInterval = async (gameId) => {
   let all_orders = [];
@@ -55,12 +54,12 @@ const manageGameInterval = async (gameId) => {
       type: "current",
       game_id: setDataType(gameId._id, "s"),
     });
-    let prevGameOrders = await getGameOrderCalculationByGameId({
-      game_not_id: setDataType(gameId._id, "s"),
-      selected: ["game_budget"],
-    });
+    // let prevGameOrders = await getGameOrderCalculationByGameId({
+    //   game_not_id: setDataType(gameId._id, "s"),
+    //   selected: ["game_budget"],
+    // });
     let totalGameContribution = await findGameContribution();
-    if (checkArray(prevGameOrders)) {
+    // if (checkArray(prevGameOrders)) {
       let calResult = calCulationNumberPridiction({
         game: gameId,
         gameOrder: currentGameOrders,
@@ -138,7 +137,6 @@ const manageGameInterval = async (gameId) => {
         { delivery: sum_of_array(gameBudgetAmmount) },
         "delivery"
       );
-    }
   }
   let period = setDataType(1, "padStart");
   if (checkObj(gameId)) {
@@ -229,25 +227,27 @@ exports.customSetting = async (req, res, next) => {
 
 exports.testingRoute = async (req, res, next) => {
   try {
-    // let object = "testingRoute";
+    let response = {};
+    // response = await getConfig();
+    // response = await findAllUsers({mobile: '+919758890373'});
+
     let gameId = await gameById({
       game: 0,
       selected: ["_id", "period", "invest_price", "detail"],
     });
-    let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
-    // let currentGameOrders = await getGameOrderCalculationByGameId({
-    //   type: "current",
-    //   game_id: setDataType(gameId._id, "s"),
-    // });
-    // let totalGameContribution = await findGameContribution();
-    // let calResult = calCulationNumberPridiction({
-    //   game: gameId,
-    //   gameOrder: currentGameOrders,
-    //   prevGameOrders: totalGameContribution,
-    //   userOrders: all_orders,
-    // });
-    // manageGameInterval(gameId);
-    return res.status(200).json(all_orders);
+    let currentGameOrders = await getGameOrderCalculationByGameId({
+      type: "current",
+      game_id: setDataType(gameId._id, "s"),
+    });
+    all_orders = await orderByGameId(setDataType(gameId._id, "s"));
+    let totalGameContribution = await findGameContribution();
+    response = calCulationNumberPridiction({
+      game: gameId,
+      gameOrder: currentGameOrders,
+      prevGameOrders: totalGameContribution,
+      userOrders: all_orders,
+    });
+    return res.status(200).json(response);
   } catch (e) {
     return res.json({ status: 0, message: e.message });
   }

@@ -184,8 +184,8 @@ module.exports.userGameContribution = async function (id, game_contribution) {
   );
 };
 
-module.exports.findAllUsers = async function () {
-  return await User.find().exec();
+module.exports.findAllUsers = async function (Obj) {
+  return await User.find(Obj).exec();
 };
 
 
