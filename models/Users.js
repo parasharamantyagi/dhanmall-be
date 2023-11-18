@@ -47,6 +47,10 @@ const UserSchema = new mongoose.Schema({
     type: Float,
     default: 0,
   },
+  game_total_pick: {
+    type: Number,
+    default: 0,
+  },
   game_total_contribution: {
     type: Float,
     default: 0,
@@ -179,7 +183,7 @@ module.exports.plusUserMoney = async function (id, { money }, type = "payment") 
 module.exports.userGameContribution = async function (id, game_contribution) {
   return await User.updateOne(
     { _id: setDataType(id,"s") },
-    { $inc: {game_total_contribution: game_contribution} },
+    { $inc: {game_total_contribution: game_contribution, game_total_pick: 1} },
     { new: true, runValidators: true }
   );
 };

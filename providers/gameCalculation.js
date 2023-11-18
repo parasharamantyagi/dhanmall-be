@@ -80,8 +80,11 @@ const setFixGameUnit = ({ game, gameOrder, userOrders }) => {
     };
   }else if(userOrders.length < 3){
     let gameContribution = getHelperGameContribution(userOrders);
-    if(checkObj(gameContribution,'game_total_contribution') && checkObj(gameContribution,'game_winner_contribution')){
-      if(gameContribution.game_winner_contribution < gameContribution.game_total_contribution / 1.4){
+    if(checkObj(gameContribution,'game_total_contribution') && checkObj(gameContribution,'game_winner_contribution') && checkObj(gameContribution,'game_total_pick')){
+      console.log(gameContribution.game_winner_contribution);
+      console.log(gameContribution.game_total_contribution);
+      console.log(gameContribution.game_total_pick);
+      if(gameContribution.game_winner_contribution < (gameContribution.game_total_contribution / (gameContribution.game_total_pick * 0.3))){
         if(gameOrder.total_price.total_delivery < 70){
             if(userOrders[0].type === 1){
               if(userOrders[0].pick === 'green'){
@@ -111,7 +114,7 @@ module.exports.calCulationNumberPridiction = ({
 }) => {
   let unit = GDM_MODULE.rn({ min: 0, max: 9, integer: true });
   let unitArray = [];
-  if (setDataType(gameOrder.game_id._id, "s") === setDataType(game._id, "s")) {
+  if (setDataType(gameOrder.game_id._id, "s") === setDataType(game._id, "s") && checkArray(userOrders)) {
     let fixUnit = setFixGameUnit({ game, gameOrder, userOrders });
     if (check(fixUnit.status)) {
       unitArray = fixUnit.unit;

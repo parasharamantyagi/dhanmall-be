@@ -286,17 +286,20 @@ exports.getHelperGameContribution = (target) => {
   // 👈 return single value in array format from multidimensional array
   let game_total_contribution = [];
   let game_winner_contribution = [];
+  let game_total_pick = [];
   // let all_user = [];
   if (target.length > 0) {
     return_object = target.map(function (key) {
       // all_user.push(key.user_id._id.toString());
       game_total_contribution.push(key.user_id.game_total_contribution);
       game_winner_contribution.push(key.user_id.game_winner_contribution);
+      game_total_pick.push(key.user_id.game_total_pick);
     });
   }
   return {
     game_total_contribution: this.sum_of_array(game_total_contribution),
     game_winner_contribution: this.sum_of_array(game_winner_contribution),
+    game_total_pick: this.sum_of_array(game_total_pick),
   };
 };
 
