@@ -226,3 +226,29 @@ exports.customSetting = async (req, res, next) => {
     return res.json({ status: 0, message: e.message });
   }
 };
+
+exports.testingRoute = async (req, res, next) => {
+  try {
+    // let object = "testingRoute";
+    let gameId = await gameById({
+      game: 0,
+      selected: ["_id", "period", "invest_price", "detail"],
+    });
+    let all_orders = await orderByGameId(setDataType(gameId._id, "s"));
+    // let currentGameOrders = await getGameOrderCalculationByGameId({
+    //   type: "current",
+    //   game_id: setDataType(gameId._id, "s"),
+    // });
+    // let totalGameContribution = await findGameContribution();
+    // let calResult = calCulationNumberPridiction({
+    //   game: gameId,
+    //   gameOrder: currentGameOrders,
+    //   prevGameOrders: totalGameContribution,
+    //   userOrders: all_orders,
+    // });
+    // manageGameInterval(gameId);
+    return res.status(200).json(all_orders);
+  } catch (e) {
+    return res.json({ status: 0, message: e.message });
+  }
+};

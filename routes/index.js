@@ -14,8 +14,5 @@ module.exports = function (app) {
 
     let standardRoute = require('./standard');
     app.use('/standard', standardRoute);
-
-    let testingRoute = require('./testing');
-    app.use('/testing', testingRoute);
     
   }
