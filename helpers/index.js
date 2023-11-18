@@ -296,10 +296,11 @@ exports.getHelperGameContribution = (target) => {
       game_total_pick.push(key.user_id.game_total_pick);
     });
   }
+  game_total_pick = this.sum_of_array(game_total_pick);
   return {
     game_total_contribution: this.sum_of_array(game_total_contribution),
     game_winner_contribution: this.sum_of_array(game_winner_contribution),
-    game_total_pick: this.sum_of_array(game_total_pick),
+    game_total_pick: this.check(game_total_pick) ? game_total_pick : 1,
   };
 };
 
