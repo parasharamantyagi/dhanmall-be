@@ -232,7 +232,7 @@ exports.testingRoute = async (req, res, next) => {
     // response = await findAllUsers({mobile: '+919758890373'});
 
     let gameId = await gameById({
-      game: 0,
+      id: '6559f05250159f43de1954de',
       selected: ["_id", "period", "invest_price", "detail"],
     });
     let currentGameOrders = await getGameOrderCalculationByGameId({

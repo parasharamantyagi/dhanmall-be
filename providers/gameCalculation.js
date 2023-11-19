@@ -81,7 +81,7 @@ const setFixGameUnit = ({ game, gameOrder, userOrders }) => {
   }else if(userOrders.length < 3){
     let gameContribution = getHelperGameContribution(userOrders);
     if(checkObj(gameContribution,'game_total_contribution') && checkObj(gameContribution,'game_winner_contribution') && checkObj(gameContribution,'game_total_pick')){
-      if(gameContribution.game_winner_contribution < (gameContribution.game_total_contribution / (gameContribution.game_total_pick * 0.3))){
+      if(gameContribution.game_winner_contribution < (gameContribution.game_total_contribution * 0.75)){
         if(gameOrder.total_price.total_delivery < 70){
             if(userOrders[0].type === 1){
               if(userOrders[0].pick === 'green'){
@@ -100,7 +100,7 @@ const setFixGameUnit = ({ game, gameOrder, userOrders }) => {
       }
     }
   }
-  return response;
+  return response;  
 };
 
 module.exports.calCulationNumberPridiction = ({
