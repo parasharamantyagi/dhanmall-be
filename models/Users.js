@@ -168,6 +168,8 @@ module.exports.plusUserMoney = async function (id, { money }, type = "payment") 
   }else if(type === "win"){
     object.game_winner_contribution = setDataType(money, "f");
     saveConfig({ delivery: setDataType(money, "f") },'win');
+  }else if(type === "revert_payment"){
+    delete object.contribution;
   }
   if(type === "payment"){
     saveConfig({ recharge: setDataType(money, "f") },'payment');

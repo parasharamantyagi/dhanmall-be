@@ -17,7 +17,7 @@ const {
   updatedRechargeModule,
   getRechargeDetail,
 } = require("../../models/Recharges");
-const { billingUsers, countUsers } = require("../../models/Users");
+const { billingUsers, countUsers, plusUserMoney } = require("../../models/Users");
 const { handlePaymentRequest } = require("../payment.controller");
 
 exports.rechargeReq = async (req, res, next) => {
@@ -90,7 +90,11 @@ exports.withdrawalStatus = async (req, res, next) => {
   try {
     let rechargeId = req.params._id;
     let inputData = objectFormat(req.body, ["status"]);
+    let rechargeDetail = await getRechargeDetail({ _id: rechargeId });
     updatedRechargeModule(rechargeId, inputData);
+    if(inputData.status === 'failure'){
+      plusUserMoney(setDataType(rechargeDetail.user_id._id,'s'),{ money: rechargeDetail.ammount },'revert_payment');
+    }
     return res.status(200).json({
       status: 1,
       message: MESSAGE.STATUS_UPDATE_SUCCESSFULLY,
