@@ -297,11 +297,18 @@ module.exports.countUsers = async function (obj = {}) {
 };
 
 module.exports.billingUsers = async function (inputReq, page) {
+  let sortData = { _id: -1 };
+  if(checkObj(inputReq,'sort')){
+    if(inputReq.sort === 'money'){
+      sortData = { money: -1 };
+    }
+    delete inputReq.sort;
+  }
   return await User.find(inputReq)
     .select(["nickname","mobile","promotion_code","money","commission","interest","createdAt","first_payment"])
     .skip(page * PAGINATION_DEFAULT_LIMIT)
     .limit(PAGINATION_DEFAULT_LIMIT)
-    .sort({ _id: -1 })
+    .sort(sortData)
     .exec();
 };
 

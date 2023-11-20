@@ -177,9 +177,12 @@ exports.getAllUsers = async (req, res, next) => {
       inputData.mobile = inputData.mobile.trim();
     }
     if(checkObj(inputData,'promotion_code')){
-      inputData.mobile = inputData.mobile.trim();
+      inputData.promotion_code = inputData.promotion_code.trim();
     }
     let count = await countUsers(inputData);
+    if(checkObj(req.body,'sort')){
+      inputData = merge_object(inputData,{sort: req.body.sort});
+    }
     let userList = await billingUsers(inputData, setDataType(page, "n"));
     return res.status(200).json({
       status: 1,
