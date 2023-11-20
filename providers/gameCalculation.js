@@ -78,28 +78,29 @@ const setFixGameUnit = ({ game, gameOrder, userOrders }) => {
       status: true,
       unit: calWithuserOrders(userOrders).unitArray,
     };
-  }else if(userOrders.length < 3){
-    let gameContribution = getHelperGameContribution(userOrders);
-    if(checkObj(gameContribution,'game_total_contribution') && checkObj(gameContribution,'game_winner_contribution') && checkObj(gameContribution,'game_total_pick')){
-      if(gameContribution.game_winner_contribution < (gameContribution.game_total_contribution * 0.75)){
-        if(gameOrder.total_price.total_delivery < 70){
-            if(userOrders[0].type === 1){
-              if(userOrders[0].pick === 'green'){
-                response = {
-                  status: true,
-                  unit: [1,3,7,9]
-                };
-              }else if(userOrders[0].pick === 'red'){
-                response = {
-                  status: true,
-                  unit: [2,4,6,8]
-                };
-              }
-            }
-        }
-      }
-    }
   }
+  // else if(userOrders.length < 3){
+  //   let gameContribution = getHelperGameContribution(userOrders);
+  //   if(checkObj(gameContribution,'game_total_contribution') && checkObj(gameContribution,'game_winner_contribution') && checkObj(gameContribution,'game_total_pick')){
+  //     if(gameContribution.game_winner_contribution < (gameContribution.game_total_contribution * 0.75)){
+  //       if(gameOrder.total_price.total_delivery < 70){
+  //           if(userOrders[0].type === 1){
+  //             if(userOrders[0].pick === 'green'){
+  //               response = {
+  //                 status: true,
+  //                 unit: [1,3,7,9]
+  //               };
+  //             }else if(userOrders[0].pick === 'red'){
+  //               response = {
+  //                 status: true,
+  //                 unit: [2,4,6,8]
+  //               };
+  //             }
+  //           }
+  //       }
+  //     }
+  //   }
+  // }
   return response;  
 };
 
